@@ -1,0 +1,28 @@
+DiophantineNP verification record
+
+Lean 4.24.0
+mathlib f897ebcf72cd16f89ab4577d0c826cd14afaafc7
+Project modules checked: 227
+Module source digest (computed by verify.py): ee4cad58ba3d758e39fcabbaec30351a824b4c098c4f855baba466e0272cfa45
+Project declarations audited: 10203
+Theorem declarations audited: 7090
+Axioms reported: propext, Classical.choice, Quot.sound
+
+The following commands finished successfully on the extracted project.
+    python3 verify.py --strict --extras -j 5
+    python3 tests/test_preflight.py
+
+The first command builds the project, reports all axioms used by project declarations,
+rechecks each module with automatic implicit variables disabled, and checks the
+numerical examples and the standalone proof entry points. The second checked 14
+cases for the preflight checker. Lake reported two pre-existing linter hints about
+unused simplification arguments in CubicUnitSigns.lean.
+
+The following closed declarations report only propext, Classical.choice and Quot.sound.
+    DiophantineNP.HAB.imultInFOM : DiophantineNP.HAB.ImultInFOM
+    DiophantineNP.HAB.corollary63 : DiophantineNP.HAB.Corollary63
+    DiophantineNP.nativeVerifier : DiophantineNP.NativeVerifier
+    DiophantineNP.classEquality : DiophantineNP.Classes.D = DiophantineNP.Classes.NP
+    DiophantineNP.classEquality_powerCutoff : DiophantineNP.Classes.Dpower = DiophantineNP.Classes.NP
+
+HAB_REVIEW.md traces the proof and the correspondence with the published theorem.

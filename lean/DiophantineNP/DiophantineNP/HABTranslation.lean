@@ -11,10 +11,10 @@ https://doi.org/10.1016/S0022-0000(02)00025-9, §§2 and 2.3, Corollary 6.3.
 
 The source semantics uses order, `BIT(position, number)`, a binary input
 relation and strict unary majority. The product bit index has two digits in
-base `U`. The interface `ImultInFOM` below states the source theorem without
-assuming any target-language template; its proof from HAB's algorithm remains
-external. The translation, the reconstruction of the input rows, the high
-index digit zero, and both degenerate universe sizes are verified here. -/
+base `U`. The interface `ImultInFOM` below states the source theorem and
+`HABVerified.lean` supplies its proof. This module proves the translation,
+the reconstruction of the input rows, the high digit zero, and the two
+degenerate universe cases. -/
 namespace DiophantineNP.HAB
 open Counting WidthFormula FiniteArithmeticGap
 open scoped Classical

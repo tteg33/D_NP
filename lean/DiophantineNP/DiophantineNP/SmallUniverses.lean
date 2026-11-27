@@ -111,16 +111,16 @@ private theorem productTable_eval (u : ℕ) (f : ℕ → ℕ) (h : ∀ i<u, f i<
         rw [Nat.testBit_lt_two_pow ((a i).isLt.trans_le hp),Nat.testBit_lt_two_pow ((h i i.isLt).trans_le hp)]
   · intro bit; exact ⟨g,fun _ _ => rfl,(prod_eq (a:=g) (fun _ => rfl)).symm ▸ bit⟩
 
-private def above (n : ℕ) : Template 1 := .ex (fromFormula (isNat n 0))
+def above (n : ℕ) : Template 1 := .ex (fromFormula (isNat n 0))
 
-private theorem above_eval {u} (n : ℕ) (e : Fin u → Fin u → Bool) (env : Fin 1 → Fin u) :
+theorem above_eval {u} (n : ℕ) (e : Fin u → Fin u → Bool) (env : Fin 1 → Fin u) :
     (above n).eval e env = decide (n<u) := by
   apply Bool.eq_iff_iff.mpr
   simp only [above,Tex_true,fromFormula_eval,isNat_spec,Fin.cases_zero,decide_eq_true_eq]
   exact ⟨fun ⟨i,eq⟩ => eq ▸ i.isLt,fun h => ⟨⟨n,h⟩,rfl⟩⟩
 
-private def branch (p a b : Template 1) : Template 1 := .disj (.conj p a) (.conj (.neg p) b)
-private theorem branch_eval {u} (p a b : Template 1) (e : Fin u → Fin u → Bool) (env : Fin 1 → Fin u) :
+def branch (p a b : Template 1) : Template 1 := .disj (.conj p a) (.conj (.neg p) b)
+theorem branch_eval {u} (p a b : Template 1) (e : Fin u → Fin u → Bool) (env : Fin 1 → Fin u) :
     (branch p a b).eval e env = if p.eval e env then a.eval e env else b.eval e env := by
   cases h : p.eval e env <;> simp [branch,Template.eval,h]
 

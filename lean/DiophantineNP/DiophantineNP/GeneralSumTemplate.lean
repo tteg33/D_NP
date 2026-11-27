@@ -358,6 +358,15 @@ theorem ProductTemplate.fullSum_correct (P : ProductTemplate) {U : ℕ} (f : ℕ
       fromFormula_eval,large,decide_eq_false h,Bool.false_and,Bool.not_false,Bool.true_and,Bool.false_or]
     rw [firstRows_correct,sum_pad f (by omega : U≤32)]
 
+/-- Balanced finite row addition, with zero padding when fewer than 2^d rows exist. -/
+def boundedRows (d : ℕ) : Template 1 := sumTree rowWord d 0
+
+theorem boundedRows_correct {U d : ℕ} (h : U ≤ 2^d) (f : ℕ → ℕ) (j : Fin U) :
+    (boundedRows d).eval (fun r c => (f r.val).testBit c.val) (fun _ => j) =
+      (Readout.prefixSum f U).testBit j.val := by
+  simpa only [boundedRows, Nat.zero_add, Readout.prefixSum, Nat.sub_zero, sum_pad f h] using
+    sumTree_eval _ rowWord (fun i => if i<U then f i else 0) d 0 (fun n _ _ => rowWord_eval f n) j
+
 def ProductTemplate.toIterated (P : ProductTemplate) : IteratedArithmetic where
   product := P.product
   sum := P.fullSum

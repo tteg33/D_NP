@@ -76,6 +76,51 @@ import Lean.Util.CollectAxioms
 #check DiophantineNP.classEquality_of_hab
 #print axioms DiophantineNP.classEquality_of_hab
 
+#check DiophantineNP.HAB.toSource_correct
+#check DiophantineNP.HAB.Form.onPrefix_correct
+#check DiophantineNP.HABPairInterpretation.compile_correct
+#check DiophantineNP.HABIndependentSum.formula_correct
+#check DiophantineNP.HABIndependentSum.multiply_correct
+#check DiophantineNP.HABProductBlocks.binaryProduct_spec
+#check DiophantineNP.HABProductBlocks.padded_short_prime_collision
+#check DiophantineNP.HABPolylogRange.block_covered
+#check DiophantineNP.HABBoundedProduct.checkFactors_exact
+#check DiophantineNP.HABPolynomialProduct.polynomial_value
+#check DiophantineNP.HABPrimeBlocks.blockMember_by_rank
+#check DiophantineNP.HABCRTCoefficients.coefficient_spec
+#check DiophantineNP.HABCRTShift.matrix_product_bit
+#check DiophantineNP.HABCRTRecovery.quotientField_of_square_le
+#check DiophantineNP.HABCRTLeading.residueLt_correct
+#check DiophantineNP.HABCRTExtend.formula_correct
+#check DiophantineNP.HABCRTDot.readout_correct
+#check DiophantineNP.HABGroupPower.prime_power_iff
+#check DiophantineNP.HABPowerReduction.source_correct
+#check DiophantineNP.HABDivisionGraph.formula_correct
+#check DiophantineNP.HABGeometricDivision.division_in_FOM_of_imult
+#check DiophantineNP.HAB.imult_iff_productTemplate
+#check DiophantineNP.HAB.corollary63_iff_productTemplate
+#print axioms DiophantineNP.HAB.corollary63_iff_productTemplate
+#print axioms DiophantineNP.HABPolynomialProduct.polynomial_value
+#print axioms DiophantineNP.HABPowerReduction.source_correct
+
+#check DiophantineNP.HABCRTBitDecision.matrixBit_correct
+#check DiophantineNP.HABPolylogProduct.formula_correct
+#check DiophantineNP.HABShortProducts.ofPolylogProduct
+#check DiophantineNP.HABModularArithmetic.prime_power
+#check DiophantineNP.HABLargePrimeProduct.source_correct
+#check DiophantineNP.HABWideBitDecision.localSpec
+#check DiophantineNP.HABWideOutput.imult_of_local
+#check DiophantineNP.HAB.imultInFOM
+#check DiophantineNP.HAB.corollary63
+#check DiophantineNP.nativeVerifier
+#check DiophantineNP.classEquality
+#check DiophantineNP.classEquality_powerCutoff
+#print axioms DiophantineNP.HAB.imultInFOM
+#print axioms DiophantineNP.HAB.corollary63
+#print axioms DiophantineNP.nativeVerifier
+#print axioms DiophantineNP.classEquality
+#print axioms DiophantineNP.classEquality_powerCutoff
+
 open Lean Elab Command in
 run_cmd do
   let env ← getEnv

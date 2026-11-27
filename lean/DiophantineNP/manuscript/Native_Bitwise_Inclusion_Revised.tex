@@ -1,0 +1,801 @@
+% Standalone manuscript. Build with pdfLaTeX twice for cross-references.
+\documentclass[11pt,letterpaper]{article}
+\usepackage[hmargin=1.08in,vmargin=1.03in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{enumitem,needspace}
+\usepackage[hidelinks,bookmarksnumbered=true,pdfencoding=auto]{hyperref}
+\hypersetup{pdftitle={A fixed Diophantine verifier for native binary bitwise inclusion},pdfsubject={Diophantine complexity, finite arithmetic, and witness bounds}}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\numberwithin{equation}{section}
+\newcommand{\ZZ}{\mathbb Z}
+\newcommand{\DD}{\mathsf D}
+\newcommand{\NP}{\mathsf{NP}}
+\setlength{\emergencystretch}{2em}
+\setlist[enumerate]{leftmargin=*,itemsep=2pt,topsep=5pt}
+\setcounter{tocdepth}{2}
+\raggedbottom
+\title{A fixed Diophantine verifier for\\native binary bitwise inclusion}
+\author{}
+\date{Revised research draft for independent review\enspace$\cdot$\enspace November 26, 2026}
+\makeatletter
+\renewcommand{\@maketitle}{\begin{center}\vspace*{-.6em}{\LARGE\@title\par}\vskip .75em{\small\@date\par}\end{center}\vskip .35em}
+\makeatother
+\begin{document}
+\maketitle
+\begin{abstract}
+For nonnegative integers $a,b$, write $a\preceq b$ if every set bit of $a$ is a set bit of $b$. We prove that one integer polynomial, of arity independent of the input width, represents this relation. On inputs of at most $n$ bits per integer, every true instance admits witnesses of polynomial total bit length. Our construction encodes each set of bit positions as an idempotent modulo a product of prime powers. Two integers determined by the width recover the native input from its idempotent. To certify these integers, we represent the packed truth table of a fixed first-order formula with majority by a single Diophantine equation. The fixed formulas for the width parameters come from the iterated-multiplication theorem of Hesse, Allender and Barrington. Finite Fourier orthogonality and signed coefficient extraction give the packing step. The Jones--Matiyasevich criterion then gives the Adleman--Manders equality $\DD=\NP$.
+\end{abstract}
+
+\section{Introduction}\label{sec:intro}
+A bit scan decides $a\preceq b$ in linear time. Encoding the same test in a single polynomial equation poses a different problem. The polynomial has two input slots, one for each integer, and a fixed number of witness slots for words of arbitrary length. Introducing a separate binary variable for each position would make the arity grow with the input. We instead recover all positions from a pair of modular residues.
+
+Write $\ell(0)=1$ and $\ell(x)=1+\lfloor\log_2|x|\rfloor$ for $x\ne0$. We count a fixed additional bit for the sign of an integer witness and add the lengths across a witness tuple. We number bits starting at zero. The width $n$ in the following statement is a bound for analysis. The two native integers $a,b$ are the inputs to the polynomial.
+
+\begin{theorem}[Native bitwise inclusion]\label{thm:main}
+There are integers $r,C\ge1$ and a polynomial
+$\mathcal P\in\ZZ[A,B,W_1,\ldots,W_r]$ with the following properties for all $n\ge1$ and $0\le a,b<2^n$.
+\begin{enumerate}[label=\textup{(\roman*)}]
+\item If $a\preceq b$, there is a tuple $w\in\ZZ^r$ of total bit length at most $(n+2)^C$ such that $\mathcal P(a,b,w)=0$.
+\item If $a\not\preceq b$, then $\mathcal P(a,b,w)\ne0$ for every $w\in\ZZ^r$.
+\end{enumerate}
+\end{theorem}
+
+We use numerical languages $L\subseteq\mathbb N$ on binary inputs. In the bounded Diophantine class $\DD$, there are a fixed arity $s$, a polynomial $q\in\mathbb N[X]$, and an integer polynomial $F$ such that, for every $x$,
+\[
+ x\in L \quad\Longleftrightarrow\quad
+ \exists w\in\mathbb N^s\quad
+ \sum_{i=1}^s\ell(w_i)\le q(\ell(x))\quad\text{and}\quad F(x,w)=0 .
+\]
+The same convention applies to a fixed tuple of inputs, using its total bit length \cite{am,pollett,lipmaa}. A false input may have longer roots of $F$. Theorem~\ref{thm:main}(ii) excludes roots of every length. We use the polynomial-time verifier definition of $\NP$ with binary certificates.
+
+\Needspace{7\baselineskip}
+\begin{corollary}[Diophantine complexity]\label{cor:classes}
+Theorem~\ref{thm:main} implies $\DD=\NP$.
+\end{corollary}
+\begin{proof}
+Replace each signed witness by its positive and negative parts. Their two natural bit lengths add to the magnitude length plus the sign bit, including at zero. Hence $\preceq$ belongs to $\DD$. The numerical characterization of Jones and Matiyasevich \cite[Section~5, eq.~(53), p.~827]{jm} then gives $\NP\subseteq\DD$ (see also \cite[Section~4.3]{lipmaa}). In the other direction a verifier guesses the bounded witnesses and evaluates the fixed polynomial in polynomial time.
+\end{proof}
+
+\paragraph{Proof outline.}
+Section~\ref{sec:residues} assigns to each width $n$ a modulus $D$ and a multiplier $J_n$. The idempotents $S^2=S\pmod D$ select bit positions independently. Taking a least residue of $SJ_n$ and rounding recovers the integer whose bits were selected. The remaining task is to produce the \emph{correct} $D,J_n$ with fixed arity. Uniform threshold arithmetic supplies fixed formulas for their individual bits, in Lemma~\ref{lem:width-formulas}.
+
+Theorem~\ref{thm:unarycompiler} in Section~\ref{sec:unarycompiler} is the main encoding step. A first-order formula on a finite arithmetic universe of size $U$ describes a word one bit at a time. To obtain the entire integer, we represent its truth values on roots of unity, implement each quantifier by averaging a coordinate, and attach the weight $2^i$ to position $i$ by Fourier orthogonality. Lemma~\ref{lem:mean-extract} evaluates each average by extracting a signed coefficient from a single integer. Section~\ref{sec:arithmetic} assembles the graphs, proves Theorem~\ref{thm:main}, and accounts for the witness costs. Appendix~\ref{sec:exact-power} gives the globally sound integer-power graph used in the extractions. Its Pell-index cutoff is certified inside the equation.
+
+\paragraph{Formal verification.}
+The companion Lean~4 project proves Corollary~6.3 of Hesse, Allender and Barrington~\cite{hab} by constructing fixed first-order formulas with strict majority for the output bits of integer division and iterated multiplication. The declarations in \texttt{HABVerified.lean} use the namespace \texttt{DiophantineNP}. The declaration \texttt{HAB.corollary63} proves their corollary, \texttt{nativeVerifier} proves Theorem~\ref{thm:main}, and \texttt{classEquality} proves $\DD=\NP$ for binary numerical languages as in Corollary~\ref{cor:classes}. This manuscript was developed with AI assistance.
+
+{\small\tableofcontents}
+\clearpage
+
+\section{Reading a binary word from a modular idempotent}\label{sec:residues}
+
+Fix a width \(n\ge1\). Put \(m=2^{n+2}\) and \(e=4n+10\). For
+\(0\le i<n\), let \(p_i\) be the \((i+1)\)-st odd prime, in increasing
+order, and define
+\begin{equation}\label{eq:width-words}
+ d_i=p_i^e,\qquad D=\prod_{i<n}d_i,\qquad
+ c_i=\left\lfloor\frac{d_i2^i}{m}\right\rfloor,\qquad
+ J_n=\sum_{i<n} c_i\,\frac{D}{d_i}.
+\end{equation}
+The prime powers are pairwise coprime. The two integers \(D,J_n\) depend
+only on the width. An idempotent modulo \(D\) selects a subset of its
+prime-power factors. The choice of \(c_i\) arranges that the contribution
+of a selected factor to \(mJ_n/D\) approximates the binary weight \(2^i\)
+from below.
+
+\begin{lemma}[Readout of an idempotent]\label{lem:read}
+Suppose \(D\mid S(S-1)\). Write \(s_i\) for the least nonnegative
+residue of \(S\) modulo \(d_i\), and \(N_S\) for the least nonnegative
+residue of \(SJ_n\) modulo \(D\). Then \(s_i\in\{0,1\}\) and
+\[
+                    \left\lceil\frac{mN_S}{D}\right\rceil
+                       =\sum_{i<n}s_i2^i .
+\]
+\end{lemma}
+\begin{proof}
+Since consecutive integers are coprime, \(d_i\) divides either \(S\) or
+\(S-1\). Reduction modulo each \(d_i\) gives
+\[
+ SJ_n\equiv\sum_{i<n}s_ic_iD/d_i\pmod D.
+\]
+The sum on the right is nonnegative and, after division by \(D\), is at
+most \(\sum_{i<n}2^i/m=(2^n-1)/m<1\). Thus it equals \(N_S\). For
+\(a'=\sum_{i<n}s_i2^i\), the floor in \eqref{eq:width-words} gives
+\[
+ 0\le a'-mN_S/D
+   =\sum_{i<n}s_i\frac{m}{d_i}
+             \left(\frac{d_i2^i}{m}-c_i\right)
+   <\frac{2^{n+2}n}{3^{4n+10}}<1 .
+\]
+The ceiling recovers \(a'\), including the empty subset.
+\end{proof}
+
+Every selection of zeroes and ones occurs, by the Chinese remainder
+theorem. For idempotents \(S,T\) with residues \(s_i,t_i\), the condition
+\(D\mid S(1-T)\) is equivalent to \(s_i(1-t_i)=0\) for all \(i\).
+Thus \(D,J_n\), together with two idempotents, suffice to check the original
+bitwise inclusion relation.
+
+\subsection{Fixed formulas for the two width-dependent integers}
+
+Let \(x=n+2\), \(K=32x^2\) and \(U=x^{20}\). We use the ordered
+universe \([U]=\{0,\ldots,U-1\}\), with ternary relations for addition
+and multiplication whose results belong to \([U]\). A word indexed by
+\([U]\) is represented in the following argument by a predicate on its
+bit positions, with position zero least significant.
+
+All \(p_i\) are less than \(K\). Indeed, put \(v=16x^2\). The largest
+binomial coefficient in row \(2v\) and the factorial valuation formula give
+\[
+ 2^v\le\frac{4^v}{2v+1}\le \binom{2v}{v}\le(2v)^{\pi(2v)}.
+\]
+Each summand \(\lfloor 2v/p^j\rfloor-2\lfloor v/p^j\rfloor\) in the
+valuation is zero or one, and it vanishes if \(p^j>2v\). Consequently
+the entire power of each prime in the binomial coefficient is at most
+\(2v\). As \(\log_2 K\le4x\), the display gives
+\(\pi(K)\ge 4x>n+1\), and \(K\) itself is even. Also \(e\le5x\), so
+\(\log_2D\le en\log_2K\le20x^3\), and \(0\le J_n<D\).
+Every \(d_i2^i\) and every individual summand \(c_iD/d_i\) has fewer
+than \(U\) bits as well. These estimates justify the bit ranges used below.
+
+\begin{lemma}[Uniform description of the two integers]\label{lem:width-formulas}
+There are two fixed first-order formulas with unary strict majority,
+\(\varphi_D(j;n)\) and \(\varphi_J(j;n)\), in the finite arithmetic
+language just described. On \([U]\) their truth values are the bits at
+position \(j\) of \(D\) and \(J_n\), respectively.
+\end{lemma}
+\begin{proof}
+Fix a formula $\Phi(h,l)$ supplied by the iterated-multiplication theorem of Hesse, Allender and Barrington \cite[Sections~2 and 2.3, Cor.~6.3]{hab}. The source vocabulary has order, $\mathrm{BIT}$, a binary input relation $R$, and strict majority over one variable. Write $X_t=\sum_{k<U}2^k[R(t,k)]$. In the two-digit presentation of the output index, the specification on $[U]$ for $U\ge2$ is
+\[
+ ([U],R)\models\Phi(h,l)
+ \quad\Longleftrightarrow\quad
+ \text{bit }hU+l\text{ of }\prod_{t<U}X_t\text{ is one}
+ \qquad(h,l<U).
+\]
+The formula is fixed before $U$, $R$, $h$, and $l$ are chosen. Write $\mathrm{BIT}(k,x)$ with the position first. It is first-order definable from the finite addition and multiplication relations \cite[Cor.~6.15]{libkin}. Iterated addition is also definable in first-order logic with majority \cite[proof of Lemma~4.1]{hab}. The companion constructs the addition formula from $\Phi$. At each use below, substitute the defining formula for $R$ and rename bound variables to avoid capture.
+
+\begin{enumerate}
+\item For \(2<p<K\), primality is expressed by the absence of
+      a pair \(u,v>1\) with \(uv=p\). All factors of \(p\) are in the universe.
+      Count the odd primes \(q<p\) by summing one-bit indicator words.
+      Compare the bits of this sum to those of the numerical parameter
+      \(i<n\). This gives a formula selecting exactly \(p=p_i\). Its bits are then obtained from \(\mathrm{BIT}\).
+\item For fixed \(i<n\), feed \(p_i\) to the product formula in slots
+      \(t<e\) and the multiplicative identity in the remaining slots.
+      This gives the bit predicate of \(d_i\). A second product takes
+      the factors \(d_t\) in slots \(t<n\), with all other slots equal
+      to one. It gives \(D\). Replacing slot \(i\) by one gives \(D/d_i\).
+\item Since \(i<n+2\), the \(k\)-th bit of \(c_i\) is the bit of \(d_i\)
+      at \(h=k+(n+2-i)\). Express this by quantifying \(h\) in \([U]\). A missing witness for this sum gives a zero bit, as the size bound requires.
+      Multiply \(c_i\) by \(D/d_i\) and sum the resulting words in
+      slots \(i<n\), with zeroes in the remaining slots. This gives \(J_n\).
+\end{enumerate}
+
+For precision about index arity, a generic product of \(U\) words of
+\(U\) bits can have \(U^2\) bit positions. Position \(j<U\) is the
+two-coordinate output index \((0,j)\) in base \(U\). Every product
+passed to a later stage above fits in a single \(U\)-bit word, so its
+low-position predicate supplies every bit required by that stage.
+The simulation of fixed-length tuple indices on the base universe is
+part of the descriptive-complexity formulation in \cite[Section~2.3]{hab}.
+The three stages have fixed syntactic depth. All slot, position, and
+prime variables are bound in the resulting formulas. Only \(j,n\) are
+free.
+\end{proof}
+
+Applying Theorem~\ref{thm:unarycompiler} of
+Section~\ref{sec:unarycompiler} to these two formulas will certify
+\(D,J_n\) by integer equations with total witness length polynomial in
+\(U\). Since \(U=(n+2)^{20}\), this is also polynomial in \(n\).
+
+\section{Packing the output of a fixed finite-arithmetic formula}
+\label{sec:unarycompiler}
+
+Write $[U]=\{0,\ldots,U-1\}$, where $U\ge1$. The structure on $[U]$
+has order and the ternary graphs of ordinary integer addition and
+multiplication restricted to $[U]^3$. A unary majority quantifier counts
+individual elements and uses a strict majority. We write $[\psi]$ for
+the indicator of a statement $\psi$.
+
+\Needspace{10\baselineskip}
+\begin{theorem}[Packing theorem]\label{thm:unarycompiler}
+Fix a first-order formula $\varphi(j;\mathbf t)$ in this language with
+unary majority. Let its numerical parameter tuple have fixed arity. There is a
+single existential integer-polynomial graph for the function
+\[
+ (U,\mathbf t)\longmapsto \sum_{j=0}^{U-1}2^j[\varphi(j;\mathbf t)],
+ \qquad \mathbf t\in[U]^{|\mathbf t|}.
+\]
+An honest evaluation requires at most $(1+U)^{C_\varphi}$ auxiliary
+bits for a constant $C_\varphi$. Every satisfying integer assignment
+gives the displayed output, with no restriction on the size of that
+assignment.
+\end{theorem}
+
+The bound is polynomial in the number $U$ of bit positions. The packed output can itself require $U$ bits. In the application $U=(n+2)^{20}$, so this gives a polynomial bound in the native input width $n$. The formula is fixed before $U$ is chosen. In particular, any additional
+input relation must have a fixed definition that can be substituted into
+the formula. We first represent a truth value by a rational Laurent
+polynomial on a grid of roots of unity. A guarded average over one
+coordinate counts a quantified variable. After the logical induction,
+four grid coordinates implement Fourier inversion with the weights $2^j$. The final step
+evaluates all these averages by integer coefficient extraction.
+
+\subsection{Threshold polynomials and their evaluation}
+
+Let $\ell(x)$ be the binary length of a positive integer $x$. Throughout the proof we use
+\begin{equation}\label{eq:packing-grid}
+ \begin{gathered}
+ B=\max(2,U),\qquad J=2B+1,\qquad M=4J(2B+2)^{30},\qquad \beta=M^4,\\
+ P=\frac{16^\beta}{\beta\binom{2\beta}{\beta}^{2}},\qquad
+ \delta=\frac{1}{64M^4},\qquad
+ h_0=100\bigl(J+10\ell(M)+20\bigr),\qquad \varepsilon=2^{-h_0}.
+ \end{gathered}
+\end{equation}
+For $q\ge1$ set $d(q)=1+2^{16}M^8\bigl(q+20\ell(M)+100\bigr)$.
+The integer $d(q)$ is odd. The parameter $P$ is rational. To see how
+accurately it approximates $\pi$, set
+$I_s=\int_0^{\pi/2}\sin^s(t)\,dt$ and
+$b_\beta=\binom{2\beta}{\beta}$. The recurrence
+$I_s=(s-1)I_{s-2}/s$ gives
+\[
+ I_{2\beta}=\frac{\pi b_\beta}{2\cdot 4^\beta},\qquad
+ I_{2\beta-1}=\frac{4^\beta}{2\beta b_\beta},\qquad
+ I_{2\beta+1}=\frac{4^\beta}{(2\beta+1)b_\beta}.
+\]
+Using $I_{2\beta+1}<I_{2\beta}<I_{2\beta-1}$ yields
+\begin{equation}
+ 1<P/\pi<1+1/(2\beta).
+ \label{eq:packing-wallis}
+\end{equation}
+The integer evaluation of $P$ uses the radix $R=2^{2\beta+1}$.
+Every coefficient of $(1+Y)^{2\beta}$ is smaller than $R$.
+Thus $b_\beta$ is the least nonnegative residue of
+$\lfloor(1+R)^{2\beta}/R^\beta\rfloor$ modulo $R$.
+This determines $P$ from $U$ using a fixed number of operations.
+
+\begin{lemma}[Threshold and scalar evaluation]\label{lem:packing-tail}
+Put $d=d(q)$, $k=(d+1)/2$, and
+\[
+ H_q(t)=\sum_{i=k}^d\binom di
+        \left(\frac{1+t}{2}\right)^i
+        \left(\frac{1-t}{2}\right)^{d-i}.
+\]
+On $[-1,1]$ the values of $H_q$ belong to $[0,1]$. If
+$\delta\le |t|\le1$, then
+$|H_q(t)-[t>0]|<2^{-q}$. On all of $\mathbb R$,
+$|H_q(t)|\le\max(1,|t|)^d$. Its value at a rational argument is
+given exactly by a fixed number of rational operations, integer
+powers, divisions with remainder, and roundings.
+\end{lemma}
+\begin{proof}
+For $|t|\le1$ put $p=(1+t)/2$. The polynomial is the probability
+of at least $k$ successes in $d$ independent Bernoulli trials of
+success probability $p$. For $1/2<p<1$ and $S$ the number of
+successes, Markov's inequality applied to
+$((1-p)/p)^{S-d/2}$ bounds $\Pr(S\le d/2)$ by
+$[2\sqrt{p(1-p)}]^d$. Exchanging successes and failures treats
+$p<1/2$, and the endpoints are immediate. The error is at most
+$(1-t^2)^{d/2}\le\exp(-d\delta^2/2)<2^{-q}$ on the stated range.
+The binomial theorem with absolute values gives the bound
+$((|1+t|+|1-t|)/2)^d=\max(1,|t|)^d$ for every real $t$.
+
+For the scalar evaluation write $t=m/s$, $s>0$, and put $a=s+m$,
+$b=s-m$, $H=(2+|a|+|b|)^d$, $Z=8H+3$. If
+$(b+aY)^d=\sum_i b_iY^i$, then $\sum_i|b_i|\le H$. Consequently
+\[
+ \left|\frac{(b+aZ)^d}{Z^k}
+          -\sum_{i=k}^d b_i Z^{i-k}\right|\le H/Z<1/8 .
+\]
+Thus rounding $(b+aZ)^d/Z^k$ gives $\sum_{i=k}^d b_iZ^{i-k}$.
+Its residue modulo $Z-1$ equals
+$\sum_{i=k}^d b_i$ modulo $Z-1$. The centered representative equals
+this sum in $\mathbb Z$ since its magnitude is at most $H<(Z-1)/2$.
+Dividing by $(2s)^d$ gives $H_q(t)$. The argument allows either sign
+for the coefficients, which is needed at later integer evaluation
+points.
+\end{proof}
+
+\subsection{Representing an integer by two grid points}
+
+Let $z=e^{2\pi i l/M}$, where $l$ ranges over $\mathbb Z/M\mathbb Z$.
+Define rational Laurent polynomials
+\[
+ c(z)=\tfrac12(z+z^{-1}),\qquad
+ x(z)=B-\frac{M c(z)}{2P},\qquad
+ Y(z)=\frac{(PJ/M)^2-c(z)^2}{4}.
+\]
+Call $z$ selected if $l=\pm(M/4+j)$ with $-B\le j\le B$.
+Its label is $B+j$. Each label from $0$ through $2B$ occurs twice,
+and both copies satisfy $c(z)=-\sin(2\pi j/M)$.
+
+\begin{lemma}[Label and window bounds]\label{lem:packing-label}
+On the full grid, $|x(z)|<M$ and $M^{-2}\le |Y(z)|\le1$.
+The selected points are precisely those with $Y(z)>0$. At these points,
+\[
+ |x(z)-(B+j)|\le E_0,\qquad E_0=32B^3/M^2+B/\beta .
+\]
+\end{lemma}
+\begin{proof}
+The bound on $x$ follows from $|c|\le1$ and $P>\pi>3$. On the
+selected arcs use $|\sin t-t|\le |t|^3/6$ and
+\eqref{eq:packing-wallis} in
+$x=B+M\sin(2\pi j/M)/(2P)$.
+
+Let $h$ be the distance in grid steps to the nearer center
+$l=\pm M/4$. Then $0\le h\le M/4$ and
+$c(z)^2=\sin^2(2\pi h/M)$ increases with $h$. At $h=B$,
+$M^2(4Y)\ge \pi^2(J^2-4B^2)=\pi^2(4B+1)>4$.
+At $h=B+1$, use $\sin^2(t)\ge t^2-t^4$ for $|t|\le1$
+and $P^2\le\pi^2(1+2/\beta)$ to obtain
+\[
+ M^2(-4Y)\ge \pi^2(4B+3)
+       -\frac{(8(B+1))^4}{M^2}-\frac{2\pi^2J^2}{\beta}>4 .
+\]
+Indeed $M\ge 2^{10}(B+1)^4$ makes each subtracted term less than one.
+Monotonicity gives the sign and the lower bound at every point.
+Finally $PJ/M<1$ and $|c|\le1$ give the upper bound.
+\end{proof}
+
+\subsection{Logical induction by guarded averaging}
+
+For each subformula $\psi$ we construct a rational Laurent polynomial
+in the grid coordinates of its free variables. It has values in
+$[0,1]$ on the whole grid. Whenever these coordinates are selected
+and their labels lie in $[U]$, its value differs from $[\psi]$ by
+at most $\varepsilon$. Numerical parameters are substituted as their
+exact integer values. The guard used below also compares a label to
+the external integer $U$.
+
+For an equality atom let $A=x-y$, $x+y-z$, or $xy-z$ according to the
+relation. Here $x,y,z$ stand for the corresponding label observables
+or numerical parameters. For each selected assignment with labels
+through $2B$, the difference between $A$ and the corresponding
+integer expression is at most $(4B+3)E_0<1/8$. For example a product
+contributes at most $4BE_0+E_0^2$ before subtracting the last
+observable. Globally $|A|\le2M^2$. Use
+\[
+ H_{h_0}\!\left(\frac{1/4-A^2}{8M^4}\right)
+ \quad\text{for equality},\qquad
+ H_{h_0}\!\left(\frac{A+1/2}{8M^4}\right)
+ \quad\text{for weak order }A=x-y\ge0.
+\]
+Each argument lies in $[-1,1]$ on the grid. On a selected assignment
+an integer equality gives $|A|\le1/8$, and an inequality of the two
+integers gives $|A|\ge7/8$. Thus the equality test has the correct
+sign with gap at least $(1/4-1/64)/(8M^4)>\delta$. For order the
+unnormalized gap is at least $3/8$. Lemma~\ref{lem:packing-tail}
+gives the claimed error.
+
+Negation sends $f$ to $1-f$. For conjunction and disjunction of
+$f,g$ apply $H_{h_0}$ respectively to $(f+g-3/2)/4$ and
+$(f+g-1/2)/4$. On valid labels the threshold margin before division
+by four is at least $1/2-2\varepsilon$. The output error is again at
+most $\varepsilon$, independently of the depth already treated.
+To quantify a coordinate, first conjoin its child with the guard
+$x<U$ using this same rule. At a selected point with label at least
+$U$, the guard is at most $\varepsilon$ and the unguarded child
+belongs to $[0,1]$. The conjunction therefore has value at most
+$\varepsilon$ there, even if the child is being evaluated outside
+its logical domain.
+
+Denote the guarded child by $G$ and the coordinate to be quantified by
+$z$. For a function on the $m$th roots write
+$\operatorname{mean}_{z^m=1}f=m^{-1}\sum_{z^m=1}f(z)$. Form
+\begin{equation}
+ C=\frac M2\,\underset{z^M=1}{\operatorname{mean}}\,
+            H_{h_0}(Y(z))G .
+ \label{eq:packing-count}
+\end{equation}
+Such a mean keeps just the terms whose exponent in $z$ is divisible
+by $M$ and then replaces $z$ by $1$, so $C$ has rational Laurent
+coefficients in the remaining coordinates. Its grid values lie in
+$[0,M/2]$. At valid remaining coordinates, each true label counted by
+the quantifier has two selected representatives. At each selected
+point the product in \eqref{eq:packing-count} differs from the
+intended indicator by at most $2\varepsilon$. Elsewhere the window
+is at most $\varepsilon$. Hence $C$ differs from the integer count
+by at most $M\varepsilon<1/8$.
+
+For existence and strict majority respectively, use
+\[
+ H_{h_0}\!\left(\frac{C-1/2}{M+U+2}\right),\qquad
+ H_{h_0}\!\left(\frac{C-\lfloor U/2\rfloor-1/2}{M+U+2}\right).
+\]
+Both arguments lie in $[-1,1]$ globally. On valid assignments they
+have the correct sign and magnitude at least
+$1/[4(M+U+2)]>\delta$. This proves the induction, with universal
+quantification obtained by negating existence. Conjoin the output
+with $j<U$ once more and denote the resulting one-coordinate
+polynomial by $T_\varphi(z)$. On selected points it approximates the
+truth indicator extended by zero to the labels $U,\ldots,2B$.
+
+\subsection{Binary weights from an exact Fourier sum}\label{sec:binary-weights}
+
+To recover the output word, we weight each true label $i$ by $2^i$.
+Write $\zeta=\exp(2\pi\mathrm i/J)$. For $0\le i<J$, finite Fourier inversion gives
+\begin{equation}\label{eq:weight-identity}
+  2^i=\frac1J\sum_{k=-B}^{B}\zeta^{ik}
+                 \sum_{b=0}^{J-1}2^b\zeta^{-bk}.
+\end{equation}
+The phase $\zeta^{ik}$ depends on the product of a label and a frequency.
+We represent the balanced remainder of $ik$ by a grid coordinate and
+verify it using another coordinate for the quotient.
+
+Use four independent $M$th roots $z,w,u,v$ and put
+\[
+ b_M=M/J,\qquad y(s)=x(s)-B,\qquad W(s)=H_{h_0}(Y(s)).
+\]
+At selected points write $i$ for the label of $z$ and $k,h,t$ for the
+centered labels of $w,u,v$, respectively. Thus $i\in[0,2B]$ and
+$k,h,t\in[-B,B]$ are integers. Define
+\begin{align*}
+ A_0&=x(z)y(w)-J y(u)-y(v),\\
+ L&=H_{h_0}\!\left(\frac{1/4-A_0^2}{8M^4}\right),&
+ S&=H_{h_0}\!\left(-\frac{(w-w^{-1})(v-v^{-1})}{16}\right).
+\end{align*}
+Here $L$ tests the integer equality $ik=Jh+t$. The factor $S$ selects
+the same choice of sign in the representations
+$w=\exp(\pm2\pi\mathrm i(M/4+k)/M)$ and
+$v=\exp(\pm2\pi\mathrm i(M/4+t)/M)$. Put
+\begin{equation}\label{eq:fourier-kernel}
+ A=T_\varphi(z)W(z)W(w)W(u)W(v)LS\,
+     v^{b_M}\sum_{b=0}^{J-1}(2w^{-b_M})^b .
+\end{equation}
+
+\begin{lemma}[Fourier extraction of the binary word]\label{lem:fourier-packing}
+Writing $\operatorname{mean} A$ for the normalized mean over the four
+coordinates, we have
+\[
+ \left|\frac{M^4}{8J}\operatorname{mean} A
+       -\sum_{i=0}^{U-1}2^i[\varphi(i)]\right|<\frac14 .
+\]
+\end{lemma}
+\begin{proof}
+First check the two new selectors. On the whole grid
+$|y|\le M/(2P)<M/6$, $|x|\le B+M/6<M/4$, and $J\le M/4$.
+These bounds give $|A_0|<M^2$, so the argument of $L$ is in $[-1,1]$.
+At four selected points,
+\[
+ |A_0-(ik-Jh-t)|\le (5B+3)E_0<1/8 .
+\]
+Indeed the product contributes at most $(3B+E_0)E_0$, and the two
+linear terms contribute $(J+1)E_0$. The last inequality follows from
+$M\ge 2^{10}(B+1)^4$ and $\beta=M^4$.
+The equality test from Lemma~\ref{lem:packing-tail} therefore gives
+$|L-[ik=Jh+t]|\le\varepsilon$ there. Writing
+$w=e^{\mathrm i\theta}$ and $v=e^{\mathrm i\eta}$, the argument of
+$S$ is $\sin\theta\sin\eta/4$. It lies in $[-1/4,1/4]$ on the entire
+grid. On the selected arcs each sine has magnitude at least
+$\cos(2\pi B/M)>1/2$ and has the sign of its arc. Hence $S$
+approximates the same-sign indicator to error $\varepsilon$.
+
+Replace the seven factors $T_\varphi$, the four windows, $L$, and
+$S$ by their intended indicators on the selected arcs, and declare the
+resulting summand zero elsewhere. For each $0\le i<U$ and each
+$-B\le k\le B$, division by the odd integer $J$ gives exactly one
+$t\in[-B,B]$ and one integer $h$ with $ik=Jh+t$. They obey
+$|h|\le(B^2+B)/J\le B$. For a common sign $\sigma\in\{1,-1\}$ of
+$w,v$, the $b$th summand of the last two factors in
+\eqref{eq:fourier-kernel} is
+\[
+ 2^b\exp\!\left(\frac{2\pi\mathrm i\sigma}{J}(t-bk)\right)
+   =2^b\exp\!\left(\frac{2\pi\mathrm i\sigma}{J}k(i-b)\right).
+\]
+Here $M/(4J)$ is an integer, so the quarter-period offsets drop out.
+Summation over $k=-B,\ldots,B$ gives zero unless $b=i$ and gives
+$J2^i$ at $b=i$. There are two choices for $\sigma$ and two each for
+the copies of $z,u$. Thus the ideal, unnormalized sum is
+$8J\sum_{i<U}2^i[\varphi(i)]$.
+
+All seven real factors of the approximate summand lie in $[0,1]$.
+At a selected tuple, the error in their product is at most
+$7\varepsilon$ by telescoping. Outside the four windows, one window
+factor is at most $\varepsilon$ and the ideal summand is zero.
+The remaining Laurent factor has magnitude at most $2^J-1$
+everywhere. After normalization the error is less than
+$7M^4 2^{J-h_0}/(8J)<1/4$ by \eqref{eq:packing-grid}.
+\end{proof}
+
+All coefficients in \eqref{eq:fourier-kernel} are rational.
+Averaging four times leaves a rational number because each mean retains
+precisely the exponents divisible by its period. The final operation is
+therefore ordinary rational rounding. The geometric sum has coefficient
+norm $2^J-1$ and its exponents have magnitude at most $(J-1)b_M<M$.
+The selectors use only $d(h_0)$ as a threshold degree, and all
+parameter exponents are polynomial in $1+U$.
+
+\subsection{Exact evaluation of a partial mean}\label{sec:mean-evaluation}
+
+It remains to explain how a fixed system of integer equations computes the rational mean just constructed. The operation that requires care is elimination of one grid coordinate. Enumerating its values would introduce a number of registers depending on $U$.
+
+For a rational Laurent polynomial $E$ in any of the remaining coordinates, choose a triple $(D_E,H_E,G_E)$ satisfying
+\[
+ D_E\ge1,\qquad P_E=D_EE\in\mathbb Z[\mathbf z^{\pm1}],
+ \qquad \|P_E\|_1\le H_E,\qquad
+ |\nu_i|\le G_E\quad(\mathbf z^\nu\in\operatorname{supp}P_E).
+\]
+Here $\|\cdot\|_1$ is the sum of the absolute coefficients. Take $H_E\ge1$. The syntax of the expression determines these bounds without enumerating its coefficients. For a scalar $p/q$ with $q>0$ take $(q,\max(1,|p|),0)$, and for a monomial $\mathbf z^\nu$ take $(1,1,\max_i|\nu_i|)$. If the children have triples $(D_i,H_i,G_i)$, we may use the following recurrences.
+\[
+\begin{array}{c|ccc}
+  &D_E&H_E&G_E\\ \hline
+ E_1\mathbin{\pm} E_2&D_1D_2&D_2H_1+D_1H_2&\max(G_1,G_2)\\
+ E_1 E_2&D_1D_2&H_1H_2&G_1+G_2\\
+ E_1^b\ (b\ge0)&D_1^b&H_1^b&bG_1\\
+ H_q(E_1),\ d=d(q)&(2D_1)^d&[2(D_1+H_1)]^d&dG_1 .
+\end{array}
+\]
+The last line follows by expanding the binomial tail with numerator factors $D_1+P_{E_1}$ and $D_1-P_{E_1}$ and using $\sum_j\binom dj=2^d$. Inverting the Laurent coordinates preserves the triple. The geometric sum in the four-coordinate readout has denominator $1$, norm $2^J-1$, and exponent bound $(J-1)M/J$. At a positive rational value of $w$ it is evaluated as $(r^J-1)/(r-1)$ for $r=2w^{-M/J}\ne1$, and as $J$ for $r=1$. Partial means also preserve the triple because orthogonality keeps exactly the terms whose exponent in the eliminated variable is divisible by the period, then combines their coefficients. This can only decrease the coefficient norm.
+
+\begin{lemma}[Extraction of a cyclic mean]\label{lem:mean-extract}
+Suppose that $E(z,\mathbf x)$ has triple $(D,H,G)$ and that its scalar evaluator accepts positive rational coordinates. For an integer $m\ge1$ and positive rational $a_i=p_i/q_i$, the scalar
+\[
+       \underset{z^m=1}{\operatorname{mean}} E(z,\mathbf a)
+\]
+can be computed with one call to that evaluator, integer arithmetic, integer powers, rounding, and a remainder. The number of operations depends only on the number of remaining coordinates.
+\end{lemma}
+\begin{proof}
+Put $C_0=\prod_i(p_iq_i)^G$ and $H'=H\prod_i\max(p_i,q_i)^{2G}$. Then $L(z)=DC_0E(z,\mathbf a)$ is integral Laurent with $\|L\|_1\le H'$. Indeed the multiplier for a coordinate exponent $\nu_i$ is $p_i^{G+\nu_i}q_i^{G-\nu_i}$, an integer bounded by $\max(p_i,q_i)^{2G}$. Choose $b=m\lceil\max(G,1)/m\rceil$, so $b$ is a positive multiple of $m$ and $b\ge G$. The ordinary polynomial
+\[
+                 R(z)=z^b L(z)\sum_{h=0}^{2b/m}z^{mh}
+\]
+has $[z^{2b}]R=\sum_{m\mid t}[z^t]L$. In fact the contributing exponents of $L$ are $b-mh$, which run from $b$ to $-b$ in steps of $m$. The desired mean is consequently $[z^{2b}]R/(DC_0)$.
+
+Let $S=H'(2b+1)$ and $Z=4S+5$. We have $\|R\|_1\le S$. Compute $R(Z)$ by one call to the evaluator of $E$ at $(Z,\mathbf a)$ and use
+\[
+                    \sum_{h=0}^{2b/m} Z^{mh}
+                       =\frac{Z^{2b+m}-1}{Z^m-1}.
+\]
+Write $R(z)=\sum_t r_tz^t$. In $R(Z)/Z^{2b}$ the terms of degree less than $2b$ have total absolute value at most $S/Z<1/4$. Its nearest integer therefore equals $\sum_{t\ge2b}r_tZ^{t-2b}$. The centered remainder of this integer modulo $Z$ is exactly $r_{2b}$, since $|r_{2b}|\le S<Z/2$. Both conclusions hold for signed coefficients. Dividing by $DC_0$ completes the computation.
+\end{proof}
+
+\paragraph{Fixed arity and bit lengths.}
+The expression tree has a size depending only on $\varphi$. A power or threshold in this tree is a single operation with a variable exponent or degree. At scalar rational arguments the binomial-tail operation uses the signed radix evaluation given above. For an inverted coordinate the evaluator exchanges its positive numerator and denominator. Lemma~\ref{lem:mean-extract} supplies a scalar evaluation rule for every mean in the tree, including the four means in the final readout and the nested means for quantified subformulas. All tree recursions can thus be unrolled before the input is supplied.
+
+The numerical values $M,\beta,J,h_0,d(h_0)$ are at most $(1+U)^{O(1)}$. The monomial exponent $M/J$ and the exponent bound $(J-1)M/J$ of the geometric sum are at most $M$. The powers and radix evaluations defining $P$ have polynomial bit length since the displayed base for the central binomial extraction has $O(\beta)$ bits and its exponent is $2\beta$. The triple recurrences now give
+\[
+              G_E+\ell(D_E)+\ell(H_E)\le(1+U)^{O_\varphi(1)}
+\]
+at every node. In particular this bounds the \emph{value} of the exponent bound $G_E$.
+
+For input coordinates of total numerator and denominator bit length $s$, the proof of Lemma~\ref{lem:mean-extract} gives $\log_2 C_0\le Gs$ and $\log_2 H'\le\log_2 H+2Gs$. The new evaluation coordinate $Z$ therefore has $(1+U+s)^{O_\varphi(1)}$ bits. The numbers $b$ and $2b+m$ are polynomial in $1+U$, since every period used in the construction is $m=M$. The powers used in the extraction have polynomial bit length in $1+U+s$. The same holds for the scalar binomial evaluation, since raising an integer of $t$ bits to a positive power $d$ requires at most $1+dt$ output bits, and the signed radix calculation uses a fixed number of such powers. For rational addition or multiplication the new numerator and denominator lengths are bounded by the sum of the operand lengths plus a constant. A $d$th power multiplies these lengths by at most $d$, up to an additive constant. Thus the same polynomial bound holds when intermediate fractions are left unreduced. Applying these estimates along the fixed tree, starting with no free coordinates at the final mean, preserves a bound $(1+U)^{O_\varphi(1)}$.
+
+Each scalar operation has the exact existential integer graph described in Section~\ref{sec:arithmetic}, with integer powers supplied by Appendix~\ref{sec:exact-power}. On the chosen values, each such graph has auxiliary bit length polynomial in the bit lengths of its arguments and result. There are a fixed number of calls. Conversely, any satisfying assignment evaluates the same rational scalars, by induction on the tree and uniqueness of each represented rational value. The final rounding therefore gives the prescribed packed integer for witnesses of every size. This proves Theorem~\ref{thm:unarycompiler}.
+
+\section{The integer polynomial and its witness bound}\label{sec:arithmetic}
+Write $\mathcal G_K(U,n,y)$ for the instance of Theorem~\ref{thm:unarycompiler} obtained from $\varphi_K(j;n)$ in Lemma~\ref{lem:width-formulas}, for $K=D,J$. It asserts that $y$ is the word specified by that formula. These are two fixed graph calls. Give all their auxiliary variables distinct names.
+
+\subsection{A factored specification}
+For free integer inputs $a,b$, let $\mathcal S(a,b)$ be the existential system
+\begin{align}
+ &n\ge1,\quad U=(n+2)^{20},\quad m=2^{n+2},\quad 0\le a,b<2^n,
+       \label{eq:assembly-width}\\
+ &\mathcal G_D(U,n,D),\qquad \mathcal G_J(U,n,J_n),\qquad D>0,
+       \label{eq:assembly-words}\\
+ &0\le S,T,N_S,N_T<D,\qquad
+       D\mid S(S-1),\quad D\mid T(T-1),\quad D\mid S(1-T),
+       \label{eq:assembly-order}\\
+ &D\mid SJ_n-N_S,\qquad D\mid TJ_n-N_T,
+       \label{eq:assembly-residue}\\
+ &(a-1)D<mN_S\le aD,\qquad (b-1)D<mN_T\le bD .
+       \label{eq:assembly-ceil}
+\end{align}
+A chained comparison denotes its component comparisons, and a bound on several symbols applies to each individually. Every symbol other than $a,b$ in this display is existential.
+
+Here are the substitutions defining $\mathcal P$ from $\mathcal S$. They also specify how to interpret scalar evaluations inside the two graph calls.
+\begin{enumerate}
+\item Use graph equations $z=x+y$ and $z=xy$ for integer gates. Represent a rational scalar by a numerator and a positive denominator. Clear denominators in equalities and comparisons, imposing nonzero divisors for quotients. Where a reduced pair is required for a height, add a B\'ezout equation. For a nonnegative integer $t$, impose $t\ge0$ by $t=u_1^2+u_2^2+u_3^2+u_4^2$. Lagrange's four-square theorem makes this exact over $\ZZ$. Write $x>y$ as $x-y-1\ge0$ and $d\mid t$ as $t=dq$ for $d>0$.
+\item To obtain $k=\lfloor p/q\rfloor$ for $q>0$, use $kq\le p<(k+1)q$. For $k=\lceil p/q\rceil$ use $(k-1)q<p\le kq$. For a nearest integer $k$ use $-q\le 2(p-kq)<q$. A centered remainder $r$ modulo $d>0$ is defined by $t-r=dv$ and $-d\le2r<d$. These rules also apply to negative numerators. Absolute values, maxima, and tests for zero use a finite disjunction of ordered cases.
+\item Every variable integer exponent is nonnegative. Use Theorem~\ref{thm:power-graph} for $y=g^e$. Its signed-base version uses parity, and a rational power takes the corresponding integer powers of numerator and denominator. Inverses of positive evaluation coordinates implement negative Laurent exponents. For $x>0$, certify $l=\ell(x)$ by $l\ge1$ and $2^{l-1}\le x<2^l$. The power graph in Appendix~\ref{sec:exact-power} itself uses only fixed-degree arithmetic, rational-coordinate tests and a fixed constant $2^{1024}$, so these substitutions terminate.
+\item Replace every resulting equation by its polynomial difference. Compile a conjunction of differences $f_i$ as $\sum_i f_i^2$ and a disjunction as $\prod_i f_i$. Rename witnesses apart in different branches. Witnesses in inactive branches can be set to zero. Both rules give the stated logical operation on integer zeros.
+\end{enumerate}
+
+Only the syntax of two fixed finite-arithmetic formulas and the fixed graph definitions determine the resulting repetitions and the variable count. The prime list is used in Lemma~\ref{lem:width-formulas} to define bit predicates. The grid points and the real number $\pi$ enter only the proof of the approximation bounds. The graph computes its rational parameter $P$ from $U$ by a binomial-coefficient extraction. Every prime-list bit and every subsequent digit is fixed by an exact graph. Once the formula $\Phi$ in Lemma~\ref{lem:width-formulas} is fixed, these finite substitutions determine a single integer polynomial for all input widths.
+
+\subsection{Proof of the main theorem}
+\begin{proof}[Proof of Theorem~\ref{thm:main}]
+\emph{Soundness.} Take any integer zero of $\mathcal P$. Its value of $n$ satisfies \eqref{eq:assembly-width}. For that width the two exact graphs in \eqref{eq:assembly-words} force the integers in \eqref{eq:width-words}. Equations \eqref{eq:assembly-residue} and the range restrictions select the least residues. By Lemma~\ref{lem:read} and \eqref{eq:assembly-ceil}, the residues of $S,T$ at the $i$th prime power are precisely the $i$th binary digits of $a,b$. The divisibility $D\mid S(1-T)$ excludes the pair $(1,0)$ in every position. Thus $a\preceq b$. This argument holds for every admitted width, including a width with arbitrarily many leading zeroes, and for witnesses of every size.
+
+\emph{Completeness.} Given $a\preceq b$, take $n_0=\max(1,\ell(a),\ell(b))$. Choose $S,T$ by the Chinese remainder theorem with component residues equal to the native digits. Their representatives in $[0,D)$ satisfy \eqref{eq:assembly-order}. Set $N_S,N_T$ to the two least residues. Lemma~\ref{lem:read} gives both ceiling inequalities, and the packing theorem supplies witnesses for the exact $D,J_{n_0}$.
+
+\emph{Bit length.} We have $n_0\le n$. The modulus has $O((n_0+2)^3)$ bits by Section~\ref{sec:residues}. Every quotient and slack in \eqref{eq:assembly-order}--\eqref{eq:assembly-ceil} can be chosen with $O(1+n_0+\ell(D))$ bits, since these expressions have fixed degree and $J_{n_0},S,T,N_S,N_T<D$. Section~\ref{sec:mean-evaluation} bounds the two graph evaluations, including their powering witnesses, by $(1+U)^{O(1)}$ total bits for $U=(n_0+2)^{20}$. The two native-width powers in \eqref{eq:assembly-width} have $O(n_0+1)$ output bits and polynomial auxiliary cost by Theorem~\ref{thm:power-graph}. A four-square witness for a nonnegative slack $t$ has each coordinate bounded by $\sqrt t$. All other fixed-degree substitutions increase bit lengths by at most a constant factor plus a constant. Summing over the fixed number of registers and increasing $C$ to absorb fixed coefficients gives $(n+2)^C$ in Theorem~\ref{thm:main}(i).
+\end{proof}
+\paragraph{The complexity corollary in Lean.}
+The companion proves $\NP\subseteq\DD$ directly from Theorem~\ref{thm:main}. For each fixed verifier, finitely many bit-inclusion tests check its accepting computation. The polynomial enforces the original certificate cutoff, and the size estimate counts every auxiliary witness. Conversely a polynomial-time machine evaluates each fixed integer polynomial on binary inputs and witnesses. The companion also proves that the per-coordinate inclusive bounds of \cite{pollett} and the total-bit convention of Section~\ref{sec:intro} give the same numerical class. The change of representation enforces the old cutoff inside the new equation, since increasing the cutoff alone could admit a long root on a false input. Corollary~\ref{cor:classes} concerns the existence of short yes-certificates.
+
+\appendix
+
+\section{An exact integer power graph}\label{sec:exact-power}
+
+The coefficient extractions in the proof use variable exponents. The
+bounded Pell construction of Lipmaa already gives short witnesses for true powers \cite[Thm.~3]{lipmaa03}. Its soundness statement places a length condition on potential witnesses for false inputs. Here a constraint from rational points on an elliptic curve forces the index of the final Pell pair to equal the proposed exponent, for assignments of every length. All logarithms in this appendix have base two unless indicated otherwise.
+
+\Needspace{7\baselineskip}
+\begin{theorem}\label{thm:power-graph}
+There is a fixed integer polynomial $F(g,e,y,\mathbf w)$ such that, for every integer triple $(g,e,y)$, an integer zero in $\mathbf w$ exists exactly when $g,e,y\ge0$ and $y=g^e$, with $0^0=1$. For each triple in this relation there is a witnessing tuple of total bit length $O((1+\log(2+g+e+y))^4)$. The bound includes the size of the proposed output $y$.
+\end{theorem}
+
+The proof uses an integer $H_*$ with two properties. Its logarithm
+must be large enough to accommodate the intended Pell solution and
+small enough to exclude every larger candidate index. We construct
+the inequalities defining $H_*$ before introducing the Pell equations.
+
+\subsection{A size bound from consecutive rational points}
+
+Use $E\colon y^2+y=x^3-x$ and $P=(0,0)$. Its rational points form
+the infinite cyclic group generated by $P$ \cite{cremona,curve}. For an affine
+point $Q$ with $x(Q)=u/v$ in lowest terms and $v>0$, put
+$H(Q)=\max(|u|,v)$. Put $H(O)=1$ and $h(Q)=\log H(Q)$.
+
+\begin{lemma}\label{lem:power-height}
+For each integer $V\ge2^{1024}$ there exists $Q\in E(\mathbb Q)$ such that
+\begin{equation}\label{eq:power-adjacent}
+          V H(Q)\le H(Q+P)\le V^2 H(Q).
+\end{equation}
+Every such $Q$ satisfies
+$\tfrac12(\log V)^2\le h(Q)\le45(\log V)^2$.
+\end{lemma}
+\begin{proof}
+The duplication formula gives $x(2Q)=F/G$, where
+\[
+ F=u^4+2u^2v^2-2uv^3+v^4,\qquad
+ G=4u^3v-4uv^3+v^4.
+\]
+A finite rational $Q$ has $G\ne0$, since $E(\mathbb Q)$ has no
+nonzero point of order two. Completing the square gives
+$F=u^4+2(uv-v^2/2)^2+v^4/2$, and
+$\max(|F|,|G|)\le9H(Q)^4$. For the common divisor, write
+$f(X)=X^4+2X^2-2X+1$ and $d(X)=4X^3-4X+1$. Direct multiplication gives
+\[
+ (64-48X^2)f(X)+(12X^3+20X-27)d(X)=37.
+\]
+Substitute $X=u/v$ and multiply by $v^7$. Since $\gcd(F,v)=1$,
+the resulting identity shows $\gcd(F,G)\mid37$. Thus
+$H(Q)^4/74\le H(2Q)\le9H(Q)^4$, and in particular
+$|h(2Q)-4h(Q)|\le12$. The latter bound also holds at $O$.
+
+The limit $b(Q)=\lim_{k\to\infty}4^{-k}h(2^kQ)$ exists and differs
+from $h(Q)$ by at most $\sum_{k\ge1}12/4^k=4$. In Silverman's natural-log normalization, the even function $x$ has degree two, so $b(Q)=2\widehat h(Q)/\ln 2$. Quadraticity therefore gives $b(jP)=j^2 b(P)$ \cite[Chap.~VIII, Section~9, Thm.~9.3(b)]{silverman}.
+Write $\alpha=b(P)$. Four applications of the duplication formula
+give the reduced $x$-coordinates
+\[
+ x(2P)=1,\quad x(4P)=2,\quad x(8P)=21/25,\quad
+ x(16P)=480106/4225.
+\]
+Since $18<h(16P)<19$ and $|h(16P)-256\alpha|\le4$, we have
+$1/20<\alpha<1/10$.
+
+Put $L=\log V$. Every $Q$ has the form $jP$ for an integer $j$, and
+\[
+ |h((j+1)P)-h(jP)-\alpha(2j+1)|\le8.
+\]
+Taking $j$ nearest to $(3L/(2\alpha)-1)/2$ places the height difference
+within $8+\alpha<L/2$ of $3L/2$. This proves existence. Conversely,
+\eqref{eq:power-adjacent} implies
+$(L-9)/(2\alpha)\le j\le(L+4)/\alpha$. In particular $j>0$. Therefore
+\[
+ \frac{(L-9)^2}{4\alpha}-4\le h(Q)
+             \le \frac{(L+4)^2}{\alpha}+4 .
+\]
+The bounds on $\alpha$ and $L\ge1024$ imply both stated estimates.
+\end{proof}
+
+Apply the lemma first to $V$ and then to $H(Q)$ from the first
+application. The latter is at least $2^{1024}$. Let $H_*$ denote the
+height $H$ of the point from the second application. These two
+constraints admit a witness for every allowable $V$, and every
+witness satisfies
+\begin{equation}\label{eq:power-window}
+  2L^3 < L^4/8\le \log H_*\le 45^3L^4 < 2^L=V.
+\end{equation}
+For the rightmost inequality, $2^L/L^4$ is increasing for $L\ge1024$
+and $45^3\cdot1024^4<2^{57}$.
+
+We specify how to impose \eqref{eq:power-adjacent} with integer
+variables. Each affine coordinate is a reduced fraction with positive
+denominator. A B\'ezout equation enforces coprimality. A separate flag
+represents $O$. Heights use absolute value and maximum, both finite
+cases. For $Q=(x,y)$ with $x\ne0$, introduce $\lambda=y/x$. Then
+$Q+P=(x',y')$ with $x'=\lambda^2-x$ and $y'=-1-\lambda x'$.
+The three other cases are $O+P=P$, $P+P=(1,0)$, and $(0,-1)+P=O$.
+These exhaust the possibilities since $x=0$ forces $y=0$ or $-1$.
+The equation of $E$, these addition equations, and
+\eqref{eq:power-adjacent} use a fixed number of operations on the
+integer coordinates. Their sizes are controlled by $h$. In particular
+\[
+      (2y+1)^2=(4u^3-4uv^2+v^3)/v^3 .
+\]
+The reduced numerator and denominator of the right hand side have
+magnitude at most $9H(Q)^3$. The reduced coordinates of $y$ consequently
+have $O(1+h(Q))$ bits. The same argument applies to $Q+P$. In both
+applications of the lemma, all coordinate numerators, denominators,
+B\'ezout coefficients, and comparison slacks may thus be chosen with
+$O(L^4)$ bits. The real logarithms occur only in this size estimate.
+
+\subsection{Selecting the exponent with two Pell equations}
+
+For an integer $C\ge4$ call a pair of integers $(s,t)$ admissible at
+$C$ if $0\le s<t$ and $s^2-Cst+t^2=1$. Write
+$U_0=0$, $U_1=1$, $U_{j+2}=CU_{j+1}-U_j$, with the dependence
+on $C$ understood. Every admissible pair equals $(U_j,U_{j+1})$
+for some $j\ge0$. Indeed, if $s>0$, the preceding pair is
+$(Cs-t,s)$ with $Cs-t=(s^2-1)/t$ an integer in $[0,s)$.
+The same quadratic expression has value one on the preceding pair.
+Descent ends at $(0,1)$. Conversely, the recurrence preserves the
+equation and strict increase. Two bounds we will use are
+\begin{equation}\label{eq:power-recurrence}
+ U_j\equiv j\pmod{C-2},\qquad
+ (C-1)^j\le U_{j+1}\le C^j .
+\end{equation}
+The congruence follows by reducing the recurrence modulo $C-2$. The
+inequalities follow from
+$(C-1)U_{j+1}\le U_{j+2}\le C U_{j+1}$.
+
+\begin{proof}[Proof of Theorem~\ref{thm:power-graph}]
+Impose $g,e,y\ge0$ in all branches. First take $g\ge2$. Set
+$T=g+e+y+2^{1024}$, $c=T+5$, and use $V=T$ in the two height
+constraints producing $H_*$. The following are all the remaining
+conditions on the graph.
+\begin{enumerate}
+\item Choose $(s_0,t_0)$ admissible at $c$ with
+      $s_0\equiv e\pmod{c-2}$. Define
+      $A=t_0+g^2+y+T+10$ and $m=Ag-g^2-1$.
+\item Choose $(s,t)$ admissible at $A$ and require
+\[
+   s\equiv e\pmod{A-2},\qquad
+   y\equiv t+(g-A)s\pmod m,\qquad t\le H_* .
+\]
+\end{enumerate}
+
+For soundness, \eqref{eq:power-recurrence} implies that the first
+index is congruent to $e$ modulo $c-2$ and hence is at least $e$.
+It follows that $t_0\ge(c-1)^e\ge g^e$. Further,
+$m\ge2A-g^2-1>A>\max(t_0,y)$.
+If the second index is $j$, then $j\equiv e\pmod{A-2}$ with
+$0\le e<A-2$. If $j\ne e$ we have $j\ge A-2>T$, so that
+$\log t\ge j\log(A-1)>T$. This contradicts \eqref{eq:power-window}.
+Hence $j=e$. At coefficient $A$ the sequence
+$R_j=U_{j+1}+(g-A)U_j$ starts with $1,g$ and follows the same
+second-order recurrence as $U_j$. Since $g^2\equiv Ag-1\pmod m$,
+induction gives $R_j\equiv g^j\pmod m$. Thus $y\equiv g^e\pmod m$.
+Both sides belong to $[0,m)$, and equality follows.
+
+For completeness take $y=g^e$ and use index $e$ in each pair.
+With $L=\log T$ we have $e\le L$ and
+$\log t_0\le e\log(T+5)\le L(L+1)$. Each of the five positive
+summands defining $A$ is at most $2^{L(L+1)}$. Therefore
+$\log A\le L^2+L+3$ and $\log t\le e\log A<2L^3$.
+Every admissible $H_*$ thus accepts the intended pair. The congruences
+hold by \eqref{eq:power-recurrence} and the identity for $R_j$.
+All Pell variables, congruence quotients, and fixed-degree
+intermediate results can be chosen with $O(L^4)$ bits, including the
+height variables and the slack $H_*-t$.
+
+For $g=1$ impose $y=1$. For $g=0$ use the cases $(e=0,y=1)$ and
+$(e>0,y=0)$. Nonnegativity, divisibility, and all the finite
+alternatives above compile by the rules of Section~\ref{sec:arithmetic}.
+The number of variables is fixed and four-square witnesses for a
+nonnegative slack have bit length bounded by that of the slack plus one.
+This gives the claimed total bound. For use with signed integer bases
+the same graph applies to the magnitude, with one parity test on $e$
+to determine the sign of the output.
+\end{proof}
+
+\begingroup
+\small
+\begin{thebibliography}{10}
+\setlength{\itemsep}{2pt}
+\bibitem{am} L. Adleman and K. Manders, Diophantine complexity, \emph{17th Annual Symposium on Foundations of Computer Science}, IEEE, 1976, 81--88. \href{https://doi.org/10.1109/SFCS.1976.13}{Publisher's version}.
+\bibitem{cremona} J. E. Cremona, \emph{Algorithms for Modular Elliptic Curves}, 2nd ed., Cambridge University Press, 1997, Tables 1 and 2, entry 37A1. \href{https://wstein.org/edu/Fall2003/252/references/cremona-algs/Cremona-Algorithms_for_modular_elliptic_curves.pdf}{Electronic edition}.
+\bibitem{hab} W. Hesse, E. Allender and D. A. Mix Barrington, Uniform constant-depth threshold circuits for division and iterated multiplication, \emph{Journal of Computer and System Sciences} \textbf{65} (2002), 695--716. \href{https://people.cs.rutgers.edu/~allender/papers/division.pdf}{Author's version}.
+\bibitem{jm} J. P. Jones and Yu. V. Matiyasevich, Register machine proof of the theorem on exponential Diophantine representation of enumerable sets, \emph{Journal of Symbolic Logic} \textbf{49} (1984), 818--829. \href{https://www.cambridge.org/core/journals/journal-of-symbolic-logic/article/abs/register-machine-proof-of-the-theorem-on-exponential-diophantine-representation-of-enumerable-sets/A2A8808B208B10A9D71BF54B6E7DA10E}{Publisher's version}.
+\bibitem{libkin} L. Libkin, \emph{Elements of Finite Model Theory}, Springer, 2004, Cor.~6.15. \href{https://www.cs.toronto.edu/~libkin/fmt/fmt.pdf}{Author's version}.
+\bibitem{lipmaa03} H. Lipmaa, On Diophantine complexity and statistical zero-knowledge arguments, \emph{Advances in Cryptology---ASIACRYPT 2003}, Lecture Notes in Computer Science \textbf{2894}, Springer, 2003, 398--415. \href{https://doi.org/10.1007/978-3-540-40061-5_26}{Publisher's version}.
+\bibitem{lipmaa} H. Lipmaa, Statistical zero-knowledge arguments: theory and practice, \emph{European Congress on Computational Methods in Applied Sciences and Engineering}, 2004, Section~4.3. \href{https://kodu.ut.ee/~lipmaa/papers/lip04/eccomas.pdf}{Author's version}.
+\bibitem{curve} LMFDB Collaboration, Elliptic curve over $\mathbb Q$ with label 37.a1 (Cremona label 37a1), Mordell--Weil group and generators. \href{https://www.lmfdb.org/EllipticCurve/Q/37/a/1}{Database record}.
+\bibitem{pollett} C. Pollett, On the bounded version of Hilbert's tenth problem, \emph{Archive for Mathematical Logic} \textbf{42} (2003), 469--488. \href{https://www.cs.sjsu.edu/faculty/pollett/papers/hilbert10.pdf}{Author's version}.
+\bibitem{silverman} J. H. Silverman, \emph{The Arithmetic of Elliptic Curves}, 2nd ed., Graduate Texts in Mathematics 106, Springer, 2009, Chap.~VIII, Section~9. \href{https://doi.org/10.1007/978-0-387-09494-6}{Publisher's version}.
+\end{thebibliography}
+\endgroup
+\end{document}

@@ -1,4 +1,4 @@
-import DiophantineNP.HABCriterion
+import DiophantineNP.HABVerified
 import DiophantineNP.ProductCriterion
 import DiophantineNP.EvaluatorPremises
 import DiophantineNP.RegisterReduction
@@ -39,3 +39,7 @@ import DiophantineNP.RegisterReduction
 
 #print DiophantineNP.HAB.ImultInFOM
 #check DiophantineNP.classEquality_of_hab
+
+#check DiophantineNP.HAB.corollary63
+#check DiophantineNP.classEquality
+#print axioms DiophantineNP.classEquality

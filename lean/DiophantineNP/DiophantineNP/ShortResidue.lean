@@ -281,7 +281,7 @@ private def rectangle (cell : Predicate) : Predicate :=
     (Predicate.ex 8 <| Predicate.ex 9 <| Predicate.ex 10 <|
       mul 6 1 8 ⋀ add 8 7 9 ⋀ eqN 10 1 ⋀ add 9 10 5)
 
-private def cellEnv (env : ℕ→ℕ) (z r u : ℕ) := Function.update (Function.update (Function.update env 5 z) 6 r) 7 u
+def cellEnv (env : ℕ→ℕ) (z r u : ℕ) := Function.update (Function.update (Function.update env 5 z) 6 r) 7 u
 
 private theorem rectangle_spec (cell : Predicate) (U : ℕ) (t : ℕ→ℕ→Bool) (env : ℕ→ℕ) (f : ℕ→ℕ)
     (hn : env 0 < U) (hp : env 1 < U) (hU : 1<U) (hb : ∀ r<env 0, f r≤env 1)
@@ -298,9 +298,9 @@ private theorem rectangle_spec (cell : Predicate) (U : ℕ) (t : ℕ→ℕ→Boo
     refine ⟨r,hr.trans hn,u,hu.trans_le ht |>.trans hp,?_,?_,(hcell z hz r hr u (hu.trans_le ht)).mpr hu,
       r*(env 1),by omega,r*(env 1)+u,by omega,1,hU,?_,?_,?_,?_⟩ <;> simp [Function.update] <;> omega
 
-private noncomputable def summed (cell : Predicate) : Predicate := exactLower 5 4 (rectangle cell)
+noncomputable def summed (cell : Predicate) : Predicate := exactLower 5 4 (rectangle cell)
 
-private theorem summed_spec (cell : Predicate) (U : ℕ) (t : ℕ→ℕ→Bool) (env : ℕ→ℕ) (f : ℕ→ℕ)
+theorem summed_spec (cell : Predicate) (U : ℕ) (t : ℕ→ℕ→Bool) (env : ℕ→ℕ) (f : ℕ→ℕ)
     (hn : env 0 < U) (hp : env 1 < U) (hU : 1<U) (hb : ∀ r<env 0, f r≤env 1)
     (hsize : env 0*env 1<U-U/2) (hs : env 4≤U/2)
     (hcell : ∀ z<U, ∀ r<env 0, ∀ u<env 1, cell.holds U t (cellEnv env z r u) ↔ u<f r) :
@@ -338,10 +338,10 @@ private def arithmetic {n : ℕ} (φ : Formula n) (v : Fin n → ℕ) : Predicat
       have e : w=env ∘ (σ ∘ v) := funext fun i => Fin.ext (hw i)
       rwa [e] at h
 
-private def shortPow (g j p v : ℕ) : Predicate :=
+def shortPow (g j p v : ℕ) : Predicate :=
   arithmetic (ShortPower.formula (0:Fin 4) 1 2 3) ![g,j,p,v]
 
-private theorem shortPow_iff (g j p v : ℕ) (U K : ℕ) (t : ℕ→ℕ→Bool) (e : ℕ→ℕ)
+theorem shortPow_iff (g j p v : ℕ) (U K : ℕ) (t : ℕ→ℕ→Bool) (e : ℕ→ℕ)
     (hp : (e p).Prime) (hg : e g<e p) (hj : e j<e p) (hv : e v<U) (hpU : e p<U)
     (hK : 2≤K) (hpk : e p ≤ 2^K) (hcap : 2^((K+1)*K)<U) :
     (shortPow g j p v).holds U t e ↔ e v=(e g)^(e j)%(e p) := by

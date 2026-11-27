@@ -28,10 +28,10 @@ private theorem qr_true {U k : ℕ} (x d q r : Fin k) (env : Fin k → Fin U) (h
     rw [← hq,← hr,Nat.mul_comm] at he
     exact ⟨⟨_,by have := (env x).isLt; omega⟩,rfl,he,hr ▸ Nat.mod_lt _ hd⟩
 
-private def remainder {k : ℕ} (x d r : Fin k) : Formula k := .ex (qr x.succ d.succ 0 r.succ)
+def remainder {k : ℕ} (x d r : Fin k) : Formula k := .ex (qr x.succ d.succ 0 r.succ)
 private def quotient {k : ℕ} (x d q : Fin k) : Formula k := .ex (qr x.succ d.succ q.succ 0)
 
-private theorem rem_true {U k : ℕ} (x d r : Fin k) (env : Fin k → Fin U) (hd : 0<(env d).val) :
+theorem rem_true {U k : ℕ} (x d r : Fin k) (env : Fin k → Fin U) (hd : 0<(env d).val) :
     (remainder x d r).eval env=true ↔ (env r).val=(env x).val%(env d).val := by
   rw [remainder,exists_true]
   have hh (v : Fin U) := qr_true x.succ d.succ 0 r.succ (Fin.cons v env) hd

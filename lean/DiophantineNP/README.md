@@ -1,6 +1,6 @@
 # Native bitwise inclusion and Diophantine complexity
 
-This Lean 4 project formalizes the draft *A fixed Diophantine verifier for native binary bitwise inclusion*. Start at `DiophantineNP/HABCriterion.lean` for the connection to the published theorem and `DiophantineNP/ProductCriterion.lean` for the project’s arithmetic and machine results. The class equality has one remaining hypothesis, the finite iterated-product formula. The rank and both machine compilers are proved. The project pins Lean 4.24.0 and mathlib commit `f897ebcf72cd16f89ab4577d0c826cd14afaafc7`. The submitted manuscript is in `manuscript/`.
+This Lean 4 project formalizes the draft *A fixed Diophantine verifier for native binary bitwise inclusion*. Start with `DiophantineNP/HABVerified.lean`. It gives closed proofs of Hesse–Allender–Barrington Corollary 6.3, the draft’s native polynomial verifier, and the equality `Classes.D = Classes.NP` for binary numerical languages. The project pins Lean 4.24.0 and mathlib commit `f897ebcf72cd16f89ab4577d0c826cd14afaafc7`. The `manuscript/` directory contains the submitted TeX and the revised manuscript in TeX and PDF.
 
 ## What Lean proves about the main claim
 
@@ -8,7 +8,7 @@ For natural numbers $a,b$, `BitIncl a b` means that every set bit of $a$ is a se
 
 1. **With the three correct width values supplied**, Lean constructs a specific integer polynomial with five input slots and 17 natural witness slots. Its inputs are $(a,b,D_n,J_n,2^{n+2})$. A zero of any size implies bitwise inclusion. Every true pair of width $n$ has a witness of total length at most $17(40(n+2)^3+7)$ bits. There is also a signed version with 68 witness slots. `ModularVerifier.lean` proves these statements for the actual prime powers of the paper.
 2. **To remove the three extra inputs**, `Assembly.lean` builds a single polynomial for the width checks and the modular check, using disjoint auxiliary variables. If the width checks have short, globally sound graphs, it proves `NativeVerifier`. It counts every auxiliary coordinate. The guessed width can be larger than the actual width on a dishonest assignment.
-3. **The route from finite arithmetic to those width graphs is explicit.** Lean constructs the formulas for the odd primes, their powers, the products with one factor omitted, the bit shifts, and the final sum. Lean constructs BIT and iterated sum from the available finite arithmetic, leaving a single uniform iterated-product template. The BIT construction uses only the elementary arithmetic atoms and unary majority. The sum construction uses the product template. `WidthFormulaSubstitution.lean` verifies substitution under quantifiers. `PackingBridge.lean` and `ScaleFormula.lean` prove how the paper's packing theorem turns those formulas into exact polynomial graphs for all three width values.
+3. **The route from finite arithmetic to those width graphs is explicit.** Lean constructs the formulas for the odd primes, their powers, the products with one factor omitted, the bit shifts, and the final sum. Lean constructs BIT and iterated sum from the available finite arithmetic, using a uniform iterated-product template constructed by the finite-model proof. The BIT construction uses only the elementary arithmetic atoms and unary majority. An independent construction in `HABIndependentSum.lean` also proves iterated addition directly from majority, with no product premise. `WidthFormulaSubstitution.lean` verifies substitution under quantifiers. `PackingBridge.lean` and `ScaleFormula.lean` prove how the paper's packing theorem turns those formulas into exact polynomial graphs for all three width values.
 4. **The complexity corollary** uses a signed-to-natural polynomial substitution. The positive and negative parts together have exactly the bit cost charged to their signed input. `Classes.lean` defines numerical languages, fixed-polynomial bounded membership, and a finite-alphabet Turing-machine verifier for NP. The current proof compiles bounded register traces directly into one polynomial using a fixed number of bit masks. A complete finite-stack evaluator decides equality of every fixed signed polynomial on the framed TM2 encoding.
 
 ## The verified evaluator
@@ -50,7 +50,7 @@ lake build
 lake env lean Audit.lean
 ```
 
-Open `DiophantineNP/HABCriterion.lean` for the final statement. To read the two machine compilers independently, open `DiophantineNP/VerifiedCompilers.lean`. For the full check use the command below. It re-elaborates each module with automatic variable declaration disabled, audits transitive dependencies, tests the numerical examples and checks the standalone entry points.
+Open `DiophantineNP/HABVerified.lean` for the final statements. To read the two machine compilers independently, open `DiophantineNP/VerifiedCompilers.lean`. For the full check use the command below. It re-elaborates each module with automatic variable declaration disabled, audits transitive dependencies, tests the numerical examples and checks the standalone entry points.
 
 ```sh
 python3 verify.py --strict --extras -j 3
@@ -60,6 +60,9 @@ python3 verify.py --strict --extras -j 3
 
 | Declaration | Conclusion | Inputs |
 | --- | --- | --- |
+| `HAB.corollary63` | Fixed source formulas compute every requested bit of division and iterated multiplication. | None |
+| `nativeVerifier` | One integer polynomial verifies native bitwise inclusion with short honest witnesses and unrestricted soundness. | None |
+| `classEquality` | The bounded Diophantine and NP classes coincide for binary numerical languages. | None |
 | `Classes.d_subset_np` | Every bounded Diophantine language has a polynomial-time verifier on the framed binary tape. | None |
 | `Classes.np_subset_d_of_native` | Every language in the project’s NP class has a bounded Diophantine representation. | A globally sound native bit-inclusion verifier with short honest roots |
 | `classEquality_of_native` | The two numerical complexity classes are equal. | The same native verifier |
@@ -68,15 +71,13 @@ python3 verify.py --strict --extras -j 3
 | `classEquality_of_product` | The two numerical complexity classes are equal. | The same iterated-product formula |
 | `classEquality_of_hab` | The two numerical complexity classes are equal. | The published iterated-multiplication result stated in the source logic, `HAB.ImultInFOM` |
 
-`CoordinateClass.lean` proves that bounding total witness length, bounding each coordinate’s bit length, and imposing an inclusive numerical bound on each coordinate give the same class. A change in the numerical cutoff alone could admit a long root on a false input. The proof encodes the original cutoff inside the new polynomial equation. `classEquality_powerCutoff_of_hab` gives the final equality using the inclusive convention. Pollett states that convention on positive inputs. This project also defines the language at zero, whose input length is taken to be one. [Pollett, introduction](https://www.cs.sjsu.edu/faculty/pollett/papers/hilbert10.pdf)
+`CoordinateClass.lean` proves that bounding total witness length, bounding each coordinate’s bit length, and imposing an inclusive numerical bound on each coordinate give the same class. A change in the numerical cutoff alone could admit a long root on a false input. The proof encodes the original cutoff inside the new polynomial equation. `classEquality_powerCutoff` gives the final equality using the inclusive convention. Pollett states that convention on positive inputs. This project also defines the language at zero, whose input length is taken to be one. [Pollett, introduction](https://www.cs.sjsu.edu/faculty/pollett/papers/hilbert10.pdf)
 
 The declarations are in namespace `DiophantineNP`. The class `D` here concerns short Diophantine certificates for yes instances.
 
-## Remaining finite-model-theory proof
+## The finite-model proof
 
-In `FiniteArithmeticGap.ProductTemplate` the universe consists of $0,\ldots,U-1$. Its binary input relation gives bit $c$ of row $r$, representing $U$ natural numbers of at most $U$ bits each. One formula must answer, for every matrix and each $j<U$, whether bit $j$ of the ordinary product is one. Only the low $U$ bits are read, equivalently the product modulo $2^U$. The specification includes every small universe. The formula may use strict majority over a single quantified variable. Returning a new formula for each $U$ would lose the fixed polynomial in the manuscript. The package proves BIT directly and constructs general iterated addition from this same product template.
-
-Hesse, Allender and Barrington state that iterated multiplication belongs to first-order logic with majority (Corollary 6.3). Their §2.3 specifies strict unary majority, an input relation with two indices, and order and BIT. Their BIT takes the bit index first; Lean’s `testBit` takes the word first. The archive now checks that the translation from this source logic preserves truth. It takes an arbitrary Boolean input matrix, represents the source output index by two base-$U$ digits, and sets the high digit to zero for the project’s low-bit query. See `HABTranslation.lean` and `HAB_REVIEW.md`. The archive proves the modular-power subcase under explicit width bounds in `ShortPower.lean`. The unrestricted uniform product construction remains external. [Hesse, Allender and Barrington](https://people.cs.rutgers.edu/~allender/papers/division.pdf)
+`HAB.ImultInFOM` requires one formula for all universe sizes, all input matrices and all legal output positions. A matrix has $U$ rows of $U$ little-endian bits. A query $(h,l)$ selects bit $hU+l$ of their ordinary product. The proof constructs this formula and derives a quotient-bit formula for two full-width inputs. The grammar has order, BIT, a binary input relation, first-order quantification and strict unary majority. `HAB_REVIEW.md` traces the two stages of CRT recovery, the elimination of the modular-power assumption, and the connection to the draft. [Hesse–Allender–Barrington, §§2–6](https://people.cs.rutgers.edu/~allender/papers/division.pdf)
 
 ## Independent verification
 
