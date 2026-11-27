@@ -1,3 +1,5 @@
+import DiophantineNP.HABModularArithmetic
+import DiophantineNP.HABWideBitDecision
 import DiophantineNP.HABProductEquivalence
 import DiophantineNP.HABGeometricDivision
 
@@ -5,7 +7,8 @@ import DiophantineNP.HABGeometricDivision
 
 The first two rows encode the dividend and divisor. The source theorem
 requires one formula for division and one formula for the iterated product.
-The equivalence below isolates the missing unrestricted low-bit construction.
+The equivalence below relates the two conclusions to a low-bit product template.
+The theorem `HAB.corollary63` combines the product construction with geometric-series division.
 -/
 namespace DiophantineNP.HAB
 open FiniteArithmeticGap
@@ -26,5 +29,12 @@ the division algorithm. Conversely, the corollary supplies that interface. -/
 theorem corollary63_iff_productTemplate : Corollary63 ↔ Nonempty ProductTemplate :=
   ⟨fun h => imult_iff_productTemplate.mp h.2,
    fun h => corollary63_of_imult (imult_iff_productTemplate.mpr h)⟩
+
+/-- One formula in the source grammar computes any bit of an unrestricted product. -/
+theorem imultInFOM : ImultInFOM :=
+  HABWideOutput.imult_of_local _ (HABWideBitDecision.localSpec HABModularArithmetic.shortProducts)
+
+/-- Division and iterated multiplication in finite first-order logic with unary majority. -/
+theorem corollary63 : Corollary63 := corollary63_of_imult imultInFOM
 
 end DiophantineNP.HAB

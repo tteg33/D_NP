@@ -38,8 +38,7 @@ theorem packedScalar_close {k U : ℕ} (φ : Formula (k+1)) (t : Fin k → Fin U
   apply (Rat.cast_lt (K := ℝ)).mp
   simpa using hreal
 
-/-- The sole remaining hypothesis of the rational-evaluator route concerns
-the Diophantine graph of this particular scalar function. -/
+/-- The strict error estimate identifies the rounded scalar with the packed integer. -/
 theorem packedScalar_roundsTo {k : ℕ} (φ : Formula (k+1)) :
     Packing.RoundsTo (fun _ t => packedScalar φ t) φ :=
   fun _ _ t => (packedScalar_close φ t).trans (by norm_num)

@@ -24,6 +24,10 @@ import Lean.Util.CollectAxioms
 
 #check DiophantineNP.Curve37.generator_infinite_order
 #check DiophantineNP.Curve37.quadratic_of_naive_error
+#check DiophantineNP.Classes.BinaryCertificates.bounded_iff
+#check DiophantineNP.Classes.Clocked.instance_clock
+#check DiophantineNP.Classes.Clocked.binary_certificate_iff
+#print axioms DiophantineNP.Classes.Clocked.languages_eq_NP
 #check DiophantineNP.Classes.tape_length_bounds
 #check DiophantineNP.Blueprint.clearedNum_spec
 #check DiophantineNP.Blueprint.packedExpr_evaluated

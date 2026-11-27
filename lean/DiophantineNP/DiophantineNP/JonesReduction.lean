@@ -7,7 +7,7 @@ import DiophantineNP.WidthProductOnly
 /-! # From the Jones–Matiyasevich normal form to the bounded class equality -/
 namespace DiophantineNP
 
-/-- The native verifier needs a rank upper bound and one uniform product formula. -/
+/-- A rank upper bound and one uniform product formula suffice for the native verifier. -/
 theorem nativeVerifier_of_rank_and_product
     (rank : Module.rank ℤ Curve37.E.Point ≤ 1)
     (product : FiniteArithmeticGap.ProductTemplate) : NativeVerifier :=
@@ -31,7 +31,7 @@ theorem np_subset_d_of_rank_product_normalForm
     (Classes.Jones.lengthGraph_of_curve (Curve37.cyclic_of_rank_le_one rank)
       (Curve37.canonicalHeight_zsmul Curve37.P))
 
-/-- All inputs still required for the class equality are explicit. -/
+/-- Class equality along the route through the single-mask source normal form. -/
 theorem classEquality_of_rank_product_normalForm
     (rank : Module.rank ℤ Curve37.E.Point ≤ 1)
     (product : FiniteArithmeticGap.ProductTemplate)

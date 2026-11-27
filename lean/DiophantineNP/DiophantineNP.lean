@@ -1,5 +1,6 @@
 import DiophantineNP.Assembly
 import DiophantineNP.Atomic
+import DiophantineNP.BinaryCertificates
 import DiophantineNP.BinaryKernel
 import DiophantineNP.BinomialModulus
 import DiophantineNP.BoundedClass
@@ -7,6 +8,7 @@ import DiophantineNP.BoundedPolynomials
 import DiophantineNP.BoundedRelation
 import DiophantineNP.CertifiedRounding
 import DiophantineNP.Classes
+import DiophantineNP.ClockedVerifier
 import DiophantineNP.Compiler
 import DiophantineNP.ConcreteGrid
 import DiophantineNP.ConstraintCost

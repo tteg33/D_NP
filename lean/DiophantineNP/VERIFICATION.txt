@@ -1,28 +1,43 @@
-DiophantineNP verification record
+Verification of the revised D_NP source distribution
 
-Lean 4.24.0
-mathlib f897ebcf72cd16f89ab4577d0c826cd14afaafc7
-Project modules checked: 227
-Module source digest (computed by verify.py): ee4cad58ba3d758e39fcabbaec30351a824b4c098c4f855baba466e0272cfa45
-Project declarations audited: 10203
-Theorem declarations audited: 7090
-Axioms reported: propext, Classical.choice, Quot.sound
+Base upstream commit 295f26ebe1c017d749880317a53c60ecc7b33a0c
+Local clean build and project kernel replay passed on 2026-11-27 (UTC).
+Toolchain: Lean 4.24.0 on x86_64 Linux
+mathlib: f897ebcf72cd16f89ab4577d0c826cd14afaafc7
+SHA-256 of library module sources, as printed by verify.py:
+67c5abacda4851fdce5784ea2ff374494c0591ca1dd3930b541292afbfb38f36
 
-The following commands finished successfully on the extracted project.
-    python3 verify.py --strict --extras -j 5
-    python3 tests/test_preflight.py
+Build boundary
 
-The first command builds the project, reports all axioms used by project declarations,
-rechecks each module with automatic implicit variables disabled, and checks the
-numerical examples and the standalone proof entry points. The second checked 14
-cases for the preflight checker. Lake reported two pre-existing linter hints about
-unused simplification arguments in CubicUnitSigns.lean.
+The checkout used for this run began with zero project .olean files. All 230
+project targets (229 library sources and the umbrella) were rebuilt from source.
+All external dependency repositories matched the pinned manifest revisions. Their
+existing compiled cache was used. The independent review files are checked separately.
 
-The following closed declarations report only propext, Classical.choice and Quot.sound.
-    DiophantineNP.HAB.imultInFOM : DiophantineNP.HAB.ImultInFOM
-    DiophantineNP.HAB.corollary63 : DiophantineNP.HAB.Corollary63
-    DiophantineNP.nativeVerifier : DiophantineNP.NativeVerifier
-    DiophantineNP.classEquality : DiophantineNP.Classes.D = DiophantineNP.Classes.NP
-    DiophantineNP.classEquality_powerCutoff : DiophantineNP.Classes.Dpower = DiophantineNP.Classes.NP
+Checks completed
 
-HAB_REVIEW.md traces the proof and the correspondence with the published theorem.
+* python3 verify.py --strict --extras -j 4: clean Lake build, axiom audit,
+  strict re-elaboration of all 229 modules, reference evaluator and review entries.
+* python3 tests/test_preflight.py: 15 checks passed.
+* bash verification/replay.sh project: kernel replay using lean4checker v4.24.0,
+  commit da26eb05e9959402afcb9bd6dfe5dc4f700f70d6. The driver selected 10290
+  project declarations and checked 10213 safe, total declarations, including
+  all 7145 theorems. The upstream replay function skips 77 unsafe or partial
+  declarations. The external base contained 4909 modules and zero project
+  declarations before replay.
+* lake env lean -DautoImplicit=false review/CertificateTransducer.lean: checked the
+  clocked binary-word characterization and the combined scanner and machine bound.
+* Standalone distributions: generated each archive twice, compared its bytes,
+  built it from a fresh extraction and checked its stated theorem and axioms.
+  Rank37 built 20 project targets; HAB63 built 81.
+
+The transitive axiom audit allowed propext, Classical.choice and Quot.sound.
+Only these three axioms were reported. Reports in verification/logs/ give
+the command output. checked-inputs.sha256 names the source and build inputs;
+from the project directory, run sha256sum -c verification/logs/checked-inputs.sha256.
+
+These checks ran in the development environment. Independent review of the
+mathematical statements and an independent build are pending. The full replay
+of external dependencies is available via bash verification/replay.sh fresh.
+The recorded kernel pass here is the project-level run. The GitHub Actions
+workflow in this distribution can be run after the repository is published.

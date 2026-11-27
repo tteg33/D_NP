@@ -1,0 +1,12 @@
+pdfLaTeX pdfTeX 3.141592653-2.6-1.40.26 (TeX Live 2025/dev/Debian)
+Revised TeX SHA-256 e9a2e65a754d1b3f9b4836df76713008c236a17fb2fed28e258625d1b50f43ac
+SOURCE_DATE_EPOCH=1795737600 FORCE_SOURCE_DATE=1 TZ=UTC
+Compilation 1 pass 1 exit code 0
+Compilation 1 pass 2 exit code 0
+Compilation 1 pass 3 exit code 0
+Rebuilt PDF SHA-256 90bb9577a1f3198ff58376ed247a73b6cd24ba416941b470dbd4a6424e5d1bfe
+Compilation 2 pass 1 exit code 0
+Compilation 2 pass 2 exit code 0
+Compilation 2 pass 3 exit code 0
+Rebuilt PDF SHA-256 90bb9577a1f3198ff58376ed247a73b6cd24ba416941b470dbd4a6424e5d1bfe
+Both fresh compilations produced the distributed PDF byte-for-byte.

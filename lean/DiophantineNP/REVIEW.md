@@ -1,6 +1,10 @@
-# Review notes, 26 November 2026
+# Historical review of the 77-module archive, 26 November 2026
 
-> Historical review of the incoming archive. The evaluator, curve rank and two machine compilers have since been proved, built and audited. See `README.md`, `HAB_REVIEW.md` and `DiophantineNP/HABCriterion.lean` for the current status.
+The report below records an early, source-only review of the incoming archive, identified by its module digest prefix `a7a4c1a8b706d3d1`. Every module count, open input and build observation below refers to that snapshot.
+
+For the current code, `DiophantineNP/HABVerified.lean` states the closed class equality. The build record identifies the sources checked, and the other review notes trace the arithmetic, machine, and finite-logic arguments. [Current project and verification instructions](README.md) · [Build record](VERIFICATION.txt) · [Finite logic](HAB_REVIEW.md) · [Rank descent](RANK_REVIEW.md) · [Machine reduction](JONES_REVIEW.md)
+
+---
 
 ## Scope and method
 
@@ -69,7 +73,7 @@ Each Lean hypothesis also quantifies over every universe size, including very sm
 - Merge duplicated private helpers into one small module: `bits_mono` (`NaturalBridge`, `PowerPolynomial`), the three versions of "`x ≤ 2^k` gives `bits x ≤ k+1`" (`PowerPolynomial.bits_of_mag`, `RadixGrowth.bits_of_bound`, `ModularVerifier.bits_le`), `table_eval` and `table_mass` (`TailRadix`, `ScalarProjection`), and `single_cost` / `bit_le_cost` (`ScalarCertified`, `ScalarSystems`).
 - 124 lines are longer than 100 characters, and roughly two in five public declarations have a docstring.
 
-## How to check this archive
+## Commands recorded for the 77-module archive
 
 ```sh
 python verify.py --static-only      # no Lean needed

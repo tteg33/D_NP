@@ -7,7 +7,7 @@ import DiophantineNP.RegisterTableReduction
 import DiophantineNP.TraceChecker
 import DiophantineNP.JonesReduction
 
-/-! # Both machine compilers and the two remaining arithmetic inputs -/
+/-! # The two machine inclusions and their composition -/
 namespace DiophantineNP
 open Classes
 

@@ -5,7 +5,9 @@ import Mathlib.Computability.TMComputable
 
 Both classes are defined on subsets of the natural numbers with binary input.
 Verification uses mathlib's finite-alphabet, polynomial-time Turing machines.
-The two complexity-theoretic library obligations are explicit hypotheses.
+This file gives a conditional reduction via the Jones–Matiyasevich criterion.
+`VerifiedCompilers.lean` proves polynomial evaluation and combines it with
+the project's register-trace proof of the reverse inclusion.
 -/
 namespace DiophantineNP.Classes
 
@@ -49,7 +51,7 @@ def NP : Set Language := {L | ∃ (r : ℕ) (q : Polynomial ℕ) (V : ℕ → (F
     PolytimePredicate V ∧ ∀ x, x ∈ L ↔
       ∃ w : Fin r → ℕ, natCost w ≤ q.eval (bits x) ∧ V x w = true}
 
-/-- The machine implementation obligation for evaluation of a fixed polynomial. -/
+/-- Polynomial-time evaluation of a fixed polynomial on the framed tapes. -/
 def PolynomialEvaluationInP : Prop :=
   ∀ (r : ℕ) (P : MvPolynomial (Option (Fin r)) ℤ),
     PolytimePredicate (fun x w => decide (polyValue P x w = 0))
@@ -60,11 +62,11 @@ theorem D_subset_NP (heval : PolynomialEvaluationInP) : D ⊆ NP := by
   intro x
   simpa using h x
 
-/-- Needed direction of the published Jones–Matiyasevich criterion, including
+/-- Sufficient direction of the published Jones–Matiyasevich criterion, including
 the identification of their numerical model with the definitions in this file. -/
 def JonesMatiyasevichDirection : Prop := InBoundedD BitIncl → NP ⊆ D
 
-/-- The corollary and its complete list of external premises. -/
+/-- The class equality via the bit-inclusion criterion and polynomial evaluation. -/
 theorem classes_eq_of_nativeVerifier (native : NativeVerifier)
     (jm : JonesMatiyasevichDirection) (machine : PolynomialEvaluationInP) : D = NP :=
   Set.Subset.antisymm (D_subset_NP machine) (jm (nativeVerifier_implies_boundedD native))

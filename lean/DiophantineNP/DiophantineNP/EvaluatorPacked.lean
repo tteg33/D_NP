@@ -91,7 +91,7 @@ theorem packedScalarPrograms (hc : PowerTests.Cyclic) (hq : PowerTests.Quadratic
     rw [(hequiv U t hU).scalarAtOne_eq] at h
     exact h
 
-/-- The class equality under the explicit external hypotheses. -/
+/-- The class equality via this evaluator, given the curve, formula and machine inputs. -/
 theorem classEquality (hc : PowerTests.Cyclic) (hq : PowerTests.Quadratic)
     (templates : WidthFormula.LiteratureFormulas) (jm : Classes.JonesMatiyasevichDirection)
     (machine : Classes.PolynomialEvaluationInP) : Classes.D = Classes.NP :=

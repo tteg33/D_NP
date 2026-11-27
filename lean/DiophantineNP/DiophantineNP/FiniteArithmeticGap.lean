@@ -270,8 +270,8 @@ theorem bitAt_eval {k U : ℕ} (x j : Fin k) (env : Fin k → Fin U) :
       (isOdd_spec _ _).mpr ?_⟩
     simpa [Nat.testBit_eq_decide_div_mod_eq,p,q] using hb
 
-/-- The binary-matrix arithmetic facts are the remaining finite-logic input.
-The product and sum results need only their low U bits, even on overflow. -/
+/-- Low-bit interfaces for products and sums of binary rows. The output
+queries cover the low U bits, including when the full value overflows. -/
 structure IteratedArithmetic where
   product : Template 1
   sum : Template 1

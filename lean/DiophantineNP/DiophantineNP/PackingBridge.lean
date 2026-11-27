@@ -4,9 +4,9 @@ import DiophantineNP.WidthFrame
 
 /-! # From the packing theorem to the two CRT width graphs
 
-The two named propositions are the unproved uniform construction obligations of
-§2.1 and §3. The specialization below is a polynomial substitution, including
-the numerical universe size. No width-dependent polynomial is supplied as advice.
+The two propositions specify the uniform width descriptions of §2.1 and the
+packing theorem of §3. The specialization substitutes the numerical universe
+size into one fixed polynomial.
 -/
 namespace DiophantineNP.Packing
 

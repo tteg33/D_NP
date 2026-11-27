@@ -4,8 +4,8 @@ import DiophantineNP.IntegerPower
 /-! # One fixed polynomial for the integer power graph
 
 The equation includes the two elliptic windows, the two Pell tests and the
-zero/one-base branches. The two external arithmetic hypotheses explicitly
-name the rational generator and canonical-height quadraticity for curve 37a1.
+zero/one-base branches. The inputs record generation by the rational point
+and quadraticity of the canonical height on curve 37a1.
 -/
 
 namespace DiophantineNP.PowerPolynomial

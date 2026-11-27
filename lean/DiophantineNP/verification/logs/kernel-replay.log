@@ -1,0 +1,13 @@
+$ bash verification/replay.sh project /workspace/scratch/2aa0d9f173d4/replay_check/checker
+Project toolchain: leanprover/lean4:v4.24.0
+Kernel checker: da26eb05e9959402afcb9bd6dfe5dc4f700f70d6
+Replay mode: project
+Lean (version 4.24.0, x86_64-unknown-linux-gnu, commit 797c613eb9b6d4ec95db23e3e00af9ac6657f24b, Release)
+Build completed successfully (3424 jobs).
+Build completed successfully (8 jobs).
+Read 230 project modules, holding 10291 distinct declarations and 7146 theorems before accounting for identical dependency declarations.
+Identical imported theorem also serialized by project: AdjoinRoot.instField.congr_simp
+Selected 10290 project declarations and 7145 theorems.
+External base loaded from 87 direct imports; its closure contains 4909 modules and zero project declarations.
+Kernel replay passed for 10213 safe, total project declarations, including all 7145 theorems. Upstream excludes 77 unsafe or partial declarations.
+Process exit code 0

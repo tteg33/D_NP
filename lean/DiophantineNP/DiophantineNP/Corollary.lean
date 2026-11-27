@@ -44,7 +44,7 @@ theorem nativeVerifier_of_packedScalarSystems (systems : PackedScalarSystems)
   Assembly.nativeVerifier_of_packing (packing_of_packedScalarSystems systems)
     (WidthFormula.widthDescriptions_of_literature templates)
 
-/-- All four remaining premises are visible as ordinary theorem arguments. -/
+/-- Reduction via packed scalar systems and the Jones–Matiyasevich criterion. -/
 theorem classEquality_of_packedScalarSystems (systems : PackedScalarSystems)
     (templates : WidthFormula.LiteratureFormulas) (jm : Classes.JonesMatiyasevichDirection)
     (machine : Classes.PolynomialEvaluationInP) : Classes.D = Classes.NP :=

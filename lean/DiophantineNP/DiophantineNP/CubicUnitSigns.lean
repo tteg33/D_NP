@@ -29,7 +29,7 @@ private theorem sign_mul (z w : (𝓞 L)ˣ) (i : Fin 3) :
   rw [map_mul]
   simp only [unitSigns,signs]
   rcases lt_or_gt_of_ne hz with h | h <;> rcases lt_or_gt_of_ne hw with k | k
-  all_goals simp [h,k,h.not_gt,k.not_gt,mul_neg_iff,lt_asymm h,lt_asymm k]
+  all_goals simp [h,k,h.not_gt,k.not_gt,mul_neg_iff]
 
 private theorem signs_one : unitSigns 1 = fun _ => false := by funext i; simp [unitSigns,signs]
 private theorem signs_neg : unitSigns (-1) = fun _ => true := by funext i; simp [unitSigns,signs]

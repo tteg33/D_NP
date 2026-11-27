@@ -1,6 +1,15 @@
 # Native bitwise inclusion and Diophantine complexity
 
-This Lean 4 project formalizes the draft *A fixed Diophantine verifier for native binary bitwise inclusion*. Start with `DiophantineNP/HABVerified.lean`. It gives closed proofs of Hesse–Allender–Barrington Corollary 6.3, the draft’s native polynomial verifier, and the equality `Classes.D = Classes.NP` for binary numerical languages. The project pins Lean 4.24.0 and mathlib commit `f897ebcf72cd16f89ab4577d0c826cd14afaafc7`. The `manuscript/` directory contains the submitted TeX and the revised manuscript in TeX and PDF.
+This Lean 4 project formalizes the draft *A fixed Diophantine verifier for native binary bitwise inclusion*. Start with `DiophantineNP/HABVerified.lean` for the closed native polynomial and class-equality theorems. Its iterated-multiplication input is proved in `DiophantineNP/HABCorollary63.lean`, which also proves both parts of Hesse–Allender–Barrington Corollary 6.3. The project pins Lean 4.24.0 and mathlib commit `f897ebcf72cd16f89ab4577d0c826cd14afaafc7`. The `manuscript/` directory contains the submitted TeX and the revised manuscript in TeX and PDF.
+
+To rebuild the revised PDF with pdfLaTeX, run the following inside `manuscript/`. The environment values reproduce the release metadata with the pdfTeX version recorded in the [PDF build log](verification/logs/pdf-build.log).
+
+```sh
+export TZ=UTC SOURCE_DATE_EPOCH=1795737600 FORCE_SOURCE_DATE=1
+for pass in 1 2 3; do
+  pdflatex -halt-on-error -interaction=nonstopmode Native_Bitwise_Inclusion_Revised.tex || exit 1
+done
+```
 
 ## What Lean proves about the main claim
 
@@ -11,11 +20,15 @@ For natural numbers $a,b$, `BitIncl a b` means that every set bit of $a$ is a se
 3. **The route from finite arithmetic to those width graphs is explicit.** Lean constructs the formulas for the odd primes, their powers, the products with one factor omitted, the bit shifts, and the final sum. Lean constructs BIT and iterated sum from the available finite arithmetic, using a uniform iterated-product template constructed by the finite-model proof. The BIT construction uses only the elementary arithmetic atoms and unary majority. An independent construction in `HABIndependentSum.lean` also proves iterated addition directly from majority, with no product premise. `WidthFormulaSubstitution.lean` verifies substitution under quantifiers. `PackingBridge.lean` and `ScaleFormula.lean` prove how the paper's packing theorem turns those formulas into exact polynomial graphs for all three width values.
 4. **The complexity corollary** uses a signed-to-natural polynomial substitution. The positive and negative parts together have exactly the bit cost charged to their signed input. `Classes.lean` defines numerical languages, fixed-polynomial bounded membership, and a finite-alphabet Turing-machine verifier for NP. The current proof compiles bounded register traces directly into one polynomial using a fixed number of bit masks. A complete finite-stack evaluator decides equality of every fixed signed polynomial on the framed TM2 encoding.
 
+### Size of the explicit construction
+
+For the width-one case, the first Wallis extraction forms an integer of approximately $3.94\times 10^{2446}$ bits. The explicit HAB formula uses 1,992,018 padding iterations. Expanding the resulting formula and using the displayed unreduced threshold evaluator gives an exponent larger than $10^{599000}$ for that method. The theorem quantifies over a fixed polynomial and a fixed bound valid at every width. The estimates describe one construction. In the smaller five-input system above, the supplied width-one values are $D=4{,}782{,}969$, $J=597{,}871$ and $m=8$. The 17-coordinate root for $a=b=1$ has total cost 185 bits. [Checked example](review/WidthOne.lean)
+
 ## The verified evaluator
 
 For every fixed counting formula, `Blueprint.packedScalarPrograms` produces two integer programs before the universe size or parameters are supplied. Their quotient equals the manuscript’s rational readout at every positive universe size. Both programs have polynomial peak bit length in the numerical universe size. Its original interface takes two curve hypotheses. The current proof supplies height quadraticity unconditionally and proves generation by the proposed point via explicit cubic-field descent.
 
-`EvaluatorSemantics.lean` proves `clearedNum_spec` by structural induction at every positive integral evaluation point, including the replacement of one coordinate by a larger radix during cyclic projection. `EvaluatorNodes.lean` builds fixed terms for all nine expression constructors. `EvaluatorParameters.lean`, `EvaluatorFormula.lean` and `EvaluatorPacked.lean` assemble those terms for the actual formula and Fourier kernel. Equivalent rational leaves can use unreduced fractions. The existing strict one-quarter rounding theorem then determines the packed word. `HeightGenerator.lean` proves that the proposed elliptic generator has infinite order. The new `CurveHeightBridge.lean` identifies the height normalizations.
+`EvaluatorSemantics.lean` proves `clearedNum_spec` by structural induction at every positive integral evaluation point, including the replacement of one coordinate by a larger radix during cyclic projection. `EvaluatorNodes.lean` builds fixed terms for all nine expression constructors. `EvaluatorParameters.lean`, `EvaluatorFormula.lean` and `EvaluatorPacked.lean` assemble those terms for the actual formula and Fourier kernel. Equivalent rational leaves can use unreduced fractions. The existing strict one-quarter rounding theorem then determines the packed word. `HeightGenerator.lean` proves that the proposed elliptic generator has infinite order. `CurveHeightBridge.lean` identifies the height normalizations.
 
 | Manuscript step | Verified result and where to read it |
 | --- | --- |
@@ -28,7 +41,7 @@ For every fixed counting formula, `Blueprint.packedScalarPrograms` produces two 
 
 ### A concrete difficulty with exponentiation
 
-The proof in mathlib that exponentiation is Diophantine uses a different Pell graph. Our theorem `MathlibPower.exponential_witness` proves a lower bound for **every** witness in its positive branch. On the family $g=2^N$, $e=1$, $y=g$, one auxiliary integer already requires at least $N2^N+1$ magnitude bits. The base, exponent and output together use only $O(N+1)$ bits. This explains why simply importing `Dioph.pow_dioph` cannot discharge the manuscript's short-witness requirement. The draft's separate construction remains viable on this evidence.
+The proof in mathlib that exponentiation is Diophantine uses a different Pell graph. Our theorem `MathlibPower.exponential_witness` proves a lower bound for **every** witness in its positive branch. On the family $g=2^N$, $e=1$, $y=g$, one auxiliary integer already requires at least $N2^N+1$ magnitude bits. The base, exponent and output together use only $O(N+1)$ bits. This explains why simply importing `Dioph.pow_dioph` cannot discharge the manuscript's short-witness requirement. The draft builds a different power polynomial using the elliptic-curve index bound in Appendix A.
 
 For $E: y^2+y=x^3-x$, Lean proves the canonical-height parallelogram identity, quadratic scaling at every rational point, and that $P=(0,0)$ generates the rational point group. The proof identifies doubling with taking a square in a cubic field. It checks the ideal class number, prime-by-prime descent of rational points, and unit signatures under all three real embeddings. `Curve37.rank_one` gives the exact rank on mathlib’s rational-point type. See `CubicDescent.lean`, `CubicIntegralReduction.lean` and `RANK_REVIEW.md`.
 
@@ -56,6 +69,25 @@ Open `DiophantineNP/HABVerified.lean` for the final statements. To read the two 
 python3 verify.py --strict --extras -j 3
 ```
 
+The default project build sets `autoImplicit=false`. The following commands run the preflight tests and replay the safe, total project declarations against the pinned external imports. The checker verifies that none of the selected project declarations was already present when replay began. The full transcript and source digest for the packaged revision are in [VERIFICATION.txt](VERIFICATION.txt).
+
+```sh
+python3 tests/test_preflight.py
+bash verification/replay.sh project
+lake env lean -DautoImplicit=false review/CertificateTransducer.lean
+```
+
+For a replay starting from an empty kernel environment, run `bash verification/replay.sh fresh`. This also checks the imported dependency closure. The release logs identify which checks completed locally. GitHub Actions includes both modes, with transitive replay available on manual dispatch.
+
+The two independently buildable review packages each contain just the required project proof sources, the exact toolchain and manifest, and a checked statement. [HAB63.zip](review/standalone/HAB63.zip) · [Rank37.zip](review/standalone/Rank37.zip)
+
+To regenerate them, choose two new output paths and run
+
+```sh
+python3 review/export.py hab HAB63.zip
+python3 review/export.py rank Rank37.zip
+```
+
 ## Current theorem statements
 
 | Declaration | Conclusion | Inputs |
@@ -63,6 +95,8 @@ python3 verify.py --strict --extras -j 3
 | `HAB.corollary63` | Fixed source formulas compute every requested bit of division and iterated multiplication. | None |
 | `nativeVerifier` | One integer polynomial verifies native bitwise inclusion with short honest witnesses and unrestricted soundness. | None |
 | `classEquality` | The bounded Diophantine and NP classes coincide for binary numerical languages. | None |
+| `Classes.Clocked.languages_eq_NP` | The class defined by running an explicit time-bounded TM2 on framed tapes equals the verifier class. | None |
+| `Classes.Clocked.binary_certificate_iff` | One binary word of length at most $2q(\ell(x))+r$ suffices for the original $r$-field witness, with exact preservation of the cutoff. | None |
 | `Classes.d_subset_np` | Every bounded Diophantine language has a polynomial-time verifier on the framed binary tape. | None |
 | `Classes.np_subset_d_of_native` | Every language in the project’s NP class has a bounded Diophantine representation. | A globally sound native bit-inclusion verifier with short honest roots |
 | `classEquality_of_native` | The two numerical complexity classes are equal. | The same native verifier |
@@ -72,6 +106,8 @@ python3 verify.py --strict --extras -j 3
 | `classEquality_of_hab` | The two numerical complexity classes are equal. | The published iterated-multiplication result stated in the source logic, `HAB.ImultInFOM` |
 
 `CoordinateClass.lean` proves that bounding total witness length, bounding each coordinate’s bit length, and imposing an inclusive numerical bound on each coordinate give the same class. A change in the numerical cutoff alone could admit a long root on a false input. The proof encodes the original cutoff inside the new polynomial equation. `classEquality_powerCutoff` gives the final equality using the inclusive convention. Pollett states that convention on positive inputs. This project also defines the language at zero, whose input length is taken to be one. [Pollett, introduction](https://www.cs.sjsu.edu/faculty/pollett/papers/hilbert10.pdf)
+
+The clocked-machine comparison includes every raw tape. It proves a polynomial deadline in instance bit length alone on admissible certificates, including rejection. `BinaryCertificates.decode` rejects malformed witnesses. In `Clocked.acceptsWord`, decoding precedes the timed TM2 run. The separately checked transducer consumes the raw certificate, rejects malformed words, and supplies the exact framed witness tape. Its run takes at most one scanner transition per input bit plus one. The theorem `BinaryCertificates.combined_clock` bounds scanner transitions plus verifier fuel by a polynomial in the instance length on admissible words. Compiling those stages into one conventional machine and comparing with a separately defined nondeterministic Turing machine on arbitrary binary strings remain open. [Transducer and combined clock](review/CertificateTransducer.lean)
 
 The declarations are in namespace `DiophantineNP`. The class `D` here concerns short Diophantine certificates for yes instances.
 

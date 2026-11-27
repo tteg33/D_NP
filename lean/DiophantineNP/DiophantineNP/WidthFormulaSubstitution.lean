@@ -1,6 +1,6 @@
 import DiophantineNP.WidthFormulas
 
-/-! Semantic substitution for the three external finite-arithmetic formulas.
+/-! Semantic substitution for the three finite-arithmetic formulas.
 The product and sum templates take one binary input relation (row, column).
 They each have just one free variable, the queried low output position.
 All renaming, addition of free parameters, and substitution under binders
@@ -73,8 +73,8 @@ private theorem comp_pairEnv {a b : Type*} (f : a → b) (x y : a) :
     f ∘ pairEnv x y = pairEnv (f x) (f y) := by
   funext i; fin_cases i <;> rfl
 
-/-- Three actual fixed formulas, with the textbook truth-table specification.
-Their existence is the external BIT and uniform threshold-arithmetic input. -/
+/-- Truth-table specifications for BIT, iterated product and iterated sum,
+with a single fixed formula for each operation. -/
 structure LiteratureFormulas where
   nativeBit : Formula 2
   bit_correct {U : ℕ} (x j : Fin U) :

@@ -3,9 +3,8 @@
     python verify.py                 preflight, mathlib cache, `lake build`, `Audit.lean`
     python verify.py --static-only   preflight only (needs no Lean installation)
     python verify.py --strict        also re-elaborate every module with autoImplicit off
-    python verify.py --extras        also check the two standalone entry points and model,
-                                     Premises.lean, blueprint/Evaluator.lean and the
-                                     Python reference evaluator
+    python verify.py --extras        also check the standalone evaluator, review targets,
+                                     Premises.lean and the Python reference evaluator
 
 The preflight catches the mistakes that a successful build cannot reveal: a module
 that the root file forgot to import is never compiled and never audited, and a
@@ -127,7 +126,7 @@ def static_checks(project=PROJECT):
                 errors.append("lake-manifest.json does not pin mathlib to a full commit hash.")
             if wanted and pin and wanted.group(1).startswith("v") and not pin.endswith(":" + wanted.group(1)):
                 warnings.append(f"Lean {pin} and mathlib tag {wanted.group(1)} carry different version numbers.")
-            summary.append(f"Lean {pin.split(':')[-1]}, mathlib {mathlib.get('rev', '?')[:12]}")
+            summary.append(f"Lean {pin.split(':')[-1]}, mathlib {mathlib.get('rev', '?')}")
     else:
         warnings.append("lake-manifest.json is missing: dependencies would be resolved afresh.")
 
@@ -147,7 +146,7 @@ def static_checks(project=PROJECT):
         digest.update(path.name.encode() + b"\0" + hashlib.sha256(data).digest())
         lines += data.count(b"\n")
     summary.append(f"{len(modules)} modules, {lines} lines, all imported by {root.name}")
-    summary.append(f"source digest {digest.hexdigest()[:16]} (changes whenever a module changes)")
+    summary.append(f"source digest {digest.hexdigest()} (SHA-256 of the module sources)")
     return errors, warnings, summary
 
 
@@ -211,8 +210,7 @@ def main():
     run([lake, "build"], env, check=True)
 
     run([lake, "env", "lean", "Audit.lean"], env, check=True)
-    print("Build and axiom audit succeeded. The theorem types printed above list the premises "
-          "that remain hypotheses.", flush=True)
+    print("Build and axiom audit succeeded.", flush=True)
 
     if args.strict:
         modules = sorted((PROJECT / LIBRARY).glob("*.lean"))
@@ -227,17 +225,19 @@ def main():
         print("strict: ok. All project modules rechecked with autoImplicit disabled.")
 
     if args.extras:
-        for extra in (PROJECT / "Premises.lean", PROJECT / "blueprint" / "Evaluator.lean"):
+        for name in ("Premises.lean", "blueprint/Evaluator.lean", "review/HAB63.lean",
+                     "review/Rank37.lean", "review/WidthOne.lean"):
+            extra = PROJECT / name
             if not extra.is_file():
                 sys.exit(f"Missing check file: {extra.relative_to(PROJECT)}")
-            path, code, output = elaborate(lake, env, extra)
+            path, code, output = elaborate(lake, env, extra, ["-DautoImplicit=false"])
             print(f"--- {extra.relative_to(PROJECT)} (outside the default build)\n{output}")
             if code:
                 failed_extras.append(str(extra.relative_to(PROJECT)))
         if failed_extras:
             sys.exit("The verified library built and passed the audit. These additions did not check: "
                      + ", ".join(failed_extras))
-        print("extras: ok. The standalone files expose the same audited evaluator and external premises.")
+        print("extras: ok. The standalone Lean files and reference evaluator passed.")
 
 
 if __name__ == "__main__":

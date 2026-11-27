@@ -1,0 +1,960 @@
+$ python3 verify.py --strict --extras -j 4
+preflight: Lean v4.24.0, mathlib f897ebcf72cd16f89ab4577d0c826cd14afaafc7
+preflight: 229 modules, 36391 lines, all imported by DiophantineNP.lean
+preflight: source digest 67c5abacda4851fdce5784ea2ff374494c0591ca1dd3930b541292afbfb38f36 (SHA-256 of the module sources)
+preflight: ok
+$ /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 /workspace/scratch/2aa0d9f173d4/revision_work/clean-srivn2ob/D_NP/lean/DiophantineNP/blueprint/reference_evaluator.py --quick
+reference evaluator: tests of the plan for PackedScalarPrograms
+  helpers (sign, |.|, geometric sum, binomial coefficient, tail numerator, shift): ok
+  evalBounds dominates Expr.bounds on 400 random expressions: ok
+  Lean scalarRecipe transcription = cyclic projection on 40 random cases (median 4, up to 360 Laurent terms): ok
+  clearedNum = cleared Laurent value on 150 random expressions (134 with a nonzero value): ok
+    91 with projections (29 nested, 61 where a projection removes some terms and keeps others);
+    median 17 nodes (up to 63); widest sub-expansion: median 4, 90th percentile 18, largest 184 Laurent terms;
+    largest intermediate value 295262 bits; 2 oversized draws rejected
+  unreduced scalar leaves leave exprValue unchanged on 100 random expressions (72 with different Expr.bounds): ok
+  parameter terms match the Lean definitions for 43 values of U: ok
+    tree sizes: {'radius': 5, 'J': 9, 'stride': 303, 'size': 313, 'precision': 645, 'halfDegree': 3795}
+  one fixed program evaluates the toy family for every (U, t) tested: ok
+    254 operations with sharing, 1308240 nodes as a tree, Tame
+    U:peak signed bits  1:28382  2:139627  3:483259  4:1274292  5:2818259
+    growth exponent between U=3 and U=5: 4.35  (polynomial, as the Tame lemma predicts)
+  packedExpr for  MAJ x (x < j):  5 coordinates, 238 expression nodes;
+    fixed program: 2462 operations with sharing, a 18-digit number of tree nodes, Tame
+  packedExpr for  MAJ x EX y (y < x and y = j):  6 coordinates, 323 expression nodes;
+    fixed program: 3464 operations with sharing, a 24-digit number of tree nodes, Tame
+  packedExpr for  EX x (x + t = j or x * x = t):  5 coordinates, 275 expression nodes;
+    fixed program: 2744 operations with sharing, a 20-digit number of tree nodes, Tame
+all checks passed in 8.7s
+$ /tmp/dnp-lean/lean-4.24.0-linux/bin/lake exe cache get Mathlib.Algebra.BigOperators.Fin Mathlib.Algebra.BigOperators.Group.Finset.Sigma Mathlib.Algebra.BigOperators.Group.List.Lemmas Mathlib.Algebra.BigOperators.Ring.Finset Mathlib.Algebra.BigOperators.Ring.List Mathlib.Algebra.CharP.Algebra Mathlib.Algebra.MvPolynomial.CommRing Mathlib.Algebra.MvPolynomial.Monad Mathlib.Algebra.MvPolynomial.Rename Mathlib.Algebra.Order.BigOperators.Group.Finset Mathlib.Algebra.Order.BigOperators.Group.List Mathlib.Algebra.Order.BigOperators.GroupWithZero.List Mathlib.Algebra.Order.BigOperators.Ring.Finset Mathlib.Algebra.Order.Floor.Ring Mathlib.Algebra.Polynomial.Eval.Coeff Mathlib.Algebra.Polynomial.Eval.Defs Mathlib.Algebra.Polynomial.Roots Mathlib.Algebra.Polynomial.SpecificDegree Mathlib.Algebra.Ring.GeomSum Mathlib.AlgebraicGeometry.EllipticCurve.Affine.Point Mathlib.Analysis.Fourier.ZMod Mathlib.Analysis.Real.Pi.Bounds Mathlib.Analysis.Real.Pi.Wallis Mathlib.Analysis.SpecialFunctions.Log.Base Mathlib.Analysis.SpecialFunctions.Log.Basic Mathlib.Analysis.SpecificLimits.Basic Mathlib.Computability.TMComputable Mathlib.Data.Fin.VecNotation Mathlib.Data.Finset.Dedup Mathlib.Data.Finset.Sort Mathlib.Data.Fintype.BigOperators Mathlib.Data.Fintype.EquivFin Mathlib.Data.Fintype.Pi Mathlib.Data.Fintype.Pigeonhole Mathlib.Data.Int.Interval Mathlib.Data.Int.Lemmas Mathlib.Data.Int.ModEq Mathlib.Data.Nat.BinaryRec Mathlib.Data.Nat.Bits Mathlib.Data.Nat.Bitwise Mathlib.Data.Nat.ChineseRemainder Mathlib.Data.Nat.Choose.Basic Mathlib.Data.Nat.Choose.Bounds Mathlib.Data.Nat.Choose.Factorization Mathlib.Data.Nat.Choose.Sum Mathlib.Data.Nat.Factorization.PrimePow Mathlib.Data.Nat.Factors Mathlib.Data.Nat.GCD.BigOperators Mathlib.Data.Nat.Log Mathlib.Data.Nat.ModEq Mathlib.Data.Nat.Size Mathlib.Data.Nat.Squarefree Mathlib.Data.Num.Lemmas Mathlib.Data.Rat.Lemmas Mathlib.Data.Real.Archimedean Mathlib.Data.Real.Basic Mathlib.Data.Set.Finite.List Mathlib.FieldTheory.Finite.Basic Mathlib.GroupTheory.OrderOfElement Mathlib.Logic.Equiv.Fin.Basic Mathlib.NumberTheory.NumberField.ClassNumber Mathlib.NumberTheory.NumberField.Discriminant.Defs Mathlib.NumberTheory.NumberField.Norm Mathlib.NumberTheory.NumberField.Units.DirichletTheorem Mathlib.NumberTheory.PellMatiyasevic Mathlib.NumberTheory.PrimeCounting Mathlib.NumberTheory.SumFourSquares Mathlib.Order.Interval.Finset.Fin Mathlib.RingTheory.AdjoinRoot Mathlib.RingTheory.Coprime.Lemmas Mathlib.RingTheory.Ideal.Norm.AbsNorm Mathlib.RingTheory.Int.Basic Mathlib.RingTheory.UniqueFactorizationDomain.Nat Mathlib.Tactic.Abel Mathlib.Tactic.DeriveFintype Mathlib.Tactic.FieldSimp Mathlib.Tactic.FinCases Mathlib.Tactic.Linarith Mathlib.Tactic.LinearCombination Mathlib.Tactic.NormNum Mathlib.Tactic.Positivity Mathlib.Tactic.Ring Mathlib.Topology.Instances.Real.Lemmas Mathlib.Topology.Order.IntermediateValue
+Current branch: HEAD
+Using cache (Azure) from origin: leanprover-community/mathlib4
+No files to download
+Decompressing 3178 file(s)
+Unpacked in 111 ms
+Completed successfully!
+$ /tmp/dnp-lean/lean-4.24.0-linux/bin/lake build
+✔ [2138/2154] Built DiophantineNP.ReadoutBits (658ms)
+✔ [2140/2158] Built DiophantineNP.Statement (1.6s)
+✔ [2141/2158] Built DiophantineNP.Readout (1.7s)
+✔ [2143/2160] Built DiophantineNP.Threshold (3.9s)
+✔ [2145/2166] Built DiophantineNP.Gates (4.2s)
+✔ [2149/2167] Built DiophantineNP.WidthData (3.7s)
+✔ [2152/2169] Built DiophantineNP.WidthFrame (1.6s)
+✔ [2156/2174] Built DiophantineNP.NaturalBridge (2.6s)
+✔ [2946/3033] Built DiophantineNP.ModularPolynomial (5.4s)
+✔ [3010/3033] Built DiophantineNP.Classes (1.7s)
+✔ [3013/3035] Built DiophantineNP.MultipleReadout (1.6s)
+✔ [3014/3035] Built DiophantineNP.Extraction (1.5s)
+✔ [3015/3035] Built DiophantineNP.Counting (6.0s)
+✔ [3017/3041] Built DiophantineNP.Compiler (2.0s)
+✔ [3019/3041] Built DiophantineNP.EncodingFacts (1.6s)
+✔ [3020/3041] Built DiophantineNP.ModularVerifier (2.4s)
+✔ [3024/3041] Built DiophantineNP.PackingBridge (2.1s)
+✔ [3025/3041] Built DiophantineNP.TailRadix (2.6s)
+✔ [3027/3041] Built DiophantineNP.BinaryCertificates (3.2s)
+✔ [3029/3041] Built DiophantineNP.Atomic (5.3s)
+✔ [3032/3042] Built DiophantineNP.HeightWindow (5.5s)
+✔ [3033/3042] Built DiophantineNP.ScaleFormula (1.9s)
+✔ [3035/3042] Built DiophantineNP.BinomialModulus (2.5s)
+✔ [3036/3047] Built DiophantineNP.ConstraintCost (2.3s)
+✔ [3037/3082] Built DiophantineNP.Pell (7.4s)
+✔ [3049/3082] Built DiophantineNP.Fourier (3.2s)
+✔ [3050/3082] Built DiophantineNP.BoundedRelation (2.3s)
+✔ [3051/3082] Built DiophantineNP.Assembly (2.0s)
+✔ [3052/3082] Built DiophantineNP.RadixGrowth (1.7s)
+✔ [3054/3082] Built DiophantineNP.LaurentBounds (2.7s)
+✔ [3055/3082] Built DiophantineNP.PrimeFormula (3.1s)
+✔ [3056/3082] Built DiophantineNP.ScalarProgram (6.2s)
+✔ [3058/3082] Built DiophantineNP.LaurentExtraction (3.1s)
+✔ [3059/3082] Built DiophantineNP.CertifiedRounding (4.6s)
+✔ [3060/3082] Built DiophantineNP.BinaryKernel (3.7s)
+✔ [3062/3083] Built DiophantineNP.WidthFormulaTools (2.4s)
+✔ [3063/3083] Built DiophantineNP.ScalarCertified (2.2s)
+✔ [3064/3083] Built DiophantineNP.LaurentSemantics (4.6s)
+✔ [3066/3090] Built DiophantineNP.ScalarDivision (2.2s)
+✔ [3067/3090] Built DiophantineNP.WidthFormulaProduct (2.5s)
+✔ [3068/3090] Built DiophantineNP.ScalarSystems (4.3s)
+✔ [3070/3090] Built DiophantineNP.Curve37 (6.1s)
+✔ [3071/3090] Built DiophantineNP.WidthFormulas (2.3s)
+✔ [3073/3094] Built DiophantineNP.ScalarProjection (3.8s)
+✔ [3075/3149] Built DiophantineNP.ScalarTermGraph (5.1s)
+✔ [3098/3149] Built DiophantineNP.PowerWindow (3.2s)
+✔ [3099/3149] Built DiophantineNP.CurveCoordinateSize (3.8s)
+✔ [3100/3149] Built DiophantineNP.WidthFormulaSubstitution (2.4s)
+✔ [3101/3149] Built DiophantineNP.LaurentGrowth (1.7s)
+✔ [3102/3149] Built DiophantineNP.JonesInterface (1.4s)
+✔ [3104/3149] Built DiophantineNP.BoundedPolynomials (1.9s)
+✔ [3106/3149] Built DiophantineNP.ClockedVerifier (1.0s)
+✔ [3111/3153] Built DiophantineNP.HeightGenerator (2.6s)
+✔ [3112/3153] Built DiophantineNP.CurveRootBound (2.6s)
+✔ [3116/3156] Built DiophantineNP.Main (1.0s)
+✔ [3240/3413] Built DiophantineNP.PowerTests (4.1s)
+✔ [3241/3413] Built DiophantineNP.JonesMachine (2.0s)
+✔ [3242/3413] Built DiophantineNP.Wallis (3.6s)
+✔ [3244/3413] Built DiophantineNP.CurveQuadraticGap (4.2s)
+✔ [3245/3413] Built DiophantineNP.SumProductDigits (1.8s)
+✔ [3246/3413] Built DiophantineNP.HABDivisionCorrection (1.5s)
+✔ [3248/3416] Built DiophantineNP.FiniteArithmeticGap (2.9s)
+✔ [3249/3416] Built DiophantineNP.MachineAddition (2.8s)
+✔ [3250/3416] Built DiophantineNP.CurveHeightBridge (2.5s)
+✔ [3251/3416] Built DiophantineNP.JonesNormalForm (3.0s)
+✔ [3253/3416] Built DiophantineNP.JMTableau (3.0s)
+✔ [3254/3416] Built DiophantineNP.JonesRegisters (2.3s)
+✔ [3255/3416] Built DiophantineNP.IntegerCurveStep (3.4s)
+✔ [3258/3424] Built DiophantineNP.SmallSumTemplate (4.5s)
+✔ [3260/3424] Built DiophantineNP.Grid (8.5s)
+✔ [3261/3424] Built DiophantineNP.CurveSaturation (9.0s)
+✔ [3262/3424] Built DiophantineNP.TraceTable (1.4s)
+✔ [3263/3424] Built DiophantineNP.ShortPower (8.0s)
+✔ [3264/3424] Built DiophantineNP.MachinePolynomial (4.3s)
+✔ [3265/3424] Built DiophantineNP.JonesVariants (2.0s)
+✔ [3266/3424] Built DiophantineNP.JonesRegisterVerifier (2.5s)
+✔ [3267/3424] Built DiophantineNP.IntegerPower (3.0s)
+✔ [3268/3424] Built DiophantineNP.WidthProductOnly (2.1s)
+✔ [3269/3424] Built DiophantineNP.StepCompiler (3.3s)
+✔ [3270/3424] Built DiophantineNP.SmallUniverses (2.3s)
+✔ [3273/3424] Built DiophantineNP.HABMatrixBind (2.0s)
+✔ [3274/3424] Built DiophantineNP.HABTranslation (2.5s)
+✔ [3275/3424] Built DiophantineNP.Observation (2.4s)
+✔ [3276/3424] Built DiophantineNP.GeneralSumTemplate (3.4s)
+✔ [3277/3424] Built DiophantineNP.MomentPowers (2.9s)
+✔ [3278/3424] Built DiophantineNP.TracePorts (1.4s)
+✔ [3279/3424] Built DiophantineNP.MachineCircuitBridge (1.8s)
+✔ [3280/3424] Built DiophantineNP.JonesAffineRows (2.6s)
+✔ [3281/3424] Built DiophantineNP.JonesRegisterInput (2.4s)
+✔ [3282/3424] Built DiophantineNP.CurveKummer (6.0s)
+✔ [3284/3424] Built DiophantineNP.HABProductPadding (2.2s)
+✔ [3285/3424] Built DiophantineNP.ShortResidue (7.1s)
+✔ [3286/3424] Built DiophantineNP.PowerPolynomial (3.9s)
+✔ [3287/3424] Built DiophantineNP.MachineArithmetic (3.7s)
+✔ [3288/3424] Built DiophantineNP.HABCRTShift (2.3s)
+✔ [3289/3424] Built DiophantineNP.HABSourceArithmetic (2.7s)
+✔ [3290/3424] Built DiophantineNP.HABMultiplyWords (2.1s)
+✔ [3291/3424] Built DiophantineNP.HABSumBlocks (2.3s)
+✔ [3292/3424] Built DiophantineNP.ConcreteGrid (3.7s)
+✔ [3293/3424] Built DiophantineNP.MachineStackModel (2.0s)
+✔ [3294/3424] Built DiophantineNP.TableauConstraints (3.2s)
+✔ [3295/3424] Built DiophantineNP.RegisterFieldPacking (1.9s)
+✔ [3296/3424] Built DiophantineNP.MathlibPower (1.4s)
+✔ [3297/3424] Built DiophantineNP.JonesAffinePaths (3.7s)
+✔ [3298/3424] Built DiophantineNP.HABCRTRecovery (3.5s)
+✔ [3299/3424] Built DiophantineNP.CubicRealPlaces (6.4s)
+✔ [3300/3424] Built DiophantineNP.HABGroupPower (4.4s)
+✔ [3301/3424] Built DiophantineNP.WidthPrimeResidue (2.5s)
+✔ [3302/3424] Built DiophantineNP.HABSumParameters (4.1s)
+✔ [3303/3424] Built DiophantineNP.HABBlockCells (4.1s)
+✔ [3304/3424] Built DiophantineNP.CubicField (10s)
+✔ [3305/3424] Built DiophantineNP.HABCounting (4.0s)
+✔ [3306/3424] Built DiophantineNP.HABSourceShift (2.7s)
+✔ [3307/3424] Built DiophantineNP.ScalarSignedPower (4.3s)
+✔ [3308/3424] Built DiophantineNP.HABPrefix (3.5s)
+✔ [3309/3424] Built DiophantineNP.MachineStackBlocks (1.8s)
+✔ [3310/3424] Built DiophantineNP.HABIndexMul (2.8s)
+✔ [3311/3424] Built DiophantineNP.TraceWitnessSize (1.0s)
+✔ [3312/3424] Built DiophantineNP.TraceBounds (2.0s)
+✔ [3313/3424] Built DiophantineNP.FourGridKernel (4.9s)
+✔ [3314/3424] Built DiophantineNP.RegisterPathBound (2.2s)
+✔ [3315/3424] Built DiophantineNP.GridLogic (7.7s)
+✔ [3316/3424] Built DiophantineNP.HABSumSelectors (3.8s)
+✔ [3317/3424] Built DiophantineNP.CubicFactorParity (2.8s)
+✔ [3318/3424] Built DiophantineNP.CubicUnitParity (2.9s)
+✔ [3319/3424] Built DiophantineNP.HABPrimeBlocks (2.5s)
+✔ [3320/3424] Built DiophantineNP.HABSumFormula (2.2s)
+✔ [3321/3424] Built DiophantineNP.HABBinaryResidue (3.7s)
+✔ [3322/3424] Built DiophantineNP.CubicUnitSigns (6.9s)
+✔ [3323/3424] Built DiophantineNP.RegisterFieldGraph (11s)
+✔ [3324/3424] Built DiophantineNP.MachineStackWords (1.6s)
+✔ [3325/3424] Built DiophantineNP.HABSmallIndexMul (3.9s)
+✔ [3326/3424] Built DiophantineNP.TraceHonest (2.1s)
+✔ [3327/3424] Built DiophantineNP.PackedTrace (2.2s)
+✔ [3328/3424] Built DiophantineNP.FormulaBackend (2.6s)
+✔ [3329/3424] Built DiophantineNP.CubicIdeals (5.5s)
+✔ [3330/3424] Built DiophantineNP.CubicSignClasses (3.1s)
+✔ [3331/3424] Built DiophantineNP.KernelSelectors (6.7s)
+✔ [3332/3424] Built DiophantineNP.HABIndependentSum (1.9s)
+✔ [3333/3424] Built DiophantineNP.HABPowerRows (2.6s)
+✔ [3334/3424] Built DiophantineNP.RegisterMachineTrace (10s)
+✔ [3335/3424] Built DiophantineNP.HABPowerCode (5.8s)
+✔ [3336/3424] Built DiophantineNP.HABProductBlocks (4.1s)
+✔ [3337/3424] Built DiophantineNP.MachineStackTransfer (1.9s)
+✔ [3338/3424] Built DiophantineNP.MachineCircuitAllocation (2.1s)
+✔ [3339/3424] Built DiophantineNP.HABSourceTranslation (2.1s)
+✔ [3340/3424] Built DiophantineNP.TraceChecker (1.9s)
+✔ [3341/3424] Built DiophantineNP.MachineFrameAdapter (5.8s)
+✔ [3342/3424] Built DiophantineNP.FormulaCoordinates (3.2s)
+✔ [3343/3424] Built DiophantineNP.CubicIntegralReduction (3.3s)
+✔ [3344/3424] Built DiophantineNP.FormulaLeaves (3.4s)
+✔ [3345/3424] Built DiophantineNP.FourGridReadout (4.0s)
+✔ [3346/3424] Built DiophantineNP.HABPairMajority (4.2s)
+✔ [3347/3424] Built DiophantineNP.MachineStackPorts (2.0s)
+✔ [3348/3424] Built DiophantineNP.HABPolylogRange (4.8s)
+✔ [3349/3424] Built DiophantineNP.MachineStackAdder (5.3s)
+✔ [3350/3424] Built DiophantineNP.MachineCircuitPair (2.1s)
+✔ [3351/3424] Built DiophantineNP.NativeBitLength (2.7s)
+✔ [3352/3424] Built DiophantineNP.FormulaRational (2.5s)
+✔ [3353/3424] Built DiophantineNP.FormulaProjection (2.6s)
+✔ [3354/3424] Built DiophantineNP.FormulaLeafGrowth (2.4s)
+✔ [3355/3424] Built DiophantineNP.HABPairInterpretation (3.2s)
+✔ [3356/3424] Built DiophantineNP.CubicDescent (5.2s)
+✔ [3357/3424] Built DiophantineNP.HABBoundedProduct (3.6s)
+✔ [3358/3424] Built DiophantineNP.HABCRTSize (3.2s)
+✔ [3359/3424] Built DiophantineNP.MachineStackAddGate (2.1s)
+✔ [3360/3424] Built DiophantineNP.HABShortLength (3.3s)
+✔ [3361/3424] Built DiophantineNP.FormulaOperations (10s)
+✔ [3362/3424] Built DiophantineNP.HABProductEquivalence (2.0s)
+✔ [3363/3424] Built DiophantineNP.MachineStackMultiply (3.4s)
+✔ [3364/3424] Built DiophantineNP.HABSpacePadding (2.7s)
+✔ [3365/3424] Built DiophantineNP.HABCRTCoefficients (2.9s)
+✔ [3366/3424] Built DiophantineNP.FormulaCompiler (3.1s)
+✔ [3367/3424] Built DiophantineNP.HABPolynomialProduct (2.6s)
+✔ [3368/3424] Built DiophantineNP.HABShortWidth (14s)
+✔ [3369/3424] Built DiophantineNP.HABWideOutput (4.4s)
+✔ [3370/3424] Built DiophantineNP.HABCRTNumerator (2.8s)
+✔ [3371/3424] Built DiophantineNP.HABCRTDot (3.7s)
+✔ [3372/3424] Built DiophantineNP.FormulaOutput (2.3s)
+✔ [3373/3424] Built DiophantineNP.HABDivisionGraph (2.8s)
+✔ [3374/3424] Built DiophantineNP.HABIndexSum (2.1s)
+✔ [3375/3424] Built DiophantineNP.HABGeometricDivision (4.0s)
+✔ [3376/3424] Built DiophantineNP.HABRemainderCheck (2.2s)
+✔ [3377/3424] Built DiophantineNP.HABCRTLeading (2.9s)
+✔ [3378/3424] Built DiophantineNP.FormulaGrowth (2.8s)
+✔ [3379/3424] Built DiophantineNP.HABCRTExtend (2.4s)
+✔ [3380/3424] Built DiophantineNP.KernelExpressions (2.8s)
+✔ [3381/3424] Built DiophantineNP.HABCRTQuotient (2.5s)
+✔ [3382/3424] Built DiophantineNP.KernelEvaluation (2.9s)
+✔ [3383/3424] Built DiophantineNP.HABCRTEstimate (2.4s)
+✔ [3384/3424] Built DiophantineNP.HABPowerReduction (25s)
+✔ [3385/3424] Built DiophantineNP.KernelGrowth (2.8s)
+✔ [3386/3424] Built DiophantineNP.HABShortLift (2.7s)
+✔ [3387/3424] Built DiophantineNP.HABCRTBitDecision (3.1s)
+✔ [3388/3424] Built DiophantineNP.HABLargePrimeRow (3.5s)
+✔ [3389/3424] Built DiophantineNP.ScalarValue (3.5s)
+✔ [3390/3424] Built DiophantineNP.FormulaRounding (3.0s)
+✔ [3391/3424] Built DiophantineNP.HABPolylogProduct (2.7s)
+✔ [3392/3424] Built DiophantineNP.Corollary (3.5s)
+✔ [3393/3424] Built DiophantineNP.HABLargePrimeProduct (3.9s)
+✔ [3394/3424] Built DiophantineNP.HABShortProducts (7.9s)
+✔ [3395/3424] Built DiophantineNP.HABWideCoefficients (3.0s)
+✔ [3396/3424] Built DiophantineNP.HABModularArithmetic (2.3s)
+✔ [3397/3424] Built DiophantineNP.EvaluatorGrowth (4.2s)
+✔ [3398/3424] Built DiophantineNP.HABWideExtend (2.5s)
+✔ [3399/3424] Built DiophantineNP.EvaluatorArithmetic (3.5s)
+✔ [3400/3424] Built DiophantineNP.JonesLength (4.4s)
+✔ [3401/3424] Built DiophantineNP.HABWideQuotient (3.7s)
+✔ [3402/3424] Built DiophantineNP.EvaluatorSemantics (6.6s)
+✔ [3403/3424] Built DiophantineNP.HABWideBitDecision (2.5s)
+✔ [3404/3424] Built DiophantineNP.BoundedClass (3.9s)
+✔ [3405/3424] Built DiophantineNP.HABCorollary63 (1.8s)
+✔ [3406/3424] Built DiophantineNP.EvaluatorNodes (4.6s)
+✔ [3407/3424] Built DiophantineNP.RegisterFieldBudget (3.1s)
+✔ [3408/3424] Built DiophantineNP.RegisterNativeTrace (5.0s)
+✔ [3409/3424] Built DiophantineNP.CoordinateClass (3.1s)
+✔ [3410/3424] Built DiophantineNP.EvaluatorFamilies (3.4s)
+✔ [3411/3424] Built DiophantineNP.RegisterTableReduction (2.6s)
+✔ [3412/3424] Built DiophantineNP.EvaluatorParameters (2.8s)
+✔ [3413/3424] Built DiophantineNP.NativeComplexity (2.3s)
+✔ [3414/3424] Built DiophantineNP.EvaluatorFormula (2.9s)
+✔ [3415/3424] Built DiophantineNP.EvaluatorPacked (2.5s)
+✔ [3416/3424] Built DiophantineNP.EvaluatorPremises (2.2s)
+✔ [3417/3424] Built DiophantineNP.JonesReduction (2.3s)
+✔ [3418/3424] Built DiophantineNP.VerifiedCompilers (2.3s)
+✔ [3419/3424] Built DiophantineNP.RegisterReduction (2.4s)
+✔ [3420/3424] Built DiophantineNP.ProductCriterion (2.5s)
+✔ [3421/3424] Built DiophantineNP.HABCriterion (2.4s)
+✔ [3422/3424] Built DiophantineNP.HABVerified (2.4s)
+✔ [3423/3424] Built DiophantineNP (2.3s)
+Build completed successfully (3424 jobs).
+$ /tmp/dnp-lean/lean-4.24.0-linux/bin/lake env lean Audit.lean
+DiophantineNP.WidthData.native_certificate_iff {n a b : ℕ} (hn : 0 < n) (ha : a < 2 ^ n) (hb : b < 2 ^ n) :
+  (∃ S < DiophantineNP.WidthData.widthD n,
+      ∃ T < DiophantineNP.WidthData.widthD n,
+        S * S ≡ S [MOD DiophantineNP.WidthData.widthD n] ∧
+          T * T ≡ T [MOD DiophantineNP.WidthData.widthD n] ∧
+            S * T ≡ S [MOD DiophantineNP.WidthData.widthD n] ∧
+              DiophantineNP.Readout.Ceiling (DiophantineNP.WidthData.widthD n) (DiophantineNP.WidthData.scale n)
+                  (S * DiophantineNP.WidthData.widthJ n % DiophantineNP.WidthData.widthD n) a ∧
+                DiophantineNP.Readout.Ceiling (DiophantineNP.WidthData.widthD n) (DiophantineNP.WidthData.scale n)
+                  (T * DiophantineNP.WidthData.widthJ n % DiophantineNP.WidthData.widthD n) b) ↔
+    ∀ (i : ℕ), a.testBit i = true → b.testBit i = true
+DiophantineNP.ModularPolynomial.native_natural_complete {n a b : ℕ} (hn : 0 < n) (ha : a < 2 ^ n) (hb : b < 2 ^ n)
+  (yes : DiophantineNP.BitIncl a b) :
+  ∃ w,
+    DiophantineNP.natCost w ≤ 17 * (40 * (n + 2) ^ 3 + 7) ∧
+      (MvPolynomial.eval
+            (DiophantineNP.ModularPolynomial.assignment a b (DiophantineNP.WidthData.widthD n)
+              (DiophantineNP.WidthData.widthJ n) (DiophantineNP.WidthData.scale n) w))
+          DiophantineNP.ModularPolynomial.polynomial =
+        0
+DiophantineNP.MathlibPower.exponential_witness (N w a z : ℕ) (hw : 2 ^ N ≤ w) (ha : 1 < a)
+  (h : a * a - ((w + 1) * (w + 1) - 1) * (w * z) * (w * z) = 1) : N * 2 ^ N ≤ a.log2
+DiophantineNP.Assembly.nativeVerifier_of_packing (pack : DiophantineNP.Packing.PackingClaim)
+  (uniform : DiophantineNP.Packing.WidthDescriptions) : DiophantineNP.NativeVerifier
+DiophantineNP.classEquality_of_packing (pack : DiophantineNP.Packing.PackingClaim)
+  (uniform : DiophantineNP.Packing.WidthDescriptions) (jm : DiophantineNP.Classes.JonesMatiyasevichDirection)
+  (machine : DiophantineNP.Classes.PolynomialEvaluationInP) : DiophantineNP.Classes.D = DiophantineNP.Classes.NP
+DiophantineNP.classEquality_of_templates (scalar : DiophantineNP.ScalarPackingConstruction)
+  (templates : DiophantineNP.WidthFormula.LiteratureFormulas) (jm : DiophantineNP.Classes.JonesMatiyasevichDirection)
+  (machine : DiophantineNP.Classes.PolynomialEvaluationInP) : DiophantineNP.Classes.D = DiophantineNP.Classes.NP
+DiophantineNP.FormulaLaurent.truthExpr_uniform_size {k : ℕ} (φ : DiophantineNP.Counting.Formula (k + 1)) :
+  ∃ c,
+    ∀ (U : ℕ),
+      0 < U →
+        ∀ (t : Fin k → Fin U),
+          have b := (DiophantineNP.FormulaLaurent.truthExpr φ t).bounds;
+          b.radius + (b.denominator.log2 + 1) + (b.height.log2 + 1) ≤ (U + 1) ^ c
+DiophantineNP.ScalarProjection.scalarRecipe_expr {d : ℕ} (e : DiophantineNP.LaurentBounds.Expr d) (j : Fin d) (m : ℕ+)
+  (p q : Fin d → ℕ) (hp : ∀ (i : Fin d), 0 < p i) (hq : ∀ (i : Fin d), 0 < q i) :
+  (DiophantineNP.ScalarProjection.scalarRecipe p q e.bounds.denominator e.bounds.height e.bounds.radius ↑m fun z =>
+      DiophantineNP.ScalarProjection.exprValue e
+        (Function.update (DiophantineNP.ScalarProjection.rationalPoint p q) j ↑z)) =
+    DiophantineNP.ScalarProjection.exprValue (e.project j m) (DiophantineNP.ScalarProjection.rationalPoint p q)
+DiophantineNP.PowerPolynomial.witness_arity : Fintype.card DiophantineNP.PowerPolynomial.Witness = 192
+DiophantineNP.PowerPolynomial.exact_over_integers (hc : DiophantineNP.PowerTests.Cyclic)
+  (hq : DiophantineNP.PowerTests.Quadratic) (g e y : ℤ) :
+  (∃ w, DiophantineNP.PowerPolynomial.value g e y w = 0) ↔ ∃ a n, g = ↑a ∧ e = ↑n ∧ y = ↑(a ^ n)
+DiophantineNP.PowerPolynomial.complete_quartic (hc : DiophantineNP.PowerTests.Cyclic)
+  (hq : DiophantineNP.PowerTests.Quadratic) :
+  ∃ K,
+    ∀ (g e : ℕ),
+      ∃ w,
+        DiophantineNP.PowerPolynomial.value (↑g) (↑e) (↑(g ^ e)) w = 0 ∧
+          DiophantineNP.intCost w ≤ K * DiophantineNP.PowerTests.inputBits g e (g ^ e) ^ 4
+DiophantineNP.FormulaLaurent.packedExpr_uniform_size {k : ℕ} (φ : DiophantineNP.Counting.Formula (k + 1)) :
+  ∃ c,
+    ∀ (U : ℕ),
+      0 < U →
+        ∀ (t : Fin k → Fin U),
+          have b := (DiophantineNP.FormulaLaurent.packedExpr φ t).bounds;
+          b.radius + (b.denominator.log2 + 1) + (b.height.log2 + 1) ≤ (U + 1) ^ c
+DiophantineNP.FormulaLaurent.packedScalar_short_fraction {k : ℕ} (φ : DiophantineNP.Counting.Formula (k + 1)) :
+  ∃ C,
+    ∀ (U : ℕ),
+      0 < U →
+        ∀ (t : Fin k → Fin U),
+          ∃ p q,
+            0 < q ∧
+              ↑p / ↑q = DiophantineNP.FormulaLaurent.packedScalar φ t ∧
+                DiophantineNP.bits p.natAbs + 1 + (DiophantineNP.bits q.natAbs + 1) ≤ (1 + U) ^ C
+DiophantineNP.FormulaLaurent.packedScalar_close {k U : ℕ} (φ : DiophantineNP.Counting.Formula (k + 1))
+  (t : Fin k → Fin U) : |DiophantineNP.FormulaLaurent.packedScalar φ t - ↑(DiophantineNP.Packing.packed φ t)| < 1 / 4
+DiophantineNP.packedScalarSystems_of_programs (programs : DiophantineNP.PackedScalarPrograms) :
+  DiophantineNP.PackedScalarSystems
+DiophantineNP.PackedScalarSystems : Prop
+DiophantineNP.packing_of_packedScalarSystems (systems : DiophantineNP.PackedScalarSystems) :
+  DiophantineNP.Packing.PackingClaim
+DiophantineNP.nativeVerifier_of_packedScalarSystems (systems : DiophantineNP.PackedScalarSystems)
+  (templates : DiophantineNP.WidthFormula.LiteratureFormulas) : DiophantineNP.NativeVerifier
+DiophantineNP.classEquality_of_packedScalarSystems (systems : DiophantineNP.PackedScalarSystems)
+  (templates : DiophantineNP.WidthFormula.LiteratureFormulas) (jm : DiophantineNP.Classes.JonesMatiyasevichDirection)
+  (machine : DiophantineNP.Classes.PolynomialEvaluationInP) : DiophantineNP.Classes.D = DiophantineNP.Classes.NP
+'DiophantineNP.classEquality_of_packedScalarSystems' depends on axioms: [propext, Classical.choice, Quot.sound]
+DiophantineNP.Curve37.generator_infinite_order : ¬IsOfFinAddOrder DiophantineNP.Curve37.P
+DiophantineNP.Curve37.quadratic_of_naive_error
+  (error :
+    ∀ (j : ℤ),
+      ∃ C,
+        ∀ (n : ℕ),
+          |DiophantineNP.Curve37.logHeight (j • 2 ^ n • DiophantineNP.Curve37.P) -
+                DiophantineNP.Curve37.logHeight (2 ^ n • DiophantineNP.Curve37.P) * ↑j ^ 2| ≤
+            C) :
+  DiophantineNP.PowerTests.Quadratic
+DiophantineNP.Classes.BinaryCertificates.bounded_iff {r : ℕ} (budget : ℕ) (P : (Fin r → ℕ) → Prop) :
+  (∃ w, DiophantineNP.natCost w ≤ budget ∧ P w) ↔
+    ∃ s, s.length ≤ 2 * budget + r ∧ ∃ w, DiophantineNP.Classes.BinaryCertificates.decode r s = some w ∧ P w
+DiophantineNP.Classes.Clocked.instance_clock (M : DiophantineNP.Classes.Clocked.Machine) (t q : Polynomial ℕ) (r : ℕ)
+  (total :
+    ∀ (u : List (Option Bool)),
+      ∃ b,
+        DiophantineNP.Classes.Clocked.runFor M u (Polynomial.eval u.length t) =
+          DiophantineNP.Classes.Clocked.output M b) :
+  ∃ T,
+    ∀ (x : ℕ) (w : Fin r → ℕ),
+      DiophantineNP.natCost w ≤ Polynomial.eval (DiophantineNP.bits x) q →
+        DiophantineNP.Classes.Clocked.runFor M (DiophantineNP.Classes.tape x w)
+            (Polynomial.eval (DiophantineNP.bits x) T) =
+          DiophantineNP.Classes.Clocked.runFor M (DiophantineNP.Classes.tape x w)
+            (Polynomial.eval (DiophantineNP.Classes.tape x w).length t)
+DiophantineNP.Classes.Clocked.binary_certificate_iff (L : DiophantineNP.Classes.Language) :
+  L ∈ DiophantineNP.Classes.NP ↔
+    ∃ r q M t,
+      (∀ (u : List (Option Bool)),
+          ∃ b,
+            DiophantineNP.Classes.Clocked.runFor M u (Polynomial.eval u.length t) =
+              DiophantineNP.Classes.Clocked.output M b) ∧
+        ∀ (x : ℕ),
+          x ∈ L ↔
+            ∃ s,
+              s.length ≤ 2 * Polynomial.eval (DiophantineNP.bits x) q + r ∧
+                DiophantineNP.Classes.Clocked.acceptsWord M t r x s
+'DiophantineNP.Classes.Clocked.languages_eq_NP' depends on axioms: [propext, Classical.choice, Quot.sound]
+DiophantineNP.Classes.tape_length_bounds {r : ℕ} (x : ℕ) (w : Fin r → ℕ) :
+  DiophantineNP.bits x + DiophantineNP.natCost w ≤ (DiophantineNP.Classes.tape x w).length ∧
+    (DiophantineNP.Classes.tape x w).length ≤ DiophantineNP.bits x + DiophantineNP.natCost w + (r + 1)
+DiophantineNP.Blueprint.clearedNum_spec {d : ℕ} (e : DiophantineNP.LaurentBounds.Expr d)
+  (he : DiophantineNP.Blueprint.WellFormed e) (x : Fin d → ℕ) (hx : ∀ (i : Fin d), 0 < x i) :
+  ↑(DiophantineNP.Blueprint.clearedNum e x) =
+    (∏ i, ↑(x i)) ^ (DiophantineNP.Blueprint.evalBounds e).radius *
+      DiophantineNP.ScalarProjection.rawValue e.expand fun i => ↑(x i)
+DiophantineNP.Blueprint.packedExpr_evaluated (hc : DiophantineNP.PowerTests.Cyclic)
+  (hq : DiophantineNP.PowerTests.Quadratic) (k : ℕ) (φ : DiophantineNP.Counting.Formula (k + 1)) :
+  ∃ e,
+    Nonempty
+        (DiophantineNP.Blueprint.Evaluated (Option (Fin k)) (4 + DiophantineNP.FormulaLaurent.depth φ)
+          (DiophantineNP.Blueprint.ValidInput k) e) ∧
+      ∀ (U : ℕ) (t : Fin k → Fin U),
+        0 < U →
+          DiophantineNP.Blueprint.ScalarEquiv U (e (DiophantineNP.Packing.termInputs t))
+            (DiophantineNP.FormulaLaurent.packedExpr φ t)
+'DiophantineNP.Blueprint.packedScalarPrograms' depends on axioms: [propext, Classical.choice, Quot.sound]
+'DiophantineNP.nativeVerifier_of_external' depends on axioms: [propext, Classical.choice, Quot.sound]
+'DiophantineNP.classEquality_of_external' depends on axioms: [propext, Classical.choice, Quot.sound]
+DiophantineNP.Curve37.canonicalHeight_zsmul (Q : DiophantineNP.Curve37.E.Point) (j : ℤ) :
+  DiophantineNP.Curve37.canonicalHeight (j • Q) = DiophantineNP.Curve37.canonicalHeight Q * ↑j ^ 2
+DiophantineNP.Curve37.cyclic_iff_rank_one :
+  DiophantineNP.PowerTests.Cyclic ↔ Module.rank ℤ DiophantineNP.Curve37.E.Point = 1
+DiophantineNP.FiniteArithmeticGap.bitAt_eval {k U : ℕ} (x j : Fin k) (env : Fin k → Fin U) :
+  (DiophantineNP.FiniteArithmeticGap.bitAt x j).eval env = (↑(env x)).testBit ↑(env j)
+DiophantineNP.FiniteArithmeticGap.ProductTemplate.fullSum_correct
+  (P : DiophantineNP.FiniteArithmeticGap.ProductTemplate) {U : ℕ} (f : ℕ → ℕ) (fits : ∀ t < U, f t < 2 ^ U)
+  (j : Fin U) :
+  (DiophantineNP.WidthFormula.Template.eval (fun r c => (f ↑r).testBit ↑c) P.fullSum fun x => j) =
+    (DiophantineNP.Readout.prefixSum f U).testBit ↑j
+DiophantineNP.FiniteArithmeticGap.ProductTemplate.widthDescriptions
+  (A : DiophantineNP.FiniteArithmeticGap.ProductTemplate) : DiophantineNP.Packing.WidthDescriptions
+DiophantineNP.JMTableau.printed_half_mask_wrong_quotient :
+  have q := 64;
+  have I := 1 + q;
+  have L := q;
+  have R := 2 * q;
+  have J := 0;
+  DiophantineNP.BitIncl (2 * J) R ∧
+    DiophantineNP.BitIncl J ((q / 2 - 1) * L) ∧ DiophantineNP.BitIncl R ((q - 1) * (I - L) + 2 * J + I) ∧ J ≠ 2 / 2 * q
+DiophantineNP.JMTableau.printed_half_mask_counterexample :
+  have q := 64;
+  have I := 1 + q + q ^ 2 + q ^ 3;
+  have L := q;
+  have R := 1 + q + q ^ 2;
+  2 ^ 3 * (1 + 1) < q / 2 ∧
+    (∀ (J : ℕ), ¬DiophantineNP.BitIncl R ((q - 1) * (I - L) + 2 * J + I)) ∧
+      DiophantineNP.JMTableau.halfConditions q I L R 0
+DiophantineNP.JMTableau.halfConditions_iff {w n : ℕ} (r j : Fin n → ℕ) (on : Fin n → Bool)
+  (hr : ∀ (i : Fin n), r i < 2 ^ (w + 1)) (hj : ∀ (i : Fin n), j i < 2 ^ (w + 1)) :
+  have q := 2 ^ (w + 1);
+  have L := DiophantineNP.JMTableau.pack q fun i => if on i = true then 1 else 0;
+  DiophantineNP.JMTableau.halfConditions q (DiophantineNP.JMTableau.pack q fun x => 1) L
+      (DiophantineNP.JMTableau.pack q r) (DiophantineNP.JMTableau.pack q j) ↔
+    ∀ (i : Fin n), j i = if on i = true then r i / 2 else 0
+DiophantineNP.JMTableau.branchChecks_iff {m b n w : ℕ}
+  (P : Fin b → List (DiophantineNP.JMTableau.Affine m × DiophantineNP.JMTableau.Affine m)) (r : Fin m → Fin n → ℕ)
+  (hw : 0 < w) (hb : b < 2 ^ w) (hr : ∀ (j : Fin m) (t : Fin n), r j t < 2 ^ w)
+  (hL : ∀ (i : Fin b), ∀ p ∈ P i, ∀ (t : Fin n), (p.1.eval fun j => r j t) < 2 ^ w)
+  (hR : ∀ (i : Fin b), ∀ p ∈ P i, ∀ (t : Fin n), (p.2.eval fun j => r j t) < 2 ^ w) :
+  (DiophantineNP.JMTableau.branchChecks P (2 ^ w) (DiophantineNP.JMTableau.pack (2 ^ w) fun x => 1) fun j =>
+      DiophantineNP.JMTableau.pack (2 ^ w) (r j)) ↔
+    ∀ (t : Fin n), ∃ i, ∀ p ∈ P i, (p.1.eval fun j => r j t) = p.2.eval fun j => r j t
+DiophantineNP.JMTableau.shiftTrace_iff {w n : ℕ} (a b : Fin n → ℕ) (first last : ℕ) (ha : ∀ (t : Fin n), a t < 2 ^ w)
+  (hb : ∀ (t : Fin n), b t < 2 ^ w) (hf : first < 2 ^ w) (hl : last < 2 ^ w) :
+  have q := 2 ^ w;
+  have I := DiophantineNP.JMTableau.pack q fun x => 1;
+  DiophantineNP.JMTableau.pack q a + ((q - 1) * I + 1) * last = q * DiophantineNP.JMTableau.pack q b + first ↔
+    ∃ r, r 0 = first ∧ r (Fin.last n) = last ∧ (∀ (t : Fin n), r t.castSucc = a t) ∧ ∀ (t : Fin n), r t.succ = b t
+DiophantineNP.Classes.Jones.Machine.regStep_affine_iff (tm : Turing.FinTM2)
+  (A C : DiophantineNP.Classes.Jones.Machine.Registers tm) :
+  DiophantineNP.Classes.Jones.Machine.regStep tm A = some C ↔
+    ∃ l,
+      A.label = some l ∧
+        ∃ v ∈ DiophantineNP.Classes.Jones.Machine.variants tm (tm.m l) A.state,
+          v.label = C.label ∧
+            v.state = C.state ∧
+              ∃ x,
+                x ∘ DiophantineNP.Classes.Jones.Machine.rowCell tm 0 = A.stack ∧
+                  x ∘ DiophantineNP.Classes.Jones.Machine.rowCell tm (Fin.last v.ops.length) = C.stack ∧
+                    DiophantineNP.Classes.Jones.Machine.Satisfies
+                      (DiophantineNP.Classes.Jones.Machine.pathEquations tm v.ops) x
+DiophantineNP.Classes.Jones.Machine.readTape_iff (M : DiophantineNP.Classes.Jones.Machine.VerifierMachine) {r : ℕ}
+  (x : ℕ) (w : Fin r → ℕ) (s : ℕ) :
+  DiophantineNP.Classes.Jones.Machine.ReadFields M (x :: List.ofFn w) s 0 ↔
+    s =
+      DiophantineNP.Classes.Jones.Machine.stackCode M.tm M.tm.k₀
+        (DiophantineNP.Classes.Jones.Machine.verifierInput M (DiophantineNP.Classes.tape x w))
+DiophantineNP.Classes.Jones.Machine.acceptingTrace_fields_iff (M : DiophantineNP.Classes.Jones.Machine.VerifierMachine)
+  {r : ℕ} (x : ℕ) (w : Fin r → ℕ) (n B : ℕ) :
+  DiophantineNP.Classes.Jones.Machine.AcceptingRegisterTrace M (DiophantineNP.Classes.tape x w) n B ↔
+    DiophantineNP.Classes.Jones.Machine.Supported M.tm (DiophantineNP.Classes.Jones.Machine.verifierHalt M true).stk ∧
+      ∃ row,
+        DiophantineNP.Classes.Jones.Machine.InitialFields M x w (row 0) ∧
+          row (Fin.last n) =
+              DiophantineNP.Classes.Jones.Machine.encode M.tm
+                (DiophantineNP.Classes.Jones.Machine.verifierHalt M true) ∧
+            DiophantineNP.Classes.Jones.Machine.IsTrace (DiophantineNP.Classes.Jones.Machine.regStep M.tm) row ∧
+              ∀ (j : Fin (n + 1)) (k : M.tm.K), ((row j).stack k).size ≤ B
+DiophantineNP.Classes.Jones.Machine.np_has_bounded_register_verifier {L : DiophantineNP.Classes.Language}
+  (hL : L ∈ DiophantineNP.Classes.NP) :
+  ∃ r q M T S,
+    ∀ (x : ℕ),
+      x ∈ L ↔
+        ∃ w n,
+          DiophantineNP.natCost w ≤ Polynomial.eval (DiophantineNP.bits x) q ∧
+            n ≤ Polynomial.eval (DiophantineNP.bits x) T ∧
+              DiophantineNP.Classes.Jones.Machine.AcceptingRegisterTrace M (DiophantineNP.Classes.tape x w) n
+                (Polynomial.eval (DiophantineNP.bits x) S)
+DiophantineNP.Classes.Jones.mem_D_of_normalForm {L : DiophantineNP.Classes.Language}
+  (source : DiophantineNP.Classes.Jones.NormalForm L) (native : DiophantineNP.NativeVerifier)
+  (lengths : DiophantineNP.Classes.Jones.LengthGraph) : L ∈ DiophantineNP.Classes.D
+DiophantineNP.Classes.MachinePolynomial.evaluator {r : ℕ} (P : MvPolynomial (Option (Fin r)) ℤ) :
+  ∃ a b p,
+    (∀ (s : List (Option Bool)),
+        have words := DiophantineNP.Classes.MachinePolynomial.fieldAt s;
+        (s.length + 1) * (r + 2) + DiophantineNP.Classes.MachinePolynomial.Circuit.work words a +
+              DiophantineNP.Classes.MachinePolynomial.Circuit.work words b +
+            ((DiophantineNP.Classes.MachinePolynomial.Circuit.word words a).length +
+                (DiophantineNP.Classes.MachinePolynomial.Circuit.word words b).length +
+              1) ≤
+          Polynomial.eval s.length p) ∧
+      ∀ (x : ℕ) (w : Fin r → ℕ),
+        have words := DiophantineNP.Classes.MachinePolynomial.fieldAt (DiophantineNP.Classes.tape x w);
+        DiophantineNP.Classes.MachinePolynomial.equalWords
+              (DiophantineNP.Classes.MachinePolynomial.Circuit.word words a)
+              (DiophantineNP.Classes.MachinePolynomial.Circuit.word words b) =
+            true ↔
+          DiophantineNP.Classes.polyValue P x w = 0
+DiophantineNP.Classes.polynomialEvaluationInP_of_framedCircuitSimulation
+  (sim : DiophantineNP.Classes.FramedCircuitSimulation) : DiophantineNP.Classes.PolynomialEvaluationInP
+DiophantineNP.nativeVerifier_of_rank_and_product (rank : Module.rank ℤ DiophantineNP.Curve37.E.Point ≤ 1)
+  (product : DiophantineNP.FiniteArithmeticGap.ProductTemplate) : DiophantineNP.NativeVerifier
+DiophantineNP.classEquality_of_rank_product_normalForm (rank : Module.rank ℤ DiophantineNP.Curve37.E.Point ≤ 1)
+  (product : DiophantineNP.FiniteArithmeticGap.ProductTemplate) (source : DiophantineNP.JonesSourceDirection)
+  (evaluation : DiophantineNP.Classes.PolynomialEvaluationInP) : DiophantineNP.Classes.D = DiophantineNP.Classes.NP
+DiophantineNP.classEquality_of_rank_product_compilers (rank : Module.rank ℤ DiophantineNP.Curve37.E.Point ≤ 1)
+  (product : DiophantineNP.FiniteArithmeticGap.ProductTemplate) (traceCompiler : DiophantineNP.RegisterTraceNormalForm)
+  (circuitCompiler : DiophantineNP.Classes.FramedCircuitSimulation) : DiophantineNP.Classes.D = DiophantineNP.Classes.NP
+'DiophantineNP.classEquality_of_rank_product_compilers' depends on axioms: [propext, Classical.choice, Quot.sound]
+DiophantineNP.Classes.d_subset_np : DiophantineNP.Classes.D ⊆ DiophantineNP.Classes.NP
+DiophantineNP.Classes.np_subset_d_of_native (native : DiophantineNP.NativeVerifier) :
+  DiophantineNP.Classes.NP ⊆ DiophantineNP.Classes.D
+DiophantineNP.Classes.framedCircuitSimulation : DiophantineNP.Classes.FramedCircuitSimulation
+DiophantineNP.JMTableau.TraceTable.run_short (T : DiophantineNP.JMTableau.TraceTable)
+  (native : DiophantineNP.NativeVerifier) : DiophantineNP.BoundedRelation.Short T.Accepts
+DiophantineNP.Curve37.Kummer.class_number_one : NumberField.classNumber DiophantineNP.Curve37.Kummer.L = 1
+DiophantineNP.Curve37.Kummer.image_eq_unit_mul_square (Q : DiophantineNP.Curve37.E.Point) :
+  ∃ u z, DiophantineNP.Curve37.Kummer.image Q = ↑↑u * z ^ 2
+DiophantineNP.Curve37.rank_one : Module.rank ℤ DiophantineNP.Curve37.E.Point = 1
+DiophantineNP.classEquality_of_native (native : DiophantineNP.NativeVerifier) :
+  DiophantineNP.Classes.D = DiophantineNP.Classes.NP
+DiophantineNP.nativeVerifier_of_product (product : DiophantineNP.FiniteArithmeticGap.ProductTemplate) :
+  DiophantineNP.NativeVerifier
+DiophantineNP.classEquality_of_product (product : DiophantineNP.FiniteArithmeticGap.ProductTemplate) :
+  DiophantineNP.Classes.D = DiophantineNP.Classes.NP
+'DiophantineNP.Curve37.rank_one' depends on axioms: [propext, Classical.choice, Quot.sound]
+'DiophantineNP.classEquality_of_product' depends on axioms: [propext, Classical.choice, Quot.sound]
+DiophantineNP.Classes.Dcoord_eq_D : DiophantineNP.Classes.Dcoord = DiophantineNP.Classes.D
+DiophantineNP.Classes.Dpower_eq_D : DiophantineNP.Classes.Dpower = DiophantineNP.Classes.D
+DiophantineNP.classEquality_powerCutoff_of_hab (hab : DiophantineNP.HAB.ImultInFOM) :
+  DiophantineNP.Classes.Dpower = DiophantineNP.Classes.NP
+DiophantineNP.ShortResidue.productResidue_spec {U K : ℕ} (n p b : Fin U) (f : ℕ → ℕ) (hp : Nat.Prime ↑p)
+  (hsize : ↑n * ↑p < U - U / 2) (hK : 2 ≤ K) (hpk : ↑p ≤ 2 ^ K) (hcap : 2 ^ ((K + 1) * K) < U) :
+  DiophantineNP.WidthFormula.Template.eval (fun r v => decide (↑v = f ↑r % ↑p))
+        DiophantineNP.ShortResidue.productResidue ![n, p, b] =
+      true ↔
+    ↑b = DiophantineNP.WidthFormula.productPrefix f ↑n % ↑p
+DiophantineNP.WidthPrimeResidue.description_correct {k n K : ℕ} (m d p b : Fin k)
+  (env : Fin k → Fin (DiophantineNP.WidthData.universeSize n)) (hd : ↑(env d) = 4 * n + 10)
+  (hm : ↑(env m) = n * ↑(env d)) (hp : Nat.Prime ↑(env p))
+  (hsize : ↑(env m) * ↑(env p) < DiophantineNP.WidthData.universeSize n - DiophantineNP.WidthData.universeSize n / 2)
+  (hK : 2 ≤ K) (hpk : ↑(env p) ≤ 2 ^ K) (hcap : 2 ^ ((K + 1) * K) < DiophantineNP.WidthData.universeSize n) :
+  (DiophantineNP.WidthPrimeResidue.description m d p b).eval env = true ↔
+    ↑(env b) = DiophantineNP.WidthData.widthD n % ↑(env p)
+DiophantineNP.HAB.Form.translate_correct {k U : ℕ} (p : DiophantineNP.HAB.Form k) (A : DiophantineNP.HAB.Matrix U)
+  (e : Fin k → Fin U) :
+  DiophantineNP.WidthFormula.Template.eval A p.translate e = true ↔ DiophantineNP.HAB.Form.Holds A p e
+DiophantineNP.HAB.productTemplate_of_imult (source : DiophantineNP.HAB.ImultInFOM) :
+  DiophantineNP.FiniteArithmeticGap.ProductTemplate
+DiophantineNP.classEquality_of_hab (hab : DiophantineNP.HAB.ImultInFOM) :
+  DiophantineNP.Classes.D = DiophantineNP.Classes.NP
+'DiophantineNP.classEquality_of_hab' depends on axioms: [propext, Classical.choice, Quot.sound]
+DiophantineNP.HAB.toSource_correct {k U : ℕ} (p : DiophantineNP.WidthFormula.Template k)
+  (A : DiophantineNP.HAB.Matrix U) (e : Fin k → Fin U) :
+  DiophantineNP.HAB.Form.Holds A (DiophantineNP.HAB.toSource p) e ↔
+    DiophantineNP.WidthFormula.Template.eval A p e = true
+DiophantineNP.HAB.Form.onPrefix_correct {k a U V : ℕ} (p : DiophantineNP.HAB.Form k) (σ : Fin k → Fin a) (v : Fin a)
+  (A : DiophantineNP.HAB.Matrix U) (h : V ≤ U) (e : Fin a → Fin U) (s : Fin k → Fin V) (hv : ↑(e v) = V)
+  (he : ∀ (i : Fin k), e (σ i) = Fin.castLE h (s i)) :
+  DiophantineNP.HAB.Form.Holds A (p.onPrefix σ v) e ↔
+    DiophantineNP.HAB.Form.Holds (DiophantineNP.HAB.prefixMatrix A h) p s
+DiophantineNP.HABPairInterpretation.compile_correct (input : DiophantineNP.HABPairInterpretation.Input) {a k U : ℕ}
+  (p : DiophantineNP.HAB.Form a) (hi lo : Fin a → Fin k) (A : DiophantineNP.HAB.Matrix U)
+  (B : DiophantineNP.HAB.Matrix (U * U)) (e : Fin k → Fin U)
+  (hInput :
+    ∀ {m : ℕ} (rh rl ch cl : Fin m) (env : Fin m → Fin U),
+      DiophantineNP.WidthFormula.Template.eval A (input rh rl ch cl) env =
+        B (DiophantineNP.HABPairInterpretation.code (env rh) (env rl))
+          (DiophantineNP.HABPairInterpretation.code (env ch) (env cl))) :
+  DiophantineNP.WidthFormula.Template.eval A (DiophantineNP.HABPairInterpretation.compile input p hi lo) e = true ↔
+    DiophantineNP.HAB.Form.Holds B p fun i => DiophantineNP.HABPairInterpretation.code (e (hi i)) (e (lo i))
+DiophantineNP.HABIndependentSum.formula_correct {U : ℕ} (f : ℕ → ℕ) (fits : ∀ i < U, f i < 2 ^ U) (j : Fin U) :
+  (DiophantineNP.WidthFormula.Template.eval (fun r c => (f ↑r).testBit ↑c) DiophantineNP.HABIndependentSum.formula
+      fun x => j) =
+    (DiophantineNP.Readout.prefixSum f U).testBit ↑j
+DiophantineNP.HABIndependentSum.multiply_correct {U : ℕ} (a b : DiophantineNP.WidthFormula.Template 1)
+  (e : Fin U → Fin U → Bool) (x y : ℕ)
+  (ha : ∀ (i : Fin U), (DiophantineNP.WidthFormula.Template.eval e a fun x => i) = x.testBit ↑i)
+  (hb : ∀ (i : Fin U), (DiophantineNP.WidthFormula.Template.eval e b fun x => i) = y.testBit ↑i) (j : Fin U) :
+  (DiophantineNP.WidthFormula.Template.eval e (DiophantineNP.HABIndependentSum.multiply a b) fun x => j) =
+    (x * y).testBit ↑j
+DiophantineNP.HABProductBlocks.binaryProduct_spec {k U K : ℕ} (p b : Fin k) (v : Fin k → Fin U)
+  (A : DiophantineNP.HAB.Matrix U) (hp : Nat.Prime ↑(v p)) (hK : 2 ≤ K) (hpk : ↑(v p) ≤ 2 ^ K)
+  (hcap : 2 ^ ((K + 1) * K) < U) :
+  DiophantineNP.WidthFormula.Template.eval A (DiophantineNP.HABProductBlocks.binaryProduct p b) v = true ↔
+    ↑(v b) = (∏ r, DiophantineNP.HAB.rowWord (A r)) % ↑(v p)
+DiophantineNP.HABProductBlocks.padded_short_prime_collision {U d : ℕ} (hU : 4 ≤ U) (large : 2 ^ (4 * d) ≤ U) :
+  ∃ x, 1 < x ∧ x < 2 ^ U ∧ ∀ (p K : ℕ), Nat.Prime p → 2 ≤ K → p ≤ 2 ^ K → 2 ^ ((K + 1) * K) < U ^ d → x % p = 1 % p
+DiophantineNP.HABPolylogRange.block_covered {U d k s t j : ℕ}
+  (hU : DiophantineNP.HABPolylogRange.threshold (4 * d + 9) ≤ U) (hk : k ≤ U.log2 ^ d) (hs : s ≤ U.log2 ^ d)
+  (ht : t ≤ s) (hj : j < k) :
+  have K := DiophantineNP.HABPolylogRange.tableBits (4 * d + 9) U;
+  2 ≤ K ∧ DiophantineNP.HABCRTShift.primeAt (t * k + j) ≤ 2 ^ K ∧ 2 ^ ((K + 1) * K) < U
+DiophantineNP.HABBoundedProduct.checkFactors_exact {k U d bits : ℕ} (r : Fin k) (A B : DiophantineNP.HAB.Matrix U)
+  (e : Fin k → Fin U) (cell : {a : ℕ} → Fin a → Fin a → DiophantineNP.WidthFormula.Template a)
+  (entry :
+    ∀ {a : ℕ} (r c : Fin a) (s : Fin a → Fin U),
+      DiophantineNP.WidthFormula.Template.eval A (cell r c) s = B (s r) (s c))
+  (large : DiophantineNP.HABPolylogRange.threshold (4 * d + 9) ≤ U) (size : bits ≤ U.log2 ^ d)
+  (hv : DiophantineNP.HAB.rowWord (A (e r)) < 2 ^ bits) (hp : ∏ i, DiophantineNP.HAB.rowWord (B i) < 2 ^ bits) :
+  DiophantineNP.WidthFormula.Template.eval A (DiophantineNP.HABBoundedProduct.checkFactors r cell) e = true ↔
+    DiophantineNP.HAB.rowWord (A (e r)) = ∏ i, DiophantineNP.HAB.rowWord (B i)
+DiophantineNP.HABPolynomialProduct.polynomial_value (d : ℕ) :
+  ∃ f,
+    ∀ {U : ℕ},
+      2 ≤ U →
+        ∀ (A : DiophantineNP.HAB.Matrix U) (hi lo : Fin U),
+          ∏ r, DiophantineNP.HAB.rowWord (A r) < U ^ d →
+            (DiophantineNP.HAB.Form.Holds A f (DiophantineNP.WidthFormula.pairEnv hi lo) ↔
+              (∏ r, DiophantineNP.HAB.rowWord (A r)).testBit (↑hi * U + ↑lo) = true)
+DiophantineNP.HABPrimeBlocks.blockMember_by_rank {n U : ℕ} (k t p : Fin n) (A : DiophantineNP.HAB.Matrix U)
+  (e : Fin n → Fin U) :
+  DiophantineNP.WidthFormula.Template.eval A (DiophantineNP.HABPrimeBlocks.blockMember k t p) e = true ↔
+    Nat.Prime ↑(e p) ∧
+      ↑(e t) * ↑(e k) + 1 ≤ Nat.count Nat.Prime ↑(e p) ∧ Nat.count Nat.Prime ↑(e p) < (↑(e t) + 1) * ↑(e k) + 1
+DiophantineNP.HABCRTCoefficients.coefficient_spec {n U : ℕ} (basis : DiophantineNP.WidthFormula.Template (n + 1))
+  (input : DiophantineNP.WidthFormula.Template (n + 2)) (A : DiophantineNP.HAB.Matrix U) (e : Fin n → Fin U)
+  (s : Finset ℕ) (fits : DiophantineNP.HABCRTCoefficients.Fits s)
+  (members : DiophantineNP.HABCRTCoefficients.Members basis A e s) (p b : Fin U) (hp : Nat.Prime ↑p)
+  (ok : DiophantineNP.HABBoundedProduct.Supported U ↑p) (x : ℕ)
+  (data :
+    ∀ (z : Fin U),
+      DiophantineNP.WidthFormula.Template.eval A input (DiophantineNP.WidthFormula.extend z p e) = true ↔ ↑z = x % ↑p) :
+  DiophantineNP.WidthFormula.Template.eval A (DiophantineNP.HABCRTCoefficients.coefficient basis input)
+        (DiophantineNP.WidthFormula.extend b p e) =
+      true ↔
+    ↑b = DiophantineNP.HABCRTRecovery.coeff (DiophantineNP.HABCRTRecovery.inverse s) x ↑p
+DiophantineNP.HABCRTShift.matrix_product_bit {U : ℕ} (A : DiophantineNP.HAB.Matrix U) (hi lo : Fin U) :
+  have x := ∏ r, DiophantineNP.HAB.rowWord (A r);
+  have s := ↑hi * U + ↑lo;
+  (DiophantineNP.HABCRTShift.quotient x (DiophantineNP.HABCRTShift.blocks (U * U + 1) s)).testBit 0 = x.testBit s
+DiophantineNP.HABCRTRecovery.quotientField_of_square_le {U k X B : ℕ} (b t r p x : Fin k) (e : Fin k → Fin U)
+  (hp : 0 < ↑(e p)) (cop : (↑(e p)).Coprime B) (hb : ↑(e b) = B % ↑(e p)) (hr : ↑(e r) = X % B % ↑(e p))
+  (hx : ↑(e x) = X % ↑(e p)) (ht : ↑(e t) < ↑(e p)) (cap : ↑(e p) ^ 2 ≤ U) :
+  DiophantineNP.WidthFormula.Template.eval (fun x x => false) (DiophantineNP.HABCRTRecovery.quotientField b t r p x) e =
+      true ↔
+    ↑(e t) = X / B % ↑(e p)
+DiophantineNP.HABCRTLeading.residueLt_correct {n U K x y : ℕ} (L : Fin n)
+  (basis : DiophantineNP.WidthFormula.Template (n + 1)) (a b : DiophantineNP.WidthFormula.Template (n + 2))
+  (A : DiophantineNP.HAB.Matrix U) (e : Fin n → Fin U) (s : Finset ℕ) (primes : ∀ p ∈ s, Nat.Prime p)
+  (small : ∀ p ∈ s, p ≤ 2 ^ K) (hK : 2 ≤ K) (cap : 2 ^ ((K + 1) * K) < U)
+  (hx : x < DiophantineNP.HABCRTRecovery.modulus s) (hy : y < DiophantineNP.HABCRTRecovery.modulus s)
+  (precise : DiophantineNP.HABCRTRecovery.modulus s * DiophantineNP.HABCRTRecovery.budget s < 2 ^ ↑(e L))
+  (sel : DiophantineNP.HABCRTCoefficients.Members basis A e s) (ha : DiophantineNP.HABCRTLeading.Residues a A e s x)
+  (hb : DiophantineNP.HABCRTLeading.Residues b A e s y) :
+  DiophantineNP.WidthFormula.Template.eval A (DiophantineNP.HABCRTLeading.residueLt L basis a b) e = true ↔ x < y
+DiophantineNP.HABCRTExtend.formula_correct {n U K x : ℕ} (L q t : Fin n)
+  (basis : DiophantineNP.WidthFormula.Template (n + 1)) (input : DiophantineNP.WidthFormula.Template (n + 2))
+  (A : DiophantineNP.HAB.Matrix U) (e : Fin n → Fin U) (s : Finset ℕ) (hp : Nat.Prime ↑(e q))
+  (pr : ∀ p ∈ s, Nat.Prime p) (small : ∀ p ∈ insert (↑(e q)) s, p ≤ 2 ^ K) (hK : 2 ≤ K) (cap : 2 ^ ((K + 1) * K) < U)
+  (hx : x < DiophantineNP.HABCRTRecovery.modulus s)
+  (precision :
+    DiophantineNP.HABCRTRecovery.modulus (insert (↑(e q)) s) * DiophantineNP.HABCRTRecovery.budget (insert (↑(e q)) s) <
+      2 ^ ↑(e L))
+  (sel : DiophantineNP.HABCRTCoefficients.Members basis A e s)
+  (data :
+    ∀ (p b : Fin U),
+      ↑p ∈ s →
+        (DiophantineNP.WidthFormula.Template.eval A input (DiophantineNP.WidthFormula.extend b p e) = true ↔
+          ↑b = x % ↑p)) :
+  DiophantineNP.WidthFormula.Template.eval A (DiophantineNP.HABCRTExtend.formula L q t basis input) e = true ↔
+    ↑(e t) = x % ↑(e q)
+DiophantineNP.HABCRTDot.readout_correct {n U K x : ℕ} (L : Fin n)
+  (active modulusBits : DiophantineNP.WidthFormula.Template (n + 1)) (a : DiophantineNP.WidthFormula.Template (n + 2))
+  (A : DiophantineNP.HAB.Matrix U) (e : Fin n → Fin U) (s : Finset ℕ) (inv : ℕ → ℕ) (primes : ∀ p ∈ s, Nat.Prime p)
+  (small : ∀ p ∈ s, p ≤ 2 ^ K) (hK : 2 ≤ K) (cap : 2 ^ ((K + 1) * K) < U)
+  (hinv : ∀ p ∈ s, DiophantineNP.HABCRTRecovery.cofactor s p * inv p ≡ 1 [MOD p])
+  (hx : x < DiophantineNP.HABCRTRecovery.modulus s)
+  (precise : DiophantineNP.HABCRTRecovery.modulus s * DiophantineNP.HABCRTRecovery.budget s < 2 ^ ↑(e L))
+  (sel : ∀ (r : Fin U), (DiophantineNP.WidthFormula.Template.eval A active fun i => Fin.cases r e i) = true ↔ ↑r ∈ s)
+  (ha :
+    ∀ (r c : Fin U),
+      ↑r ∈ s →
+        DiophantineNP.WidthFormula.Template.eval A a (DiophantineNP.WidthFormula.extend c r e) =
+          (DiophantineNP.HABCRTRecovery.coeff inv x ↑r).testBit ↑c)
+  (hm :
+    ∀ (j : Fin U),
+      (DiophantineNP.WidthFormula.Template.eval A modulusBits fun i => Fin.cases j e i) =
+        (DiophantineNP.HABCRTRecovery.modulus s).testBit ↑j)
+  (j : Fin U) (fit : ↑(e L) + ↑j < U ∨ DiophantineNP.HABCRTRecovery.modulus s ≤ 2 ^ (U - ↑(e L))) :
+  (DiophantineNP.WidthFormula.Template.eval A (DiophantineNP.HABCRTDot.readout L active modulusBits a) fun i =>
+      Fin.cases j e i) =
+    x.testBit ↑j
+DiophantineNP.HABGroupPower.prime_power_iff {p a : ℕ} (prime : Nat.Prime p) (ha : a < p) (r b : ℕ) :
+  a ^ r % p = b ↔
+    (a = 0 ∧ b = if r = 0 then 1 else 0) ∨
+      ∃ g h, (↑g).val = a ∧ (↑h).val = b ∧ DiophantineNP.HABGroupPower.ShortCertificate g h r
+DiophantineNP.HABPowerReduction.source_correct (prod : DiophantineNP.HABPowerReduction.ShortProducts) {U : ℕ}
+  (A : DiophantineNP.HAB.Matrix U) (p a r b : Fin U) (prime : Nat.Prime ↑p) (hap : ↑a < ↑p) :
+  DiophantineNP.HAB.Form.Holds A (DiophantineNP.HABPowerReduction.source prod) ![p, a, r, b] ↔ ↑a ^ ↑r % ↑p = ↑b
+DiophantineNP.HABDivisionGraph.formula_correct {U : ℕ} (A : DiophantineNP.HAB.Matrix U) (e : Fin 3 → Fin U) :
+  DiophantineNP.HAB.Form.Holds A DiophantineNP.HABDivisionGraph.formula e ↔
+    0 < DiophantineNP.HAB.rowWord (A (e 1)) ∧
+      DiophantineNP.HAB.rowWord (A (e 2)) = DiophantineNP.HAB.rowWord (A (e 0)) / DiophantineNP.HAB.rowWord (A (e 1))
+DiophantineNP.HABGeometricDivision.division_in_FOM_of_imult (h : DiophantineNP.HAB.ImultInFOM) :
+  ∃ φ,
+    ∀ {U : ℕ} (hU : 2 ≤ U) (A : DiophantineNP.HAB.Matrix U) (j : Fin U),
+      (DiophantineNP.HAB.Form.Holds A φ fun x => j) ↔
+        (DiophantineNP.HAB.rowWord (A ⟨0, ⋯⟩) / DiophantineNP.HAB.rowWord (A ⟨1, ⋯⟩)).testBit ↑j = true
+DiophantineNP.HAB.imult_iff_productTemplate :
+  DiophantineNP.HAB.ImultInFOM ↔ Nonempty DiophantineNP.FiniteArithmeticGap.ProductTemplate
+DiophantineNP.HAB.corollary63_iff_productTemplate :
+  DiophantineNP.HAB.Corollary63 ↔ Nonempty DiophantineNP.FiniteArithmeticGap.ProductTemplate
+'DiophantineNP.HAB.corollary63_iff_productTemplate' depends on axioms: [propext, Classical.choice, Quot.sound]
+'DiophantineNP.HABPolynomialProduct.polynomial_value' depends on axioms: [propext, Classical.choice, Quot.sound]
+'DiophantineNP.HABPowerReduction.source_correct' depends on axioms: [propext, Classical.choice, Quot.sound]
+DiophantineNP.HABCRTBitDecision.matrixBit_correct {n U K : ℕ} (k s L : Fin n) (A : DiophantineNP.HAB.Matrix U)
+  (e : Fin n → Fin U) (hK : 2 ≤ K) (cap : 2 ^ ((K + 1) * K) < U) (last : ↑(e L) = U - 1)
+  (small : ∀ t ≤ ↑(e s), ∀ p ∈ DiophantineNP.HABPrimeBlocks.primeSet (↑(e k)) t, p ≤ 2 ^ K)
+  (room : ∏ r, DiophantineNP.HAB.rowWord (A r) + 2 ^ ↑(e s) < DiophantineNP.HABCRTShift.block (↑(e k)) 0) :
+  DiophantineNP.WidthFormula.Template.eval A (DiophantineNP.HABCRTBitDecision.matrixBit k s L) e =
+    (∏ r, DiophantineNP.HAB.rowWord (A r)).testBit ↑(e s)
+DiophantineNP.HABPolylogProduct.formula_correct (d : ℕ) {U : ℕ} (hu : DiophantineNP.HABPolylogProduct.threshold d ≤ U)
+  (f : ℕ → ℕ) (fits : ∀ i < U, f i < 2 ^ U) (hp : DiophantineNP.WidthFormula.productPrefix f U < 2 ^ U.log2 ^ d)
+  (j : Fin U) :
+  (DiophantineNP.WidthFormula.Template.eval (fun r c => (f ↑r).testBit ↑c) (DiophantineNP.HABPolylogProduct.formula d)
+      fun x => j) =
+    (DiophantineNP.WidthFormula.productPrefix f U).testBit ↑j
+DiophantineNP.HABShortProducts.ofPolylogProduct (N : ℕ) (P : DiophantineNP.WidthFormula.Template 1)
+  (ok : DiophantineNP.HABShortProducts.BitsCorrect N 60 P) : DiophantineNP.HABPowerReduction.ShortProducts
+DiophantineNP.HABModularArithmetic.prime_power :
+  ∃ φ,
+    ∀ {U : ℕ} (A : DiophantineNP.HAB.Matrix U) (a r b p : Fin U),
+      Nat.Prime ↑p → (DiophantineNP.HAB.Form.Holds A φ ![a, r, b, p] ↔ ↑a ^ ↑r ≡ ↑b [MOD ↑p])
+DiophantineNP.HABLargePrimeProduct.source_correct (P : DiophantineNP.HABPowerReduction.ShortProducts) {k U : ℕ}
+  (p b : Fin k) (A : DiophantineNP.HAB.Matrix U) (e : Fin k → Fin U) (prime : Nat.Prime ↑(e p)) :
+  DiophantineNP.HAB.Form.Holds A (DiophantineNP.HABLargePrimeProduct.source P p b) e ↔
+    (∏ i, DiophantineNP.HAB.rowWord (A i)) % ↑(e p) = ↑(e b)
+DiophantineNP.HABWideBitDecision.localSpec (ops : DiophantineNP.HABPowerReduction.ShortProducts) :
+  DiophantineNP.HABWideOutput.LocalSpec (DiophantineNP.HABWideBitDecision.matrixBit ops 0 1 2)
+DiophantineNP.HABWideOutput.imult_of_local (F : DiophantineNP.WidthFormula.Template 3)
+  (valid : DiophantineNP.HABWideOutput.LocalSpec F) : DiophantineNP.HAB.ImultInFOM
+DiophantineNP.HAB.imultInFOM : DiophantineNP.HAB.ImultInFOM
+DiophantineNP.HAB.corollary63 : DiophantineNP.HAB.Corollary63
+DiophantineNP.nativeVerifier : DiophantineNP.NativeVerifier
+DiophantineNP.classEquality : DiophantineNP.Classes.D = DiophantineNP.Classes.NP
+DiophantineNP.classEquality_powerCutoff : DiophantineNP.Classes.Dpower = DiophantineNP.Classes.NP
+'DiophantineNP.HAB.imultInFOM' depends on axioms: [propext, Classical.choice, Quot.sound]
+'DiophantineNP.HAB.corollary63' depends on axioms: [propext, Classical.choice, Quot.sound]
+'DiophantineNP.nativeVerifier' depends on axioms: [propext, Classical.choice, Quot.sound]
+'DiophantineNP.classEquality' depends on axioms: [propext, Classical.choice, Quot.sound]
+'DiophantineNP.classEquality_powerCutoff' depends on axioms: [propext, Classical.choice, Quot.sound]
+Checked dependencies of 10290 project declarations, including 7145 theorem declarations. Axioms: [propext,
+ Quot.sound,
+ Classical.choice].
+Build and axiom audit succeeded.
+strict: re-elaborating 229 modules with autoImplicit off
+strict: ok. All project modules rechecked with autoImplicit disabled.
+--- Premises.lean (outside the default build)
+def DiophantineNP.PackedScalarPrograms : Prop :=
+∀ (k : ℕ) (φ : DiophantineNP.Counting.Formula (k + 1)),
+  ∃ num den,
+    (∀ (U : ℕ),
+        0 < U →
+          ∀ (t : Fin k → Fin U), 0 < DiophantineNP.ScalarProgram.Term.run (DiophantineNP.Packing.termInputs t) den) ∧
+      (∃ c,
+          ∀ (U : ℕ),
+            0 < U →
+              ∀ (t : Fin k → Fin U),
+                max (DiophantineNP.ScalarProgram.Term.peak (DiophantineNP.Packing.termInputs t) num)
+                    (DiophantineNP.ScalarProgram.Term.peak (DiophantineNP.Packing.termInputs t) den) ≤
+                  (1 + U) ^ c) ∧
+        ∀ (U : ℕ),
+          0 < U →
+            ∀ (t : Fin k → Fin U),
+              DiophantineNP.Packing.termRatio num den U t = DiophantineNP.FormulaLaurent.packedScalar φ t
+@[reducible] def DiophantineNP.PowerTests.Cyclic : Prop :=
+∀ (Q : DiophantineNP.Curve37.E.Point), ∃ j, j • DiophantineNP.Curve37.P = Q
+@[reducible] def DiophantineNP.PowerTests.Quadratic : Prop :=
+∀ (j : ℤ),
+  DiophantineNP.Curve37.canonicalHeight (j • DiophantineNP.Curve37.P) =
+    DiophantineNP.Curve37.canonicalHeight DiophantineNP.Curve37.P * ↑j ^ 2
+structure DiophantineNP.WidthFormula.LiteratureFormulas : Type
+number of parameters: 0
+fields:
+  DiophantineNP.WidthFormula.LiteratureFormulas.nativeBit : DiophantineNP.Counting.Formula 2
+  DiophantineNP.WidthFormula.LiteratureFormulas.bit_correct : ∀ {U : ℕ} (x j : Fin U),
+      self.nativeBit.eval (DiophantineNP.WidthFormula.pairEnv x j) = (↑x).testBit ↑j
+  DiophantineNP.WidthFormula.LiteratureFormulas.product : DiophantineNP.WidthFormula.Template 1
+  DiophantineNP.WidthFormula.LiteratureFormulas.sum : DiophantineNP.WidthFormula.Template 1
+  DiophantineNP.WidthFormula.LiteratureFormulas.product_correct : ∀ {U : ℕ} (f : ℕ → ℕ),
+      (∀ t < U, f t < 2 ^ U) →
+        ∀ (j : Fin U),
+          (DiophantineNP.WidthFormula.Template.eval (fun r c => (f ↑r).testBit ↑c) self.product fun x => j) =
+            (DiophantineNP.WidthFormula.productPrefix f U).testBit ↑j
+  DiophantineNP.WidthFormula.LiteratureFormulas.sum_correct : ∀ {U : ℕ} (f : ℕ → ℕ),
+      (∀ t < U, f t < 2 ^ U) →
+        ∀ (j : Fin U),
+          (DiophantineNP.WidthFormula.Template.eval (fun r c => (f ↑r).testBit ↑c) self.sum fun x => j) =
+            (DiophantineNP.Readout.prefixSum f U).testBit ↑j
+constructor:
+  DiophantineNP.WidthFormula.LiteratureFormulas.mk (nativeBit : DiophantineNP.Counting.Formula 2)
+    (bit_correct : ∀ {U : ℕ} (x j : Fin U), nativeBit.eval (DiophantineNP.WidthFormula.pairEnv x j) = (↑x).testBit ↑j)
+    (product sum : DiophantineNP.WidthFormula.Template 1)
+    (product_correct :
+      ∀ {U : ℕ} (f : ℕ → ℕ),
+        (∀ t < U, f t < 2 ^ U) →
+          ∀ (j : Fin U),
+            (DiophantineNP.WidthFormula.Template.eval (fun r c => (f ↑r).testBit ↑c) product fun x => j) =
+              (DiophantineNP.WidthFormula.productPrefix f U).testBit ↑j)
+    (sum_correct :
+      ∀ {U : ℕ} (f : ℕ → ℕ),
+        (∀ t < U, f t < 2 ^ U) →
+          ∀ (j : Fin U),
+            (DiophantineNP.WidthFormula.Template.eval (fun r c => (f ↑r).testBit ↑c) sum fun x => j) =
+              (DiophantineNP.Readout.prefixSum f U).testBit ↑j) :
+    DiophantineNP.WidthFormula.LiteratureFormulas
+def DiophantineNP.Classes.JonesMatiyasevichDirection : Prop :=
+DiophantineNP.InBoundedD DiophantineNP.BitIncl → DiophantineNP.Classes.NP ⊆ DiophantineNP.Classes.D
+def DiophantineNP.Classes.PolynomialEvaluationInP : Prop :=
+∀ (r : ℕ) (P : MvPolynomial (Option (Fin r)) ℤ),
+  DiophantineNP.Classes.PolytimePredicate fun x w => decide (DiophantineNP.Classes.polyValue P x w = 0)
+def DiophantineNP.Classes.D : Set DiophantineNP.Classes.Language :=
+{L |
+  ∃ r q P,
+    ∀ (x : ℕ),
+      x ∈ L ↔
+        ∃ w,
+          DiophantineNP.natCost w ≤ Polynomial.eval (DiophantineNP.bits x) q ∧
+            DiophantineNP.Classes.polyValue P x w = 0}
+def DiophantineNP.Classes.NP : Set DiophantineNP.Classes.Language :=
+{L |
+  ∃ r q V,
+    DiophantineNP.Classes.PolytimePredicate V ∧
+      ∀ (x : ℕ), x ∈ L ↔ ∃ w, DiophantineNP.natCost w ≤ Polynomial.eval (DiophantineNP.bits x) q ∧ V x w = true}
+def DiophantineNP.NativeVerifier : Prop :=
+∃ r C,
+  0 < r ∧
+    0 < C ∧
+      ∃ P,
+        ∀ (n a b : ℕ),
+          1 ≤ n →
+            a < 2 ^ n →
+              b < 2 ^ n →
+                (DiophantineNP.BitIncl a b →
+                    ∃ w, DiophantineNP.intCost w ≤ (n + 2) ^ C ∧ DiophantineNP.value P a b w = 0) ∧
+                  ∀ (w : Fin r → ℤ), DiophantineNP.value P a b w = 0 → DiophantineNP.BitIncl a b
+'DiophantineNP.classEquality_of_evaluator' depends on axioms: [propext, Classical.choice, Quot.sound]
+'DiophantineNP.nativeVerifier_of_evaluator' depends on axioms: [propext, Classical.choice, Quot.sound]
+'DiophantineNP.classEquality_of_external' depends on axioms: [propext, Classical.choice, Quot.sound]
+'DiophantineNP.nativeVerifier_of_external' depends on axioms: [propext, Classical.choice, Quot.sound]
+structure DiophantineNP.FiniteArithmeticGap.ProductTemplate : Type
+number of parameters: 0
+fields:
+  DiophantineNP.FiniteArithmeticGap.ProductTemplate.product : DiophantineNP.WidthFormula.Template 1
+  DiophantineNP.FiniteArithmeticGap.ProductTemplate.product_correct : ∀ {U : ℕ} (f : ℕ → ℕ),
+      (∀ t < U, f t < 2 ^ U) →
+        ∀ (j : Fin U),
+          (DiophantineNP.WidthFormula.Template.eval (fun r c => (f ↑r).testBit ↑c) self.product fun x => j) =
+            (DiophantineNP.WidthFormula.productPrefix f U).testBit ↑j
+constructor:
+  DiophantineNP.FiniteArithmeticGap.ProductTemplate.mk (product : DiophantineNP.WidthFormula.Template 1)
+    (product_correct :
+      ∀ {U : ℕ} (f : ℕ → ℕ),
+        (∀ t < U, f t < 2 ^ U) →
+          ∀ (j : Fin U),
+            (DiophantineNP.WidthFormula.Template.eval (fun r c => (f ↑r).testBit ↑c) product fun x => j) =
+              (DiophantineNP.WidthFormula.productPrefix f U).testBit ↑j) :
+    DiophantineNP.FiniteArithmeticGap.ProductTemplate
+def DiophantineNP.Classes.Jones.NormalForm : DiophantineNP.Classes.Language → Prop :=
+fun L =>
+  ∃ r P Q,
+    ∀ (x : ℕ),
+      x ∈ L ↔
+        ∃ w,
+          (∀ (i : Fin (r + 2)), ↑(w i).size ≤ Polynomial.eval (↑x.size) P) ∧
+            DiophantineNP.BitIncl (w 0) (w 1) ∧ DiophantineNP.Classes.polyValue Q x w = 0
+def DiophantineNP.JonesSourceDirection : Prop :=
+∀ L ∈ DiophantineNP.Classes.NP, DiophantineNP.Classes.Jones.NormalForm L
+def DiophantineNP.boundedTraceLanguage : ℕ →
+  Polynomial ℕ →
+    DiophantineNP.Classes.Jones.Machine.VerifierMachine →
+      Polynomial ℕ → Polynomial ℕ → DiophantineNP.Classes.Language :=
+fun r q M T S =>
+  {x |
+    ∃ w n,
+      DiophantineNP.natCost w ≤ Polynomial.eval (DiophantineNP.bits x) q ∧
+        n ≤ Polynomial.eval (DiophantineNP.bits x) T ∧
+          DiophantineNP.Classes.Jones.Machine.AcceptingRegisterTrace M (DiophantineNP.Classes.tape x w) n
+            (Polynomial.eval (DiophantineNP.bits x) S)}
+def DiophantineNP.RegisterTraceNormalForm : Prop :=
+∀ (r : ℕ) (q : Polynomial ℕ) (M : DiophantineNP.Classes.Jones.Machine.VerifierMachine) (T S : Polynomial ℕ),
+  DiophantineNP.Classes.Jones.NormalForm (DiophantineNP.boundedTraceLanguage r q M T S)
+def DiophantineNP.Classes.FramedCircuitSimulation : Prop :=
+∀ (r : ℕ) (a b : DiophantineNP.Classes.MachinePolynomial.Circuit (Option (Fin r))),
+  Nonempty (DiophantineNP.Classes.FramedCircuitMachine a b)
+DiophantineNP.nativeVerifier_of_rank_and_product (rank : Module.rank ℤ DiophantineNP.Curve37.E.Point ≤ 1)
+  (product : DiophantineNP.FiniteArithmeticGap.ProductTemplate) : DiophantineNP.NativeVerifier
+DiophantineNP.classEquality_of_rank_product_normalForm (rank : Module.rank ℤ DiophantineNP.Curve37.E.Point ≤ 1)
+  (product : DiophantineNP.FiniteArithmeticGap.ProductTemplate) (source : DiophantineNP.JonesSourceDirection)
+  (evaluation : DiophantineNP.Classes.PolynomialEvaluationInP) : DiophantineNP.Classes.D = DiophantineNP.Classes.NP
+DiophantineNP.classEquality_of_rank_product_compilers (rank : Module.rank ℤ DiophantineNP.Curve37.E.Point ≤ 1)
+  (product : DiophantineNP.FiniteArithmeticGap.ProductTemplate) (traceCompiler : DiophantineNP.RegisterTraceNormalForm)
+  (circuitCompiler : DiophantineNP.Classes.FramedCircuitSimulation) : DiophantineNP.Classes.D = DiophantineNP.Classes.NP
+'DiophantineNP.classEquality_of_rank_product_compilers' depends on axioms: [propext, Classical.choice, Quot.sound]
+DiophantineNP.Classes.d_subset_np : DiophantineNP.Classes.D ⊆ DiophantineNP.Classes.NP
+DiophantineNP.Curve37.rank_one : Module.rank ℤ DiophantineNP.Curve37.E.Point = 1
+DiophantineNP.classEquality_of_native (native : DiophantineNP.NativeVerifier) :
+  DiophantineNP.Classes.D = DiophantineNP.Classes.NP
+DiophantineNP.nativeVerifier_of_product (product : DiophantineNP.FiniteArithmeticGap.ProductTemplate) :
+  DiophantineNP.NativeVerifier
+DiophantineNP.classEquality_of_product (product : DiophantineNP.FiniteArithmeticGap.ProductTemplate) :
+  DiophantineNP.Classes.D = DiophantineNP.Classes.NP
+'DiophantineNP.classEquality_of_product' depends on axioms: [propext, Classical.choice, Quot.sound]
+def DiophantineNP.HAB.ImultInFOM : Prop :=
+∃ φ,
+  ∀ {U : ℕ},
+    2 ≤ U →
+      ∀ (A : DiophantineNP.HAB.Matrix U) (hi lo : Fin U),
+        DiophantineNP.HAB.Form.Holds A φ (DiophantineNP.WidthFormula.pairEnv hi lo) ↔
+          (∏ r, DiophantineNP.HAB.rowWord (A r)).testBit (↑hi * U + ↑lo) = true
+DiophantineNP.classEquality_of_hab (hab : DiophantineNP.HAB.ImultInFOM) :
+  DiophantineNP.Classes.D = DiophantineNP.Classes.NP
+DiophantineNP.HAB.corollary63 : DiophantineNP.HAB.Corollary63
+DiophantineNP.classEquality : DiophantineNP.Classes.D = DiophantineNP.Classes.NP
+'DiophantineNP.classEquality' depends on axioms: [propext, Classical.choice, Quot.sound]
+--- blueprint/Evaluator.lean (outside the default build)
+DiophantineNP.Blueprint.packedExpr_evaluated (hc : DiophantineNP.PowerTests.Cyclic)
+  (hq : DiophantineNP.PowerTests.Quadratic) (k : ℕ) (φ : DiophantineNP.Counting.Formula (k + 1)) :
+  ∃ e,
+    Nonempty
+        (DiophantineNP.Blueprint.Evaluated (Option (Fin k)) (4 + DiophantineNP.FormulaLaurent.depth φ)
+          (DiophantineNP.Blueprint.ValidInput k) e) ∧
+      ∀ (U : ℕ) (t : Fin k → Fin U),
+        0 < U →
+          DiophantineNP.Blueprint.ScalarEquiv U (e (DiophantineNP.Packing.termInputs t))
+            (DiophantineNP.FormulaLaurent.packedExpr φ t)
+'DiophantineNP.Blueprint.packedScalarPrograms' depends on axioms: [propext, Classical.choice, Quot.sound]
+'DiophantineNP.Blueprint.classEquality' depends on axioms: [propext, Classical.choice, Quot.sound]
+--- review/HAB63.lean (outside the default build)
+Corollary 6.3 uses [propext, Quot.sound, Classical.choice].
+--- review/Rank37.lean (outside the default build)
+Rank and generator use [Quot.sound, propext, Classical.choice].
+--- review/WidthOne.lean (outside the default build)
+'Review.WidthOne.concrete_certificate' depends on axioms: [propext, Classical.choice, Quot.sound]
+extras: ok. The standalone Lean files and reference evaluator passed.
+Process exit code 0

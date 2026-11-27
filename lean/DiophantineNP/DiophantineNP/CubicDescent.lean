@@ -1,8 +1,8 @@
 import DiophantineNP.CubicUnitSigns
 import DiophantineNP.CubicSignClasses
-import DiophantineNP.VerifiedCompilers
+import DiophantineNP.CubicIntegralReduction
 
-/-! # Descent from integral-unit square classes to the class equality -/
+/-! # The Mordell–Weil rank of the curve 37a1 by descent -/
 namespace DiophantineNP.Curve37.Kummer
 open NumberField
 open scoped NumberField
@@ -43,3 +43,15 @@ theorem cyclic_of_unitTimesSquare (h : ∀ Q : E.Point, UnitTimesSquare (image Q
     field_simp [image_ne_zero]
 
 end DiophantineNP.Curve37.Kummer
+
+namespace DiophantineNP
+
+/-- The generator (0,0) spans the rational points of the specified Weierstrass curve. -/
+theorem Curve37.rational_points_cyclic : PowerTests.Cyclic :=
+  Curve37.Kummer.cyclic_of_unitTimesSquare Curve37.Kummer.image_eq_unit_mul_square
+
+/-- The algebraic Mordell–Weil rank on the actual mathlib point type. -/
+theorem Curve37.rank_one : Module.rank ℤ Curve37.E.Point = 1 :=
+  Curve37.cyclic_iff_rank_one.mp Curve37.rational_points_cyclic
+
+end DiophantineNP

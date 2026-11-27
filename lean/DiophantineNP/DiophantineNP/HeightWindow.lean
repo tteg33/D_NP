@@ -8,7 +8,7 @@ import Mathlib.Tactic.Positivity
 
 This is the real-variable argument in Appendix A. The assumption on `h` is
 the uniform comparison of naive and canonical heights along the cyclic group.
-The curve-specific construction of such an `h` remains a separate obligation.
+`Curve37.adjacent_height_window` applies the estimate to the paper's curve.
 -/
 
 namespace DiophantineNP.HeightWindow

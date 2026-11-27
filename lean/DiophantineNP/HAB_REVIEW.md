@@ -1,6 +1,22 @@
 # Verifying Corollary 6.3 and its use in the draft
 
-The closed theorem `DiophantineNP.HAB.corollary63 : HAB.Corollary63` proves both published conclusions in the project’s finite source language. `DiophantineNP.classEquality : Classes.D = Classes.NP` then specializes the earlier class-equality proof. Both declarations are in `DiophantineNP/HABVerified.lean`. [Hesse, Allender and Barrington, *Uniform Constant-Depth Threshold Circuits for Division and Iterated Multiplication*, Corollary 6.3](https://people.cs.rutgers.edu/~allender/papers/division.pdf)
+The published Corollary 6.3 puts division and iterated multiplication in first-order logic with majority. The closed theorem `DiophantineNP.HAB.corollary63` in `DiophantineNP/HABCorollary63.lean` expresses both conclusions in the project’s finite logic. The application to bounded Diophantine languages appears in `DiophantineNP/HABVerified.lean`. [Hesse, Allender and Barrington, *Uniform Constant-Depth Threshold Circuits for Division and Iterated Multiplication*, Corollary 6.3](https://people.cs.rutgers.edu/~allender/papers/division.pdf)
+
+## Check the finite-logic theorem on its own
+
+From the directory containing `lakefile.toml`, build the theorem and inspect its statement and axiom dependencies.
+
+```sh
+lake build DiophantineNP.HABCorollary63
+lake env lean --stdin <<'LEAN'
+import DiophantineNP.HABCorollary63
+
+#print DiophantineNP.HAB.Corollary63
+#print DiophantineNP.HAB.DivisionInFOM
+#print DiophantineNP.HAB.ImultInFOM
+#print axioms DiophantineNP.HAB.corollary63
+LEAN
+```
 
 ## Compare the statements
 
@@ -9,7 +25,7 @@ The closed theorem `DiophantineNP.HAB.corollary63 : HAB.Corollary63` proves both
 | Does the finite logic match the paper? | `HAB.Form` and `Form.Holds` in `HABTranslation.lean` give equality, linear order, position-first BIT, an input relation, and ordinary quantification plus strict unary majority. The same finite syntax tree works for every universe. `HAB.toSource_correct` eliminates the auxiliary bounded arithmetic atoms. |
 | Are the inputs and all possible output bits represented? | A relation on $[U]^2$ encodes $U$ words of $U$ bits each, least significant bit first. The pair $(h,l)$ queries position $hU+l$ for every $h,l<U$. For division the first two rows encode the dividend and divisor. Every $U\ge2$ is covered. The division formula also returns zero on a zero divisor, following Lean’s natural-number division convention. |
 | Could a change of universe alter majority or the product? | `HABPairInterpretation.compile_correct` proves preservation of BIT and majority over pairs, including ties and odd sizes. `HABWideOutput.source_correct` interprets the polynomially larger workspace within the base universe and gives each added row the multiplicative identity. The draft’s low-bit interface handles sizes zero and one in `HAB.productTemplate_of_imult`. |
-| Does the draft use precisely this result? | `HAB.corollary63_iff_productTemplate` proves both directions. `classEquality_of_hab` supplies the connection to the verifier and both complexity inclusions. `HABVerified.lean` supplies the proved premise. |
+| Does the draft use precisely this result? | `HAB.corollary63_iff_productTemplate` proves both directions. `classEquality_of_hab` supplies the connection to the verifier and both complexity inclusions. `HAB.imultInFOM` in `HABCorollary63.lean` supplies its product formula. |
 
 ## Follow the proof without assuming the answer
 

@@ -1,0 +1,111 @@
+HAB63 standalone clean build. Start (UTC) 2026-11-27T06:35:10+00:00
+Source archive SHA-256 102aa837b74b863d99fceb58714a5638f2f8758dac5807af0acebeccba1e2798
+$ python3 review/export.py hab <fresh-output>.zip
+/workspace/scratch/2aa0d9f173d4/revision_work/standalone-80xci7_o/hab-repeat.zip: 80 local proof modules
+exit code 0
+A separate export is byte-for-byte identical.
+Extracted into a new project directory. Initially no .lake directory or compiled project modules.
+Existing dependency cache matched every pinned revision:
+mathlib f897ebcf72cd16f89ab4577d0c826cd14afaafc7
+plausible dfd06ebfe8d0e8fa7faba9cb5e5a2e74e7bd2805
+LeanSearchClient 99657ad92e23804e279f77ea6dbdeebaa1317b98
+importGraph d768126816be17600904726ca7976b185786e6b9
+proofwidgets 556caed0eadb7901e068131d1be208dd907d07a2
+aesop 725ac8cd67acd70a7beaf47c3725e23484c1ef50
+Qq dea6a3361fa36d5a13f87333dc506ada582e025c
+batteries 8da40b72fece29b7d3fe3d768bac4c8910ce9bee
+Cli 91c18fa62838ad0ab7384c03c9684d99d306e1da
+$ lean --version
+Lean (version 4.24.0, x86_64-unknown-linux-gnu, commit 797c613eb9b6d4ec95db23e3e00af9ac6657f24b, Release)
+exit code 0
+LEAN_NUM_THREADS=2; project artifact cache disabled.
+$ lake build
+✔ [1845/1850] Built DiophantineNP.ReadoutBits (910ms)
+✔ [1846/1856] Built DiophantineNP.Statement (2.0s)
+✔ [1893/1909] Built DiophantineNP.Readout (1.0s)
+✔ [1894/1909] Built DiophantineNP.Threshold (4.3s)
+✔ [1895/1911] Built DiophantineNP.WidthData (4.5s)
+✔ [1896/1931] Built DiophantineNP.WidthFrame (1.9s)
+✔ [2143/2218] Built DiophantineNP.HABDivisionCorrection (1.6s)
+✔ [2144/2218] Built DiophantineNP.Counting (7.3s)
+✔ [2145/2218] Built DiophantineNP.PackingBridge (2.5s)
+✔ [2146/2218] Built DiophantineNP.ScaleFormula (2.9s)
+✔ [2147/2218] Built DiophantineNP.PrimeFormula (4.5s)
+✔ [2148/2218] Built DiophantineNP.WidthFormulaTools (2.8s)
+✔ [2149/2218] Built DiophantineNP.SumProductDigits (1.8s)
+✔ [2150/2218] Built DiophantineNP.WidthFormulaProduct (2.3s)
+✔ [2151/2218] Built DiophantineNP.WidthFormulas (2.3s)
+✔ [2152/2218] Built DiophantineNP.WidthFormulaSubstitution (2.3s)
+✔ [2153/2218] Built DiophantineNP.FiniteArithmeticGap (2.8s)
+✔ [2154/2218] Built DiophantineNP.SmallSumTemplate (2.0s)
+✔ [2155/2218] Built DiophantineNP.SmallUniverses (2.0s)
+✔ [2156/2218] Built DiophantineNP.ShortPower (6.3s)
+✔ [2157/2218] Built DiophantineNP.GeneralSumTemplate (2.0s)
+✔ [2158/2218] Built DiophantineNP.HABTranslation (2.4s)
+✔ [2159/2218] Built DiophantineNP.HABMatrixBind (2.0s)
+✔ [2160/2218] Built DiophantineNP.HABMultiplyWords (2.2s)
+✔ [2161/2218] Built DiophantineNP.HABSumBlocks (2.3s)
+✔ [2162/2218] Built DiophantineNP.ShortResidue (6.0s)
+✔ [2163/2218] Built DiophantineNP.HABProductPadding (2.2s)
+✔ [2164/2218] Built DiophantineNP.HABSourceArithmetic (2.9s)
+✔ [2165/2218] Built DiophantineNP.HABCRTShift (2.3s)
+✔ [2166/2218] Built DiophantineNP.HABGroupPower (3.6s)
+✔ [2167/2218] Built DiophantineNP.HABCRTRecovery (2.8s)
+✔ [2168/2218] Built DiophantineNP.WidthPrimeResidue (2.0s)
+✔ [2169/2218] Built DiophantineNP.HABBlockCells (2.8s)
+✔ [2170/2218] Built DiophantineNP.HABSumParameters (2.9s)
+✔ [2171/2218] Built DiophantineNP.HABCounting (3.4s)
+✔ [2172/2218] Built DiophantineNP.HABSourceShift (1.9s)
+✔ [2173/2218] Built DiophantineNP.HABIndexMul (2.5s)
+✔ [2174/2218] Built DiophantineNP.HABSumSelectors (2.7s)
+✔ [2175/2218] Built DiophantineNP.HABPrimeBlocks (2.1s)
+✔ [2176/2218] Built DiophantineNP.HABSumFormula (1.8s)
+✔ [2177/2218] Built DiophantineNP.HABBinaryResidue (3.5s)
+✔ [2178/2218] Built DiophantineNP.HABSmallIndexMul (3.5s)
+✔ [2179/2218] Built DiophantineNP.HABIndependentSum (1.9s)
+✔ [2180/2218] Built DiophantineNP.HABPowerRows (2.9s)
+✔ [2181/2218] Built DiophantineNP.HABPowerCode (5.5s)
+✔ [2182/2218] Built DiophantineNP.HABSourceTranslation (1.8s)
+✔ [2183/2218] Built DiophantineNP.HABProductBlocks (3.8s)
+✔ [2184/2218] Built DiophantineNP.HABPairMajority (2.9s)
+✔ [2185/2218] Built DiophantineNP.HABPolylogRange (3.8s)
+✔ [2186/2218] Built DiophantineNP.HABPairInterpretation (2.8s)
+✔ [2187/2218] Built DiophantineNP.HABBoundedProduct (2.8s)
+✔ [2188/2218] Built DiophantineNP.HABCRTSize (2.5s)
+✔ [2189/2218] Built DiophantineNP.HABShortLength (3.1s)
+✔ [2190/2218] Built DiophantineNP.HABProductEquivalence (1.8s)
+✔ [2191/2218] Built DiophantineNP.HABShortWidth (13s)
+✔ [2192/2218] Built DiophantineNP.HABSpacePadding (2.3s)
+✔ [2193/2218] Built DiophantineNP.HABCRTCoefficients (2.4s)
+✔ [2194/2218] Built DiophantineNP.HABWideOutput (3.7s)
+✔ [2195/2218] Built DiophantineNP.HABCRTDot (3.1s)
+✔ [2196/2218] Built DiophantineNP.HABCRTNumerator (2.4s)
+✔ [2197/2218] Built DiophantineNP.HABPowerReduction (22s)
+✔ [2198/2218] Built DiophantineNP.HABIndexSum (2.0s)
+✔ [2199/2218] Built DiophantineNP.HABRemainderCheck (1.8s)
+✔ [2200/2218] Built DiophantineNP.HABGeometricDivision (4.3s)
+✔ [2201/2218] Built DiophantineNP.HABShortLift (1.8s)
+✔ [2202/2218] Built DiophantineNP.HABCRTLeading (2.4s)
+✔ [2203/2218] Built DiophantineNP.HABLargePrimeRow (2.7s)
+✔ [2204/2218] Built DiophantineNP.HABCRTExtend (2.2s)
+✔ [2205/2218] Built DiophantineNP.HABShortProducts (6.3s)
+✔ [2206/2218] Built DiophantineNP.HABLargePrimeProduct (2.5s)
+✔ [2207/2218] Built DiophantineNP.HABCRTQuotient (2.4s)
+✔ [2208/2218] Built DiophantineNP.HABWideCoefficients (2.3s)
+✔ [2209/2218] Built DiophantineNP.HABCRTEstimate (1.8s)
+✔ [2210/2218] Built DiophantineNP.HABWideExtend (2.0s)
+✔ [2211/2218] Built DiophantineNP.HABCRTBitDecision (2.3s)
+✔ [2212/2218] Built DiophantineNP.HABWideQuotient (2.2s)
+✔ [2213/2218] Built DiophantineNP.HABPolylogProduct (2.2s)
+✔ [2214/2218] Built DiophantineNP.HABWideBitDecision (2.2s)
+✔ [2215/2218] Built DiophantineNP.HABModularArithmetic (1.8s)
+✔ [2216/2218] Built DiophantineNP.HABCorollary63 (1.6s)
+ℹ [2217/2218] Built DiophantineNP (2.7s)
+info: DiophantineNP.lean:40:0: Corollary 6.3 uses [propext, Quot.sound, Classical.choice].
+Build completed successfully (2218 jobs).
+exit code 0
+$ lake env lean DiophantineNP.lean
+Corollary 6.3 uses [propext, Quot.sound, Classical.choice].
+exit code 0
+Built all 81 local modules from source, including the review entry point. Standalone axiom check passed.
+Finished (UTC) 2026-11-27T06:37:33+00:00

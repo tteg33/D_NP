@@ -3,6 +3,12 @@ import DiophantineNP.ProductCriterion
 import DiophantineNP.EvaluatorPremises
 import DiophantineNP.RegisterReduction
 
+/-! # Inspecting the proof statements
+
+The first group prints the specifications used in intermediate reductions.
+The final commands display the closed conclusions from `HABVerified.lean`
+and the axioms used by the numerical class equality. -/
+
 #print DiophantineNP.PackedScalarPrograms
 #print DiophantineNP.PowerTests.Cyclic
 #print DiophantineNP.PowerTests.Quadratic

@@ -1,6 +1,6 @@
 import DiophantineNP.PrimeFormula
 
-/-! Syntax and semantics for the external finite-arithmetic primitives of §2.1.
+/-! Syntax and semantics for the finite-arithmetic primitives of §2.1.
 The iterator operates on a formula for its input relation; each operation
 produces a formula before the finite universe or its parameter values are given. -/
 namespace DiophantineNP.WidthFormula

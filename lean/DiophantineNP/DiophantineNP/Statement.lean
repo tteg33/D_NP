@@ -7,7 +7,8 @@ import Mathlib.Tactic.NormNum
 # The native-bit theorem and its bounded Diophantine consequence
 
 The proposition `NativeVerifier` is the target of Theorem 1.1 of the manuscript.
-Only `nativeVerifier_implies_boundedD` is asserted as a theorem here.
+`nativeVerifier_implies_boundedD` derives bounded Diophantine membership from this
+specification. `DiophantineNP.nativeVerifier` in `HABVerified.lean` proves it.
 -/
 
 namespace DiophantineNP

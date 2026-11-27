@@ -184,8 +184,8 @@ theorem prime_blocks_bit {x k : ℕ} (hx : x<block k 0) (s : ℕ) :
     exact block_odd .. 
 
 /-- The exact product bit from the source-level HAB predicate, specialized to
-concrete disjoint prime blocks. The identity certifies the arithmetic of the
-readout; its finite-logic implementation must still construct the operations. -/
+concrete disjoint prime blocks. The identity gives the numerical readout that the
+finite-logic construction implements. -/
 theorem matrix_product_bit {U : ℕ} (A : HAB.Matrix U) (hi lo : Fin U) :
     let x := ∏ r : Fin U, HAB.rowWord (A r)
     let s := hi.val*U+lo.val

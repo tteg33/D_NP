@@ -321,8 +321,8 @@ theorem canonical_comparison (Q : E.Point) :
   have h := HeightWindow.canonical_error (orbit_step Q) (canonical_limit Q)
   simpa [orbitHeight] using h
 
-/-- Curve-specific inputs still needed for the paper's adjacent-point lemma
-are written as ordinary hypotheses. -/
+/-- The adjacent-point height window from cyclicity and quadraticity, supplied by
+`Curve37.rational_points_cyclic` and `Curve37.canonicalHeight_zsmul`. -/
 theorem adjacent_height_window
     (hcyclic : ∀ Q : E.Point, ∃ j : ℤ, j • P = Q)
     (hquadratic : ∀ j : ℤ, canonicalHeight (j • P) = canonicalHeight P * (j : ℝ)^2)

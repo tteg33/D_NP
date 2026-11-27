@@ -3,8 +3,11 @@ import DiophantineNP.Classes
 import DiophantineNP.WidthFormulaSubstitution
 import DiophantineNP.ScalarSystems
 
-/-! The complete dependency statement. The four named hypotheses are ordinary
-arguments. Their proofs are not supplied by this project. -/
+/-! # Reductions from packing and width descriptions
+
+These lemmas expose the inputs for a route through the Jones–Matiyasevich criterion.
+The closed theorem `DiophantineNP.classEquality` in `HABVerified.lean` uses the
+register-trace compiler to prove the reverse inclusion directly. -/
 namespace DiophantineNP
 
 theorem classEquality_of_packing (pack : Packing.PackingClaim)
@@ -18,7 +21,7 @@ theorem nativeVerifier_of_arithmetic (pack : Packing.PackingClaim)
     (arithmetic : WidthFormula.Arithmetic) : NativeVerifier :=
   Assembly.nativeVerifier_of_packing pack (WidthFormula.widthDescriptions arithmetic)
 
-/-- A constructive target for the unfinished scalar evaluator. The analytic
+/-- A specification for a scalar evaluator. The analytic
 estimate and the fixed constraint system refer to the same rational function. -/
 def ScalarPackingConstruction : Prop :=
   ∀ (k : ℕ) (φ : Counting.Formula (k+1)),
@@ -30,7 +33,7 @@ theorem classEquality_of_scalarSystems (scalar : ScalarPackingConstruction)
   Classes.classes_eq_of_nativeVerifier (nativeVerifier_of_arithmetic
     (Packing.packing_of_scalar_systems scalar) arithmetic) jm machine
 
-/-- The three fixed external formulas have one numerical BIT relation and
+/-- The three fixed formulas have one numerical BIT relation and
 two low-output-bit templates, for iterated products and sums of bit arrays. -/
 theorem classEquality_of_templates (scalar : ScalarPackingConstruction)
     (templates : WidthFormula.LiteratureFormulas) (jm : Classes.JonesMatiyasevichDirection)

@@ -1,6 +1,25 @@
 # Rank of the elliptic curve 37.a1
 
-Lean now proves `Curve37.rational_points_cyclic` and `Curve37.rank_one` without external arithmetic hypotheses. The checked route uses the curve’s explicit Kummer map, the cubic field’s ordinary class number one, parity of valuations, and the classification of units by their three real signs. It is assembled in `ProductCriterion.lean`. The computations and the independent published descent criterion below are alternative ways to check the numerical result.
+For $E:y^2+y=x^3-x$ over $\mathbb Q$, `Curve37.rational_points_cyclic` states that $(0,0)$ generates the rational point group, and `Curve37.rank_one` gives its rank on mathlib’s point type. The proof in `DiophantineNP/CubicDescent.lean` uses the explicit Kummer map, ordinary class number one in the cubic field, parity of valuations, and the three real signs of units. The database entry records the known rank and generator. [LMFDB, curve 37.a1](https://www.lmfdb.org/EllipticCurve/Q/37/a/1)
+
+## Check the descent on its own
+
+From the directory containing `lakefile.toml`, build the descent and inspect the curve, generation property and rank.
+
+```sh
+lake build DiophantineNP.CubicDescent
+lake env lean --stdin <<'LEAN'
+import DiophantineNP.CubicDescent
+
+#print DiophantineNP.Curve37.E
+#print DiophantineNP.PowerTests.Cyclic
+#check DiophantineNP.Curve37.rational_points_cyclic
+#check DiophantineNP.Curve37.rank_one
+#print axioms DiophantineNP.Curve37.rank_one
+LEAN
+```
+
+The rank equality concerns the $\mathbb Z$-module $E(\mathbb Q)$. The stronger generation theorem identifies every rational point with an integral multiple of the specified point. A reviewer can check the group, the sign of the generator, and the descent argument separately from the later complexity application.
 
 ## Two computations from the coefficients
 

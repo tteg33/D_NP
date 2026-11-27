@@ -121,7 +121,7 @@ theorem scalarSystem_of_terms {k : ℕ} (num den : IntegerTerm k)
     obtain ⟨hn,hd,hp⟩ := (pairFormula_iff ..).1 hw
     exact ⟨hp, by rw [num.sound _ _ _ hn, den.sound _ _ _ hd]; rfl⟩
 
-/-- A precise sufficient remaining evaluator construction. Its witnesses are
+/-- An evaluator specification sufficient for packing. Its witnesses are
 fixed numerator and denominator programs for each finite-arithmetic formula. -/
 def FixedTermEvaluators : Prop :=
   ∀ (k : ℕ) (φ : Counting.Formula (k+1)), ∃ num den : IntegerTerm k,

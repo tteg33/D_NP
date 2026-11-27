@@ -8,7 +8,8 @@ import Mathlib.Tactic.Positivity
 
 The recurrence and the congruences are over the integers. Its index and
 the exponents of powers are natural numbers. The cap on the Pell solution
-is an explicit hypothesis in the final soundness theorem.
+appears as an input to the index-selection argument. The elliptic windows
+in `PowerTests.lean` enforce the cap in the power graph.
 -/
 
 namespace DiophantineNP.Pell

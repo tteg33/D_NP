@@ -1,0 +1,17 @@
+$ python3 tests/test_preflight.py
+PASS complete module digest
+PASS clean copy: 0 error(s), 0 warning(s) []
+PASS root forgets a module: 1 error(s), 0 warning(s) ['DiophantineNP/TailRadix.lean is not imported by DiophantineNP.lean: it would be neither compiled nor audited.']
+PASS root imports a ghost: 2 error(s), 0 warning(s) ['DiophantineNP.lean imports DiophantineNP.DoesNotExist, which does not exist.']
+PASS unimported new module: 1 error(s), 0 warning(s) ['DiophantineNP/Stray.lean is not imported by DiophantineNP.lean: it would be neither compiled nor audited.']
+PASS sorry in a proof: 1 error(s), 0 warning(s) ['Wallis.lean: `sorry` at line(s) 73.']
+PASS axiom declared: 1 error(s), 0 warning(s) ['Wallis.lean: `axiom` at line(s) 73.']
+PASS native_decide: 1 error(s), 0 warning(s) ['Wallis.lean: `native_decide` at line(s) 73.']
+PASS sorry only in comments and strings: 0 error(s), 0 warning(s) []
+PASS module imports a ghost: 1 error(s), 0 warning(s) ['Corollary.lean imports DiophantineNP.Mian, which does not exist.']
+PASS lakefile pin edited: 1 error(s), 1 warning(s) ["lakefile.toml asks for mathlib 'v4.25.0' but the manifest was resolved from 'v4.24.0'. Run `lake update mathlib`."]
+PASS toolchain garbage: 1 error(s), 1 warning(s) ["lean-toolchain should pin one Lean release, found 'stable'."]
+PASS manifest rev shortened: 1 error(s), 0 warning(s) ['lake-manifest.json does not pin mathlib to a full commit hash.']
+PASS audit name typo: 0 error(s), 1 warning(s) ['Audit.lean mentions DiophantineNP.classEquality_of_paking, and no declaration with that final name was found.']
+PASS audit removed: 1 error(s), 0 warning(s) ['Audit.lean is missing. The build requires its axiom check.']
+Process exit code 0

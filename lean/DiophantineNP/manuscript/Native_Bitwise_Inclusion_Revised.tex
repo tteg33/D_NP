@@ -18,14 +18,14 @@
 \raggedbottom
 \title{A fixed Diophantine verifier for\\native binary bitwise inclusion}
 \author{}
-\date{Revised research draft for independent review\enspace$\cdot$\enspace November 26, 2026}
+\date{Revised research draft for independent review\enspace$\cdot$\enspace November 27, 2026}
 \makeatletter
 \renewcommand{\@maketitle}{\begin{center}\vspace*{-.6em}{\LARGE\@title\par}\vskip .75em{\small\@date\par}\end{center}\vskip .35em}
 \makeatother
 \begin{document}
 \maketitle
 \begin{abstract}
-For nonnegative integers $a,b$, write $a\preceq b$ if every set bit of $a$ is a set bit of $b$. We prove that one integer polynomial, of arity independent of the input width, represents this relation. On inputs of at most $n$ bits per integer, every true instance admits witnesses of polynomial total bit length. Our construction encodes each set of bit positions as an idempotent modulo a product of prime powers. Two integers determined by the width recover the native input from its idempotent. To certify these integers, we represent the packed truth table of a fixed first-order formula with majority by a single Diophantine equation. The fixed formulas for the width parameters come from the iterated-multiplication theorem of Hesse, Allender and Barrington. Finite Fourier orthogonality and signed coefficient extraction give the packing step. The Jones--Matiyasevich criterion then gives the Adleman--Manders equality $\DD=\NP$.
+For nonnegative integers $a,b$, write $a\preceq b$ if every set bit of $a$ is a set bit of $b$. We prove that one integer polynomial, of arity independent of the input width, represents this relation. On inputs of at most $n$ bits per integer, every true instance admits witnesses of polynomial total bit length. Our construction encodes each set of bit positions as an idempotent modulo a product of prime powers. Two integers determined by the width recover the native input from its idempotent. To certify these integers, we represent the packed truth table of a fixed first-order formula with majority by a single Diophantine equation. The fixed formulas for the width parameters come from the iterated-multiplication theorem of Hesse, Allender and Barrington. Finite Fourier orthogonality and signed coefficient extraction give the packing step. Applying the resulting polynomial to the bit masks of a packed accepting computation gives the Adleman--Manders equality $\DD=\NP$ for binary numerical languages under the verifier convention specified below.
 \end{abstract}
 
 \section{Introduction}\label{sec:intro}
@@ -48,15 +48,33 @@ We use numerical languages $L\subseteq\mathbb N$ on binary inputs. In the bounde
  \exists w\in\mathbb N^s\quad
  \sum_{i=1}^s\ell(w_i)\le q(\ell(x))\quad\text{and}\quad F(x,w)=0 .
 \]
-The same convention applies to a fixed tuple of inputs, using its total bit length \cite{am,pollett,lipmaa}. A false input may have longer roots of $F$. Theorem~\ref{thm:main}(ii) excludes roots of every length. We use the polynomial-time verifier definition of $\NP$ with binary certificates.
+The same convention applies to a fixed tuple of inputs, using its total bit length \cite{am,pollett,lipmaa}. A false input may have longer roots of $F$. Theorem~\ref{thm:main}(ii) excludes roots of every length.
+
+\Needspace{5\baselineskip}
+For $\NP$ we retain the same fixed arity and polynomial certificate budget, and replace $F(x,w)=0$ by acceptance of $(x,w)$ by a deterministic polynomial-time verifier. Each natural is encoded in binary and followed by a delimiter. The verifier halts on all tapes within a polynomial in the tape length. An arbitrary binary certificate, including its leading zeroes, fits in one field by adjoining one high sentinel bit. Section~\ref{sec:arithmetic} records the comparison of witness bounds.
 
 \Needspace{7\baselineskip}
 \begin{corollary}[Diophantine complexity]\label{cor:classes}
 Theorem~\ref{thm:main} implies $\DD=\NP$.
 \end{corollary}
 \begin{proof}
-Replace each signed witness by its positive and negative parts. Their two natural bit lengths add to the magnitude length plus the sign bit, including at zero. Hence $\preceq$ belongs to $\DD$. The numerical characterization of Jones and Matiyasevich \cite[Section~5, eq.~(53), p.~827]{jm} then gives $\NP\subseteq\DD$ (see also \cite[Section~4.3]{lipmaa}). In the other direction a verifier guesses the bounded witnesses and evaluates the fixed polynomial in polynomial time.
+Fix a verifier $V$ and certificate budget $q$ for $L\in\NP$. Encode its finite control and stacks by natural registers. Pack each register's values along a computation into the successive digits of one integer in a power-of-two radix. The checker for this fixed machine has a fixed number of register words. Equations and bit-inclusion tests on the words enforce the initial tape, the transitions and an accepting final configuration. For example, if $A$ and $B$ pack the old and new values of a register, then
+\[
+            A+Q^t x_{\mathrm{last}}=QB+x_{\mathrm{first}}
+\]
+links $t$ successive steps at radix $Q$. Digit masks bound each value and provide guard bits for the transition arithmetic. Branch markers select the transition imposed in each position. Reading the radix digits therefore gives a run starting on the supplied tape and ending in acceptance. A polynomial-time run has polynomially many positions and uses polynomially many bits per position. Thus its packed words have polynomial length. The formal table equivalence, including the polynomial bounds on its auxiliary words, is proved in \texttt{TraceChecker.lean}.
+
+Inside the same system enforce $\sum_i\ell(w_i)\le q(\ell(x))$ using exact binary lengths and a natural slack. Replace each bit-inclusion test by a fresh copy of the polynomial of Theorem~\ref{thm:main}. Represent each signed witness by a difference of naturals. Its positive and negative parts have combined bit length equal to the signed cost, including at zero. Take the sum of squares of the polynomial differences. Every zero now decodes to a computation that accepts an original certificate within budget. Conversely, on an accepting run, each test has short witnesses by Theorem~\ref{thm:main}(i). Adding their lengths, the packed words, and the witnesses for the input framing and length checks gives a polynomial total bound. This proves $L\in\DD$. The table construction and this implication are formalized in \texttt{RegisterNativeTrace.lean} and \texttt{NativeComplexity.lean}.
+
+For $L\in\DD$, use its original tuple and cutoff as the $\NP$ certificate and cutoff. Evaluate the fixed polynomial $F(x,w)$ and accept precisely when the result is zero. Its fixed degree bounds every intermediate binary length by a constant multiple of the input and witness lengths plus a constant. Binary addition and multiplication therefore give a polynomial-time verifier. The machine implementation appears in \texttt{VerifiedCompilers.lean}.
 \end{proof}
+
+\paragraph{The printed halving mask.}
+Jones and Matiyasevich give a one-mask numerical characterization in \cite[Section~5, eq.~(53), p.~827]{jm} (see also \cite[Section~4.3]{lipmaa}). There is a local error in the implication from (49) to (50) on that page. Write $Q$ for the radix, $I$ for all time markers, $L$ for active markers, $R$ for a packed register and $J$ for the selected half-register. At $(Q,I,L,R,J)=(64,65,64,128,0)$, the first two masks have zero left sides. The third, as printed, holds because
+\[
+   (Q-1)(I-L)+2J+I=63+65=128=R.
+\]
+Equation (50) requires $J=64$ in the active position. Replacing the last $I$ by $L$ restores the floor-half selector at every active position and forces zero elsewhere, as proved in \texttt{JMTableau.lean}. Corollary~\ref{cor:classes} uses as many masks as the fixed verifier requires and establishes the transfer directly.
 
 \paragraph{Proof outline.}
 Section~\ref{sec:residues} assigns to each width $n$ a modulus $D$ and a multiplier $J_n$. The idempotents $S^2=S\pmod D$ select bit positions independently. Taking a least residue of $SJ_n$ and rounding recovers the integer whose bits were selected. The remaining task is to produce the \emph{correct} $D,J_n$ with fixed arity. Uniform threshold arithmetic supplies fixed formulas for their individual bits, in Lemma~\ref{lem:width-formulas}.
@@ -64,7 +82,7 @@ Section~\ref{sec:residues} assigns to each width $n$ a modulus $D$ and a multipl
 Theorem~\ref{thm:unarycompiler} in Section~\ref{sec:unarycompiler} is the main encoding step. A first-order formula on a finite arithmetic universe of size $U$ describes a word one bit at a time. To obtain the entire integer, we represent its truth values on roots of unity, implement each quantifier by averaging a coordinate, and attach the weight $2^i$ to position $i$ by Fourier orthogonality. Lemma~\ref{lem:mean-extract} evaluates each average by extracting a signed coefficient from a single integer. Section~\ref{sec:arithmetic} assembles the graphs, proves Theorem~\ref{thm:main}, and accounts for the witness costs. Appendix~\ref{sec:exact-power} gives the globally sound integer-power graph used in the extractions. Its Pell-index cutoff is certified inside the equation.
 
 \paragraph{Formal verification.}
-The companion Lean~4 project proves Corollary~6.3 of Hesse, Allender and Barrington~\cite{hab} by constructing fixed first-order formulas with strict majority for the output bits of integer division and iterated multiplication. The declarations in \texttt{HABVerified.lean} use the namespace \texttt{DiophantineNP}. The declaration \texttt{HAB.corollary63} proves their corollary, \texttt{nativeVerifier} proves Theorem~\ref{thm:main}, and \texttt{classEquality} proves $\DD=\NP$ for binary numerical languages as in Corollary~\ref{cor:classes}. This manuscript was developed with AI assistance.
+The companion Lean~4 project proves Corollary~6.3 of Hesse, Allender and Barrington~\cite{hab} by constructing fixed first-order formulas with strict majority for the output bits of integer division and iterated multiplication. The finite logic uses order, bit access, an input relation and strict unary majority. For every universe of size $U\ge2$, two indices address all $U^2$ output positions of a product of $U$ words of $U$ bits. In the namespace \texttt{DiophantineNP}, the declaration \texttt{HAB.corollary63} in \texttt{HABCorollary63.lean} gives both results. The descent for the auxiliary elliptic curve gives \texttt{Curve37.rank\_one} in \texttt{CubicDescent.lean}. The declarations \texttt{nativeVerifier} and \texttt{classEquality} in \texttt{HABVerified.lean} give Theorem~\ref{thm:main} and Corollary~\ref{cor:classes}. This manuscript was developed with AI assistance.
 
 {\small\tableofcontents}
 \clearpage
@@ -601,8 +619,25 @@ Only the syntax of two fixed finite-arithmetic formulas and the fixed graph defi
 
 \emph{Bit length.} We have $n_0\le n$. The modulus has $O((n_0+2)^3)$ bits by Section~\ref{sec:residues}. Every quotient and slack in \eqref{eq:assembly-order}--\eqref{eq:assembly-ceil} can be chosen with $O(1+n_0+\ell(D))$ bits, since these expressions have fixed degree and $J_{n_0},S,T,N_S,N_T<D$. Section~\ref{sec:mean-evaluation} bounds the two graph evaluations, including their powering witnesses, by $(1+U)^{O(1)}$ total bits for $U=(n_0+2)^{20}$. The two native-width powers in \eqref{eq:assembly-width} have $O(n_0+1)$ output bits and polynomial auxiliary cost by Theorem~\ref{thm:power-graph}. A four-square witness for a nonnegative slack $t$ has each coordinate bounded by $\sqrt t$. All other fixed-degree substitutions increase bit lengths by at most a constant factor plus a constant. Summing over the fixed number of registers and increasing $C$ to absorb fixed coefficients gives $(n+2)^C$ in Theorem~\ref{thm:main}(i).
 \end{proof}
-\paragraph{The complexity corollary in Lean.}
-The companion proves $\NP\subseteq\DD$ directly from Theorem~\ref{thm:main}. For each fixed verifier, finitely many bit-inclusion tests check its accepting computation. The polynomial enforces the original certificate cutoff, and the size estimate counts every auxiliary witness. Conversely a polynomial-time machine evaluates each fixed integer polynomial on binary inputs and witnesses. The companion also proves that the per-coordinate inclusive bounds of \cite{pollett} and the total-bit convention of Section~\ref{sec:intro} give the same numerical class. The change of representation enforces the old cutoff inside the new equation, since increasing the cutoff alone could admit a long root on a false input. Corollary~\ref{cor:classes} concerns the existence of short yes-certificates.
+\paragraph{Comparison of certificate bounds.}
+The companion proves that the inclusive numerical cutoff on each natural witness coordinate in \cite{pollett} and our total bit-length cutoff define the same numerical class (\texttt{CoordinateClass.lean}). The transformed equation enforces the original cutoff because on a false input the original polynomial may acquire roots beyond that cutoff.
+
+For $\NP$, \texttt{ClockedVerifier.lean} proves that running the deterministic verifier for an explicit polynomial number of transitions gives the same class. On admissible certificates its clock can be bounded by a polynomial in the instance length alone. The fixed tuple $w$ of arity $r$ can also be presented as one binary word of length $2\sum_i\ell(w_i)+r$. For fixed $r$, the single-pass finite-state transducer in \texttt{review/CertificateTransducer.lean} rejects malformed words and converts each valid word $s$ to the verifier's exact framed certificate fields in at most $|s|+1$ transducer steps. The clock bounds the subsequent verifier run on the framed tape. A simulation on a single conventional nondeterministic Turing machine with one tape and arbitrary binary string inputs remains open in the formalization.
+
+\subsection{Size of the explicit construction}\label{sec:literal-size}
+The polynomial bound in Theorem~\ref{thm:main} allows large fixed exponents. Consider the first extraction in Section~\ref{sec:unarycompiler}. With $R=2^{2\beta+1}$ the binary length of $(1+R)^{2\beta}$ is
+\[
+    4\beta^2+2\beta+1
+    \;\sim\; 2^{266} U^{248}
+    \;=\;2^{266}(n+2)^{4960}.
+\]
+Indeed $0<2\beta\log_2(1+R^{-1})<1$, and $M\sim 2^{33}U^{31}$ in \eqref{eq:packing-grid}. Substitution of $n=1$ into the exact length gives about $3.94\times10^{2446}$ bits for this intermediate integer alone.
+
+The exponent in the packing estimate also depends on the chosen finite formula. In the companion's explicit iterated-product construction, the short-product step uses $d=60$. Put $a=4(2d+2)+9=497$ and $s=8(a+2)^2+10=1{,}992{,}018$. The large-universe construction requires size at least $2^{2^s}$. Each padding step replaces the interpreted universe by its square. Starting at size two, the uniform construction performs $s$ such steps (\texttt{HABPolylogProduct.lean}, \texttt{HABShortLift.lean}). On a path through the expanded formula, each step adds an existential quantifier and replaces each previous existential by two quantifiers for the two coordinates of a pair. Iteration gives at least $h=2^s-1$ quantifiers on that path.
+
+The literal evaluation of these quantifiers uses nested thresholds. For the unreduced evaluator of Section~\ref{sec:mean-evaluation} the denominator at a threshold is $(2D_1)^{d(q)}$, with $d(q)>U^{248}$. The intervening projections preserve denominators and the products of denominators at arithmetic nodes preserve this lower bound. Along the indicated path the bit count therefore grows at least as $U^{248h}$. A bound $(n+2)^C$ covering these explicit intermediates needs $C\ge4960h>10^{599000}$. This estimate applies to the expanded formula and its specified denominator recurrence. Theorem~\ref{thm:main} leaves open how small an exponent a different representation could attain.
+
+The modular readout can be tested separately. With $D,J_n,2^{n+2}$ supplied, its five-input polynomial uses 17 natural witnesses and admits the bound $17(40(n+2)^3+7)$ on their total bit length. At $a=b=n=1$, \eqref{eq:width-words} gives $D=3^{14}=4{,}782{,}969$, $J_1=597{,}871$, and $2^{n+2}=8$. An explicit zero of this polynomial has total witness length 185 bits (\texttt{review/WidthOne.lean}). The two-input polynomial of Theorem~\ref{thm:main} additionally certifies the three supplied values.
 
 \appendix
 
@@ -784,6 +819,7 @@ to determine the sign of the output.
 
 \begingroup
 \small
+\clearpage
 \begin{thebibliography}{10}
 \setlength{\itemsep}{2pt}
 \bibitem{am} L. Adleman and K. Manders, Diophantine complexity, \emph{17th Annual Symposium on Foundations of Computer Science}, IEEE, 1976, 81--88. \href{https://doi.org/10.1109/SFCS.1976.13}{Publisher's version}.

@@ -4,7 +4,7 @@
 
 Each case copies the project to a temporary folder, breaks one thing, and checks
 that `verify.static_checks` reports it. Two controls must stay clean."""
-import importlib.util, shutil, sys, tempfile
+import hashlib, importlib.util, shutil, sys, tempfile
 from pathlib import Path
 src = Path(sys.argv[1]) if len(sys.argv) > 1 else Path(__file__).resolve().parent.parent
 spec = importlib.util.spec_from_file_location("verify", src / "verify.py")
@@ -46,7 +46,12 @@ cases = [
  ("audit name typo", sub("Audit.lean", "#check DiophantineNP.classEquality_of_packing", "#check DiophantineNP.classEquality_of_paking"), 0, 1),
  ("audit removed", lambda t: (t / "Audit.lean").unlink(), 1, 0),
 ]
-ok = True
+digest = hashlib.sha256()
+for module in sorted((src / "DiophantineNP").glob("*.lean")):
+    digest.update(module.name.encode() + b"\0" + hashlib.sha256(module.read_bytes()).digest())
+_, _, summary = v.static_checks(src)
+ok = f"source digest {digest.hexdigest()} (SHA-256 of the module sources)" in summary
+print(("PASS" if ok else "FAIL"), "complete module digest")
 for name, edit, want_err, want_warn in cases:
     errors, warnings, _ = mutated(edit)
     good = (len(errors) >= want_err and (want_err > 0 or not errors)) and (len(warnings) >= want_warn and (want_warn > 0 or not warnings))

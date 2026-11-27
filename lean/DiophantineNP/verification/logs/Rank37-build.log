@@ -1,0 +1,50 @@
+Rank37 standalone clean build. Start (UTC) 2026-11-27T06:33:47+00:00
+Source archive SHA-256 893ecf07da336bea51a039d6b52ce618fc77856996d6d31c8c9374fea34397dd
+$ python3 review/export.py rank <fresh-output>.zip
+/workspace/scratch/2aa0d9f173d4/revision_work/standalone-80xci7_o/rank-repeat.zip: 19 local proof modules
+exit code 0
+A separate export is byte-for-byte identical.
+Extracted into a new project directory. Initially no .lake directory or compiled project modules.
+Existing dependency cache matched every pinned revision:
+mathlib f897ebcf72cd16f89ab4577d0c826cd14afaafc7
+plausible dfd06ebfe8d0e8fa7faba9cb5e5a2e74e7bd2805
+LeanSearchClient 99657ad92e23804e279f77ea6dbdeebaa1317b98
+importGraph d768126816be17600904726ca7976b185786e6b9
+proofwidgets 556caed0eadb7901e068131d1be208dd907d07a2
+aesop 725ac8cd67acd70a7beaf47c3725e23484c1ef50
+Qq dea6a3361fa36d5a13f87333dc506ada582e025c
+batteries 8da40b72fece29b7d3fe3d768bac4c8910ce9bee
+Cli 91c18fa62838ad0ab7384c03c9684d99d306e1da
+$ lean --version
+Lean (version 4.24.0, x86_64-unknown-linux-gnu, commit 797c613eb9b6d4ec95db23e3e00af9ac6657f24b, Release)
+exit code 0
+LEAN_NUM_THREADS=2; project artifact cache disabled.
+$ lake build
+✔ [1603/1606] Built DiophantineNP.HeightWindow (5.7s)
+✔ [3103/3122] Built DiophantineNP.Pell (8.6s)
+✔ [3104/3122] Built DiophantineNP.Curve37 (6.7s)
+✔ [3105/3122] Built DiophantineNP.CurveRootBound (2.4s)
+✔ [3106/3122] Built DiophantineNP.PowerWindow (3.5s)
+✔ [3107/3122] Built DiophantineNP.HeightGenerator (2.7s)
+✔ [3108/3122] Built DiophantineNP.PowerTests (3.9s)
+✔ [3109/3122] Built DiophantineNP.CurveQuadraticGap (4.7s)
+✔ [3110/3122] Built DiophantineNP.CurveSaturation (7.9s)
+✔ [3111/3122] Built DiophantineNP.CurveKummer (5.9s)
+✔ [3112/3122] Built DiophantineNP.CubicRealPlaces (7.0s)
+✔ [3113/3122] Built DiophantineNP.CubicField (10s)
+✔ [3114/3122] Built DiophantineNP.CubicFactorParity (3.1s)
+✔ [3115/3122] Built DiophantineNP.CubicUnitParity (3.4s)
+✔ [3116/3122] Built DiophantineNP.CubicUnitSigns (7.1s)
+✔ [3117/3122] Built DiophantineNP.CubicSignClasses (3.0s)
+✔ [3118/3122] Built DiophantineNP.CubicIdeals (4.4s)
+✔ [3119/3122] Built DiophantineNP.CubicIntegralReduction (3.7s)
+✔ [3120/3122] Built DiophantineNP.CubicDescent (5.4s)
+ℹ [3121/3122] Built DiophantineNP (5.0s)
+info: DiophantineNP.lean:25:0: Rank and generator use [Quot.sound, propext, Classical.choice].
+Build completed successfully (3122 jobs).
+exit code 0
+$ lake env lean DiophantineNP.lean
+Rank and generator use [Quot.sound, propext, Classical.choice].
+exit code 0
+Built all 20 local modules from source, including the review entry point. Standalone axiom check passed.
+Finished (UTC) 2026-11-27T06:35:10+00:00

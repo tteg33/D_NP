@@ -1,0 +1,85 @@
+name: Verify Lean proofs
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      fresh:
+        description: Also replay the entire imported dependency closure from scratch
+        required: false
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 300
+    defaults:
+      run:
+        shell: bash
+        working-directory: lean/DiophantineNP
+    env:
+      LEAN_NUM_THREADS: "2"
+      LAKE_NO_CACHE: "1"
+      MATHLIB_NO_CACHE_ON_UPDATE: "1"
+      PYTHONDONTWRITEBYTECODE: "1"
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+
+      - name: Record checkout and install the pinned Lean toolchain
+        run: |
+          mkdir -p "$RUNNER_TEMP/dnp-logs"
+          exec > >(tee "$RUNNER_TEMP/dnp-logs/environment.log") 2>&1
+          git rev-parse HEAD
+          sha256sum lean-toolchain lakefile.toml lake-manifest.json
+          test ! -e .lake/build
+          sudo apt-get update -qq
+          sudo apt-get install -y elan
+          elan toolchain install "$(cat lean-toolchain)"
+          lean --version
+          lake --version
+
+      - name: Test the source preflight
+        run: python3 tests/test_preflight.py 2>&1 | tee "$RUNNER_TEMP/dnp-logs/preflight.log"
+
+      - name: Build, audit axioms, and check review targets
+        run: python3 verify.py --strict --extras -j 2 2>&1 | tee "$RUNNER_TEMP/dnp-logs/build.log"
+
+      - name: Check the binary-certificate transducer
+        run: lake env lean -DautoImplicit=false review/CertificateTransducer.lean 2>&1 | tee "$RUNNER_TEMP/dnp-logs/transducer.log"
+
+      - name: Reproduce the standalone projects
+        run: |
+          mkdir -p "$RUNNER_TEMP/standalone"
+          python3 review/export.py hab "$RUNNER_TEMP/standalone/HAB63.zip"
+          python3 review/export.py rank "$RUNNER_TEMP/standalone/Rank37.zip"
+          python3 - <<'PYTHON'
+          import os
+          from pathlib import Path
+          from zipfile import ZipFile
+          for name in ("Rank37.zip", "HAB63.zip"):
+              with ZipFile(Path("review/standalone") / name) as saved, ZipFile(Path(os.environ["RUNNER_TEMP"]) / "standalone" / name) as built:
+                  if sorted(saved.namelist()) != sorted(built.namelist()) or any(saved.read(p) != built.read(p) for p in saved.namelist()):
+                      raise SystemExit(f"Regenerate the standalone project {name}")
+          PYTHON
+
+      - name: Kernel replay of the project
+        run: bash verification/replay.sh project 2>&1 | tee "$RUNNER_TEMP/dnp-logs/project-replay.log"
+
+      - name: Fresh kernel replay including dependencies
+        if: github.event_name == 'workflow_dispatch' && inputs.fresh
+        run: bash verification/replay.sh fresh 2>&1 | tee "$RUNNER_TEMP/dnp-logs/fresh-replay.log"
+
+      - name: Upload verification logs
+        if: always()
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        with:
+          name: lean-verification-${{ github.sha }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/dnp-logs
+          if-no-files-found: warn

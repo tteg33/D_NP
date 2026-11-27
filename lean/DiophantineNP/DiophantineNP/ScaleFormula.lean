@@ -66,7 +66,7 @@ theorem scale_description : Describes scaleFormula scale := by
   rw [scaleFormula_true, scale, Nat.testBit_two_pow, decide_eq_true_eq]
   rfl
 
-/-- The same unproved general packing assertion used for the two width words
+/-- The packing theorem used for the two width words
 also supplies the bounded, fully sound fixed-width scale graph. -/
 theorem scaleGraph (pack : PackingClaim) : HasWidthGraph scale := by
   apply widthGraph_of_description pack scale_description
