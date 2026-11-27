@@ -1,6 +1,6 @@
 # Native bitwise inclusion and the Adleman–Manders conjecture
 
-This is a proposed proof of the Adleman–Manders equality for binary numerical languages. The central theorem constructs one integer polynomial for all input widths. A true bitwise-inclusion instance has a root of polynomial total bit length, and every root implies a true instance. The companion Lean development derives `Classes.D = Classes.NP` from this theorem. Independent mathematical review is pending.
+This is a proposed proof of the Adleman–Manders equality for binary numerical languages. The central theorem constructs one integer polynomial for all input widths. A true bitwise-inclusion instance has a root of polynomial total bit length, and every root implies a true instance. The companion Lean development derives `Classes.D = Classes.NP` from this theorem.
 
 **Read the revised paper** in [PDF](lean/DiophantineNP/manuscript/Native_Bitwise_Inclusion_Revised.pdf) or [TeX](lean/DiophantineNP/manuscript/Native_Bitwise_Inclusion_Revised.tex).
 | To review | Start here |
